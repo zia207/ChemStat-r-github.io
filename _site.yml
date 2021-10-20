@@ -1,0 +1,42 @@
+name: ChemStat-R
+output_dir: '.'
+navbar:
+  title: ChemStat-R 
+  type: inverse
+  left:
+  - text: Home
+    icon: fa-home
+    href: index.html
+  - text: Getting Started with R
+    href: getting-started-with-r.html
+  - text: Essential of The R Language 
+    href: essential-of-r-language.html
+    menu:
+    - text: Introduction to Using R
+      href: intoduction-to-use-r.html
+    - text: R-Data Input and Types
+      href: r-data-input-and-type.html
+    - text: Data Wrangling with R
+      href: data-wrangling.html
+    - text: Simple Mathematics with R
+      href: mathematics-with-r.html
+    - text: Basic Statistics with R
+      href: basic-statistics-with-r.html
+    - text: SQL with R
+      href: sql-with-r.html
+    - text: Data Visualization with R
+      href: data-visualization.html
+  right:
+  - text: Email
+    icon: fa-envelope fa-lg
+    href: mailto:zia207@gmail.com
+  - icon: fa-github fa-lg
+    href: http://github.com/zia207
+  - icon: fa-linkedin fa-lg
+    href: https://www.linkedin.com/in/zia-ahmed-a7653578
+output:
+  html_document:
+    theme: cosmo
+    css: styles.css
+    lib_dir: site_libs
+    self_contained: no

@@ -1,0 +1,34 @@
+---
+title: ''
+---
+<div style="margin-bottom:20px;">
+</div>
+
+```{r echo=FALSE, out.width='100%', fig.align="center"}
+knitr::include_graphics("F:\\GitHub\\Chemistry_R\\chemstat-r-github.io\\Image\\PNG_FILE_02\\essential_R.png")
+```
+
+<div style="margin-bottom:20px;">
+</div>
+
+
+
+There is an enormous range of things that R can do, and one of the hardest parts of learning R is finding your way around. I suggest that you start by looking down all
+the chapter names at the front of this book (p. v) to get an overall idea of where the material you want might be found. The Index for this book has the names of R functions
+in bold. 
+
+
+
+* [Introduction to Using R](intoduction-to-use-r.html)
+
+* [R-data Input and Types](r-data-input-and-type.html)
+
+* [Data Wrangling with R](data-wrangling.html)
+
+* [Simple Mathematics with R](mathematics-with-r.html)
+
+* [Basic Statistics with R](basic-statistics-with-r.html)
+
+* [SQL with R](sql-with-r.html)
+
+* [Data Visualization with R](data-visualization.html)

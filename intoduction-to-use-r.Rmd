@@ -1,0 +1,22 @@
+---
+title: "Introduction to Using R"
+---
+
+
+
+## **Table of content**
+
+-	Screen prompt
+-	R as a calculator
+-	Built in function
+-	Number with Exponents
+-	Rounding
+-	Missing values NA
+-	Assignment Statements
+-	Operators
+-	Indexing
+-	Vector
+-	Matrix
+-	Data Frame
+
+#### Screen prompt

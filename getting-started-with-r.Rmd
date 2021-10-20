@@ -1,0 +1,152 @@
+---
+title: ''
+---
+
+<div style="margin-bottom:20px;">
+</div>
+
+```{r echo=FALSE, out.width='100%', fig.align="center"}
+knitr::include_graphics("F:\\GitHub\\Chemistry_R\\chemstat-r-github.io\\Image\\PNG_FILE_01\\getting_started.png")
+```
+
+<div style="margin-bottom:20px;">
+</div>
+
+
+### **What is R?** 
+
+[R](https://www.r-project.org/) is one of the most popular open-source environments for statistical computing and visualization. It was developed in 1980 based on the S language, and an open-source community regularly updates the software for a robust, programmable, portable, and open-source computing environment. We can use it to solve complex and sophisticated problems and "routine" analysis without restrictions on access or use. 
+
+### **Download R**
+
+The R can be downloaded from the [R project](https://www.r-project.org/) of a repository CRAN or you can install [Microsoft R Open](https://mran.microsoft.com/download),  the enhanced distribution of R from Microsoft. It is a complete and free open source platform for statistical analysis and data science 
+
+1.	Click [this link](https://www.r-project.org//) to download the latest stable version of R 
+2.	Select a CRAN location (a mirror site) and please choose a location close to you
+3.	Click on the "Download R for Windows" link at the top of the page.  
+4.	Click on the "install R for the first time" link at the top of the page.
+5.	Click "Download R for Windows" and save the executable file somewhere on your computer.
+
+
+```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="Download R"}
+library(embedr)
+embed_video("F:/GitHub/Chemistry_R/chemstat-r-github.io/Vedio/download_r.mp4", width = "856", height = "656")
+```
+
+<div style="margin-bottom:20px;">
+</div>
+
+
+### **Install R on Windows** 
+
+Installation instruction of R  in Windows and MAC could be found  [here](https://courses.edx.org/courses/UTAustinX/UT.7.01x/3T2014/56c5437b88fa43cf828bff5371c6a924/). Detail Installation steps of Microsoft R Open in different operating systems can be found [here](https://mran.microsoft.com/documents/rro/installation). 
+
+1. Open Windows Explorer
+2. Navigate to the directory where the downloaded R.4.1.1-win.exe  file is exit. 
+3. Double-click this exe file and follow the instruction as shown in the video below: 
+
+```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="Download R"}
+embed_video("F:/GitHub/Chemistry_R/chemstat-r-github.io/Vedio/install_r.mp4", width = "856", height = "656")
+```
+
+<div style="margin-bottom:20px;">
+</div>
+
+### **Installing R on Mac OSX**
+
+Installing R on Mac OS is similar to Windows.  The easiest way is to install it through CRAN by going to the CRAN downloads page and following description as  as shown [here](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu)
+
+<div style="margin-bottom:20px;">
+</div>
+### **Install R-base on Ubuntu**  
+
+The installation of R in Ubuntu little tricky for those who are not familiar with command line. Details R installation on Ubuntu 19.04/18.04/16.04 could be found [here](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu).  
+
+<div style="margin-bottom:20px;">
+</div>
+
+### **Open R-Base** 
+
+After R installation in Windows, double click on desktop icon or open program from START to run R.  R will be open as a **Console**  window. You can work in console and use R with the command line. However, the command line can be quite daunting to a beginner, It it is better to work in **R Editor**.  First you have to create a **New script** from  **File** menu. Any code you run in R-script, output will be displayed  in console window. We can save all of your R codes as a R script file and output in console as a R-Data file.  
+```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="Download R"}
+embed_video("F:/GitHub/Chemistry_R/chemstat-r-github.io/Vedio/open_r.mp4", width = "856", height = "656")
+```
+
+<div style="margin-bottom:20px;">
+</div>
+
+
+### **Integrated development environment (IDE)**
+
+R can be run in the command line  and graphical user interfaces in [integrated development environment (IDE)](https://en.wikipedia.org/wiki/Integrated_development_environment). Below down are the best programming IDE for R: 
+
+1. [RStudio](https://www.rstudio.com/)
+2. [R Tools for Visual Studio](https://docs.microsoft.com/en-us/visualstudio/rtvs/installing-r-tools-for-visual-studio?view=vs-2017)
+3. [Rattle](https://rattle.togaware.com/) 
+4. [ESS](https://www.dunebook.com/best-r-programming-ide/) 
+5. [Tinn-R](https://tinn-r.software.informer.com/) 
+6. [R AnalyticalFlow](https://r.analyticflow.com/en/)
+7. [Radiant](https://radiant-rstats.github.io/docs/install.html)
+8. [RBox](https://atom.io/packages/rbox)
+
+<div style="margin-bottom:10px;">
+</div>
+
+### **Download and Installation R-Studio**
+
+[RStudio](https://www.rstudio.com/) is one of the best [integrated development environment (IDE)](https://en.wikipedia.org/wiki/Integrated_development_environment) for R that includes a [console](https://support.rstudio.com/hc/en-us/articles/200404846-Working-in-the-Console), a [terminal](https://support.rstudio.com/hc/en-us/articles/115010737148-Using-the-RStudio-Terminal-in-the-RStudio-IDE) syntax-highlighting editor that supports direct code execution, as well as tools for plotting, history, debugging and workspace management. RStudio Desktop and RStudio Server for Windows, Mac, and Linux are open sources. 
+
+First, you have to download the latest version of RStudio according to your operating system from [here](https://www.rstudio.com/products/rstudio/download/#download). 
+For windows user, and just run the installation file and it normally detects your latest installed R version automatically. If you want to do some extra configuration, you need follow  some steps which can be found [here](http://www.dummies.com/programming/r/how-to-install-and-configure-rstudio/)
+
+For installation instruction of R and RStudio in Mac OS could be found [here](https://web.stanford.edu/~kjytay/courses/stats32-aut2018/Session%201/Installation%20for%20Mac.html). 
+Installing R Studio on Ubuntu could be found [here](https://www.geeksforgeeks.org/how-to-install-r-studio-on-windows-and-linux/)
+
+<div style="margin-bottom:10px;">
+</div>
+
+### **Open RStudio**
+
+We may open RStudio just double click Rstudio icon on your Desktop or on the task bar. It has several components: console, terminal, editors, global environment etc. 
+
+```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="Download R"}
+embed_video("F:/GitHub/Chemistry_R/chemstat-r-github.io/Vedio/rStudio_01.mp4", width = "856", height = "656")
+```
+
+<div style="margin-bottom:20px;">
+</div>
+
+### **Change RStudio Apperance & Themes**
+
+Navigate to **Tools → Global options → Appearance** and switch the theme in the Editor Theme option. By default, you will have the Textmate theme activated. There is a wide in-built variety of themes to choose, from light to dark themes
+
+```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="Download R"}
+embed_video("F:/GitHub/Chemistry_R/chemstat-r-github.io/Vedio/rStudio_02.mp4", width = "856", height = "656")
+```
+
+<div style="margin-bottom:20px;">
+</div>
+
+## **R Packages** 
+
+R Packages are collections of R functions, data, and compiled code in a well-defined format. The directory where packages are stored is called the **library**. We can install any R 'package' or multiple package  directly from the console, using r-script and GUI (Tools > Install Packages) through internet. 
+
+Use **install.packages()** function in your console or in  a script:     
+
+
+```{r }
+# One package
+# install.packages("raster", dependencies = TRUE)
+
+# Multiple packages
+# install.packages(c("raster","gstat"), dependencies = TRUE)
+```
+
+```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="Download R"}
+embed_video("F:/GitHub/Chemistry_R/chemstat-r-github.io/Vedio/r_package.mp4", width = "856", height = "656")
+```
+
+
+
+<div style="margin-bottom:30px;">
+</div>
