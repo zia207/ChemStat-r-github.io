@@ -64,8 +64,8 @@ If you want to change the working directory in R you just need to call the **set
 
 
 ```{r}
-myWD<-setwd("F:/GitHub/Chemistry_R/chemstat-r-github.io")    # Set working directory  
-myWD<-setwd("F://GitHub//Chemistry_R//chemstat-r-github.io") # Equivelent
+myWD<-setwd("E:\\Dropbox\\GitHub\\chemstat-r-github.io")    # Set working directory  
+myWD<-setwd("E:/Dropbox/GitHub/chemstat-r-github.io") # Equivelent
 myWD
 ```
 
@@ -90,7 +90,7 @@ The easiest form of data to import into R is a simple text file, and this will o
 
 ```{r}
 ## Create a data folder
-dataFolder<-"F:/GitHub/Chemistry_R/chemstat-r-github.io/Data/"
+dataFolder<-"E:/GitHub/chemstat-r-github.io/Data/"
 ```
 
 ```{r}
