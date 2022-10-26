@@ -12,11 +12,12 @@ knitr::include_graphics("F:\\GitHub\\Chemistry_R\\chemstat-r-github.io\\Image\\P
 </div>
 
 
+There is an enormous range of things that R can do, and one of the hardest parts of learning R is finding your way around. 
 
-There is an enormous range of things that R can do, and one of the hardest parts of learning R is finding your way around. I suggest that you start by looking down all
-the chapter names at the front of this book (p. v) to get an overall idea of where the material you want might be found. The Index for this book has the names of R functions
-in bold. 
+<div style="margin-bottom:15px;">
+</div>
 
+### **Table of Content**
 
 
 * [Introduction to Using R](intoduction-to-use-r.html)

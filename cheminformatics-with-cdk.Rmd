@@ -1,0 +1,160 @@
+---
+title: ''
+---
+
+<div style="margin-bottom:40px;">
+</div>
+
+```{r echo=FALSE, out.width='100%', fig.align="center"}
+knitr::include_graphics("F:\\GitHub\\Chemistry_R\\chemstat-r-github.io\\Image\\PNG_FILE_04\\rCDK.png")
+```
+
+<div style="margin-bottom:20px;">
+</div>
+
+```{r eval=FALSE, include=FALSE}
+install.packages("rcdk")
+```
+
+####  Load Librabry
+
+```{r message=FALSE, warning=FALSE}
+
+if (Sys.getenv("JAVA_HOME")!="")
+  Sys.setenv(JAVA_HOME="")
+library(rJava)
+
+options(java.parameters="-Xmx16000m") 
+
+require(rcdk) # chemical informatics functionality in R
+require(gap)  # for qq plots later
+options(stringsAsFactors=FALSE)
+```
+
+###  plot molecules in R plot window instead of separate Java window
+
+```{r}
+rcdkplot = function(molecule,marg=0,main='') {
+  par(mar=c(marg,marg,marg,marg)) # set margins to zero since this isn't a real plot
+  temp1 = view.image.2d(molecule) # get Java representation into an image matrix. set number of pixels you want horiz and vertical
+  plot(NA,NA,xlim=c(1,10),ylim=c(1,10),xaxt='n',yaxt='n',xlab='',ylab='',main=main) # create an empty plot
+  rasterImage(temp1,1,1,10,10) # boundaries of raster: xmin, ymin, xmax, ymax. here i set them equal to plot boundaries
+}
+```
+
+
+```{r}
+curcumin = parse.smiles("O=C(\\C=C\\c1ccc(O)c(OC)c1)CC(=O)\\C=C\\c2cc(OC)c(O)cc2")[[1]] 
+```
+
+
+```{r warning=FALSE, fig.width = 5, fig.height = 4}
+rcdkplot(curcumin)
+```
+
+#### Bemis-Murcko scheme
+
+Fragment the input molecule using the Bemis-Murcko scheme. A variety of methods for fragmenting molecules are available ranging from exhaustive, rings to more specific methods such as Murcko frameworks. Fragmenting a collection of molecules can be a useful for a variety of analyses. In addition fragment based analysis can be a useful and faster alternative to traditional clustering of the whole collection, especially when it is large.
+
+```{r}
+curc.frags = get.murcko.fragments(curcumin)
+curc.frags
+```
+
+```{r warning=FALSE, fig.width = 4, fig.height = 4}
+rcdkplot(parse.smiles(curc.frags[[1]]$rings)[[1]])
+```
+
+```{r warning=FALSE, fig.width = 5, fig.height = 4}
+rcdkplot(parse.smiles(curc.frags[[1]]$frameworks)[[1]])
+```
+```{r}
+anle138b = parse.smiles("C1OC2=C(O1)C=C(C=C2)C3=CC(=NN3)C4=CC(=CC=C4)Br")[[1]]
+rcdkplot(anle138b)
+```
+```{r}
+anle138b.frags = get.murcko.fragments(anle138b)
+anle138b.frags
+```
+
+```{r}
+rcdkplot(parse.smiles(anle138b.frags[[1]]$rings[1])[[1]])
+rcdkplot(parse.smiles(anle138b.frags[[1]]$rings[2])[[1]])
+rcdkplot(parse.smiles(anle138b.frags[[1]]$frameworks[1])[[1]])
+rcdkplot(parse.smiles(anle138b.frags[[1]]$frameworks[2])[[1]])
+rcdkplot(parse.smiles(anle138b.frags[[1]]$frameworks[3])[[1]])
+```
+
+```{r}
+anle138b.frags = get.murcko.fragments(anle138b,min.frag.size=3)
+anle138b.frags[[1]]$rings
+```
+
+### Load FDA drug list
+
+```{r}
+drugs = read.table('http://www.cureffi.org/wp-content/uploads/2013/10/drugs.txt',
+                   sep='\t',header=TRUE,allowEscapes=FALSE,quote='',comment.char='')
+```
+
+#### Remove those with no SMILES or with a really huge smiles
+
+```{r}
+drugs = drugs[nchar(drugs$smiles) > 0 & nchar(drugs$smiles) < 200,]
+drug.objects = parse.smiles(drugs$smiles) # create rcdk IAtomContainer objects for each drug
+```
+
+#### Check dimensin
+
+```{r}
+# check that lengths are same
+dim(drugs) # 1467 3
+length(drug.objects) # 1467
+```
+
+#### Extract some strains
+
+```{r}
+statins = c("atorvastatin","fluvastatin","lovastatin","pitavastatin","pravastatin","rosuvastatin","simvastatin")
+drugs[tolower(drugs$generic_name) %in% statins,] # check that the statins are in the drug list
+```
+
+### Examine statin structures
+
+```{r warning=FALSE, fig.width = 5, fig.height = 4}
+for (statin in statins) {
+  rcdkplot(drug.objects[tolower(drugs$generic_name) == statin][[1]],marg=2,main=statin)
+}
+```
+
+#### Get all murcko fragments
+
+```{r}
+mfrags = get.murcko.fragments(drug.objects,min.frag.size=3) 
+mfrags[1:2]  # First two
+```
+
+#### Get a list of all possible fragments in any of these drugs
+
+```{r}
+allfrags = unique(unlist(mfrags))
+length(allfrags) 
+```
+
+#### Get only the ring systems
+
+```{r}
+allrings = unique(unlist(lapply(mfrags,"[[",1)))
+length(allrings) 
+```
+
+#### Convert drug.objects to a matrix
+
+
+```{r}
+mat = matrix(nrow=length(drug.objects), ncol=length(allrings))
+for (i in 1:length(drug.objects)) {
+  mat[i,] = allrings %in% mfrags[[i]]$rings
+}
+```
+

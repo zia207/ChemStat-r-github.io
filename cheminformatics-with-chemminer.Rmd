@@ -1,0 +1,247 @@
+---
+title: ''
+---
+
+<div style="margin-bottom:40px;">
+</div>
+
+```{r echo=FALSE, out.width='100%', fig.align="center"}
+knitr::include_graphics("F:\\GitHub\\Chemistry_R\\chemstat-r-github.io\\Image\\PNG_FILE_04\\Chemminer.png")
+```
+<div style="margin-bottom:20px;">
+</div>
+
+### **Table of Content**
+
+* [Installation](#Installation)
+
+* [Loading the Package and Documentation](#loading-the-package-and-documentation)
+
+* [Create Instances of SDFset Class](#create-instances-of-sdfset-class) 
+
+* [Summary of SDFset](#summary-of-sdfset) 
+
+* [Subsetting of SDF Object](#subsetting-of-sdf-object)
+
+* [Miscellaneous Accessory Methods for SDFset Container](#miscellaneous-accessory-methods-for-sdfset-container)
+
+	- [Atom Block](#atom-block)
+	
+	- [Bond Block](#bond-block)
+	
+	- [Data Block](#data-block)
+
+* [Assigning Compound IDs](#assigning-compound-ids) 
+
+* [Unify CMP Names](#unify-cmp-names)
+
+* [Converting the Data Blocks in an SDFset to a Matrix](#converting-the-data-blocks-in-an-sdfset-to-matrix)
+
+* [Atom Frequency Matrix Molecular Weight Formula](#atom-frequency-matrix-molecular-weight-formula)
+
+* [String Search in SDFset](#string-search-in-sdfset)
+	
+* [Export SDFset to SD File](#export-sdfset-to-sd-file)	
+
+* [Plot Molecule Structure](#plot-molecule-structure)
+
+* [Visualize an SDFset online using ChemMine Tools](#visualize-an-sdfset-online-using-chemMine-tools)
+
+
+<div style="margin-bottom:20px;">
+</div>
+
+### **Installation**
+
+The R software for running **ChemmineR** can be downloaded from CRAN (http://cran.at.r-project.org/). The ChemmineR package can be installed from R with:
+
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+if (!requireNamespace("BiocManager", quietly=TRUE))
+     install.packages("BiocManager")
+ BiocManager::install("ChemmineR")
+```
+
+### **Loading the Package and Documentation**
+ 
+```{r message=F, warning=F}
+library("ChemmineR") 
+```
+
+```{r}
+# library(help="ChemmineR") # Lists all functions and classes 
+# vignette("ChemmineR") # Opens this PDF manual from R 
+```
+
+<div style="margin-bottom:10px;">
+</div>
+
+### **Create Instances of SDFset Class**
+
+Class **SDFset** is list-like container for storing one or many objects of class SDF each containing the structure definition information of molecules provided by an SD/MOL file. The SDFset is the most important class in the ChemmmineR package for accessing and manipulating information stored in **SD** files.
+
+[The **structural data file (SDF)** belongs to a family of chemical-data file formats. It is based on the MOL-file format, both developed by Molecular Design Limited (MDL), now named Biovia (belongs Dassault Systèmes).The SDF contains information on the chemical structure and associated data of compounds in plain text. The original MOL-file only encoded a single molecule, whereas files in SDF format can encode single or multiple molecules that are then delimited by lines consisting of four dollar signs ($$$$). SDF files are formatted ASCII files that store information about the positions of the individual atoms (either in 2D or 3D space) that make up the molecule. The data on connectivity and hybridization state are also encoded, although their use is less frequent and often inconsistent](https://lifechemicals.com/order-and-supply/how-to-work-with-sd-files)
+
+<div style="margin-bottom:10px;">
+</div>
+
+```{r}
+data(sdfsample) 
+sdfset <- sdfsample
+```
+
+### **Summary of SDFset** 
+
+```{r}
+sdfset 
+```
+
+### **Subsetting of SDF Object**
+
+```{r}
+ sdfset[1:4]
+```
+
+#### **Summary of one SDF**
+
+```{r}
+ sdfset[[1]] 
+```
+```{r}
+# view(sdfset[1:4]) # Returns summarized content of many SDFs, not printed here 
+# as(sdfset[1:4], "list") # Returns complete content of many SDFs, not printed here 
+```
+
+
+### **Miscellaneous Accessory Methods for SDFset Container**
+
+Returns **header** block(s) from an object of class SDF or SDFset with named character vector or list of named character vectors
+
+```{r}
+header(sdfset[1:4])
+```
+
+#### **Atom Block**
+
+**atomblock()**  returns atom block(s) from an object of class SDF or SDFse
+
+```{r}
+# atomblock(sdfset[1:4]) # Not printed here 
+```
+
+Sub-set of atom block(s): 
+
+```{r}
+atomblock(sdfset[[1]])[1:4,] 
+```
+
+#### **Bond Block**
+
+Returns bond block(s) from an object of class SDF or SDFset
+
+```{r}
+bondblock(sdfset[[1]])[1:4,] 
+```
+
+#### **Data Block**
+
+```{r}
+datablock(sdfset[[1]])[1:4] 
+```
+
+### **Assigning Compound IDs** 
+
+Assigning compound IDs and keeping them unique:
+
+```{r}
+cid(sdfset)[1:4] 
+
+```
+
+#### **Returns IDs from SD file header block**
+
+```{r}
+sdfid(sdfset)[1:4] 
+```
+
+### **Unify CMP Names**
+
+Creates unique CMP names by appending a counter to each duplicatation set. The function can be used for any character vector.
+
+```{r}
+unique_ids <- makeUnique(sdfid(sdfset))
+```
+
+```{r}
+cid(sdfset) <- unique_ids 
+```
+
+### **Converting the Data Blocks in an SDFset to a Matrix**
+
+Convert data blocks in SDFset to character matrix with **datablock2ma()**, then store its numeric columns as numeric matrix and its character columns as character matrix.
+
+```{r}
+blockmatrix <- datablock2ma(datablocklist=datablock(sdfset)) 
+```
+
+Then  Splits **blockmatrix** to numeric and character matrix 
+
+```{r}
+numchar <- splitNumChar(blockmatrix=blockmatrix) # Splits to numeric and character matrix 
+```
+
+Slice of numeric matrix 
+
+```{r}
+numchar[[1]][1:2,1:2] # Slice of numeric matrix 
+```
+
+Slice of character matrix
+
+```{r}
+ numchar[[2]][1:2,10:11] # Slice of character matrix 
+```
+
+### ***Atom Frequency Matrix Molecular Weight Formula**
+
+```{r}
+ propma <- data.frame(MF=MF(sdfset), MW=MW(sdfset), atomcountMA(sdfset))
+ propma[1:4, ] 
+```
+
+#### **Assign matrix data to data block**
+
+```{r}
+datablock(sdfset) <- propma 
+datablock(sdfset[1]) 
+```
+
+### **String Search in SDFset**
+
+**grepSDFset**  a function for string searching in SDFset containers.
+
+```{r}
+grepSDFset("650001", sdfset, field="datablock", mode="subset") 
+```
+```{r}
+grepSDFset("650001", sdfset, field="datablock", mode="index") 
+```
+
+### **Export SDFset to SD File**
+
+```{r}
+ write.SDF(sdfset[1:4], file="sub.sdf", sig=TRUE) 
+```
+
+
+### **Plot Molecule Structure**
+
+```{r warning=FALSE, fig.width = 7, fig.height = 7}
+plot(sdfset[1:4], print=FALSE) # Plots structures to R graphics device
+```
+
+### **Visualize an SDFset online using ChemMine Tools**
+
+```{r}
+sdf.visualize(sdfset[1:4]) # Compound viewing in web browser 
+```
+

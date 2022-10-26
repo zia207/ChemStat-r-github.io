@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>cheminformatics-with-chemminer.knit</title>
+
+<script src="site_libs/header-attrs-2.17/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">ChemStat-R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="getting-started-with-r.html">Getting Started with R</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Essential of The R Language
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="essential-of-r-language.html">Table of Content</a>
+    </li>
+    <li>
+      <a href="intoduction-to-use-r.html">Introduction to Using R</a>
+    </li>
+    <li>
+      <a href="r-data-input-and-type.html">Importing/Exporting  Data into R</a>
+    </li>
+    <li>
+      <a href="data-wrangling.html">Data Wrangling with R</a>
+    </li>
+    <li>
+      <a href="mathematics-with-r.html">Simple Mathematics with R</a>
+    </li>
+    <li>
+      <a href="basic-statistics-with-r.html">Basic Statistics with R</a>
+    </li>
+    <li>
+      <a href="sql-with-r.html">SQL with R</a>
+    </li>
+    <li>
+      <a href="data-visualization.html">Data Visualization with R</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Curve Fitting with R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="curve-fitting-with-r.html">Table of Content</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Cheminformatics with R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="cheminformatics-with-r.html">Table of Content</a>
+    </li>
+    <li>
+      <a href="getting-strated-chem.html">Getting Started</a>
+    </li>
+    <li>
+      <a href="cheminformatics-with-chemminer.html">Cheminformatics with ChemmineR</a>
+    </li>
+    <li>
+      <a href="cheminformatics-with-cdk.html">Cheminformatics with CDK</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    ICP-MS Data Processing with R.html
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="icp-ms-data-processing-and-analysis-with-r.html">Table of Content</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="mailto:zia207@gmail.com">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+    Email
+  </a>
+</li>
+<li>
+  <a href="http://github.com/zia207">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://www.linkedin.com/in/zia-ahmed-a7653578">
+    <span class="fa fa-linkedin fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+
+</div>
+
+
+<div style="margin-bottom:40px;">
+
+</div>
+<img src="Image/PNG_FILE_04/ChemmineR.png" width="100%" style="display: block; margin: auto;" />
+<div style="margin-bottom:20px;">
+
+</div>
+<div id="table-of-content" class="section level3">
+<h3><strong>Table of Content</strong></h3>
+<ul>
+<li><p><a href="#Installation">Installation</a></p></li>
+<li><p><a href="#loading-the-package-and-documentation">Loading the
+Package and Documentation</a></p></li>
+<li><p><a href="#create-instances-of-sdfset-class">Create Instances of
+SDFset Class</a></p></li>
+<li><p><a href="#summary-of-sdfset">Summary of SDFset</a></p></li>
+<li><p><a href="#subsetting-of-sdf-object">Subsetting of SDF
+Object</a></p></li>
+<li><p><a
+href="#miscellaneous-accessory-methods-for-sdfset-container">Miscellaneous
+Accessory Methods for SDFset Container</a></p>
+<ul>
+<li><p><a href="#atom-block">Atom Block</a></p></li>
+<li><p><a href="#bond-block">Bond Block</a></p></li>
+<li><p><a href="#data-block">Data Block</a></p></li>
+</ul></li>
+<li><p><a href="#assigning-compound-ids">Assigning Compound
+IDs</a></p></li>
+<li><p><a href="#unify-cmp-names">Unify CMP Names</a></p></li>
+<li><p><a
+href="#converting-the-data-blocks-in-an-sdfset-to-matrix">Converting the
+Data Blocks in an SDFset to a Matrix</a></p></li>
+<li><p><a href="#atom-frequency-matrix-molecular-weight-formula">Atom
+Frequency Matrix Molecular Weight Formula</a></p></li>
+<li><p><a href="#string-search-in-sdfset">String Search in
+SDFset</a></p></li>
+<li><p><a href="#export-sdfset-to-sd-file">Export SDFset to SD
+File</a></p></li>
+<li><p><a href="#plot-molecule-structure">Plot Molecule
+Structure</a></p></li>
+<li><p><a
+href="#visualize-an-sdfset-online-using-chemMine-tools">Visualize an
+SDFset online using ChemMine Tools</a></p></li>
+</ul>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="installation" class="section level3">
+<h3><strong>Installation</strong></h3>
+<p>The R software for running <strong>ChemmineR</strong> can be
+downloaded from CRAN (<a href="http://cran.at.r-project.org/"
+class="uri">http://cran.at.r-project.org/</a>). The ChemmineR package
+can be installed from R with:</p>
+</div>
+<div id="loading-the-package-and-documentation" class="section level3">
+<h3><strong>Loading the Package and Documentation</strong></h3>
+<pre class="r"><code>library(&quot;ChemmineR&quot;) </code></pre>
+<pre class="r"><code># library(help=&quot;ChemmineR&quot;) # Lists all functions and classes 
+# vignette(&quot;ChemmineR&quot;) # Opens this PDF manual from R </code></pre>
+<div style="margin-bottom:10px;">
+
+</div>
+</div>
+<div id="create-instances-of-sdfset-class" class="section level3">
+<h3><strong>Create Instances of SDFset Class</strong></h3>
+<p>Class <strong>SDFset</strong> is list-like container for storing one
+or many objects of class SDF each containing the structure definition
+information of molecules provided by an SD/MOL file. The SDFset is the
+most important class in the ChemmmineR package for accessing and
+manipulating information stored in <strong>SD</strong> files.</p>
+<p><a
+href="https://lifechemicals.com/order-and-supply/how-to-work-with-sd-files">The
+<strong>structural data file (SDF)</strong> belongs to a family of
+chemical-data file formats. It is based on the MOL-file format, both
+developed by Molecular Design Limited (MDL), now named Biovia (belongs
+Dassault Systèmes).The SDF contains information on the chemical
+structure and associated data of compounds in plain text. The original
+MOL-file only encoded a single molecule, whereas files in SDF format can
+encode single or multiple molecules that are then delimited by lines
+consisting of four dollar signs ($$$$). SDF files are formatted ASCII
+files that store information about the positions of the individual atoms
+(either in 2D or 3D space) that make up the molecule. The data on
+connectivity and hybridization state are also encoded, although their
+use is less frequent and often inconsistent</a></p>
+<div style="margin-bottom:10px;">
+
+</div>
+<pre class="r"><code>data(sdfsample) 
+sdfset &lt;- sdfsample</code></pre>
+</div>
+<div id="summary-of-sdfset" class="section level3">
+<h3><strong>Summary of SDFset</strong></h3>
+<pre class="r"><code>sdfset </code></pre>
+<pre><code>## An instance of &quot;SDFset&quot; with 100 molecules</code></pre>
+</div>
+<div id="subsetting-of-sdf-object" class="section level3">
+<h3><strong>Subsetting of SDF Object</strong></h3>
+<pre class="r"><code> sdfset[1:4]</code></pre>
+<pre><code>## An instance of &quot;SDFset&quot; with 4 molecules</code></pre>
+<div id="summary-of-one-sdf" class="section level4">
+<h4><strong>Summary of one SDF</strong></h4>
+<pre class="r"><code> sdfset[[1]] </code></pre>
+<pre><code>## An instance of &quot;SDF&quot;
+## 
+## &lt;&lt;header&gt;&gt;
+##                             Molecule_Name 
+##                                  &quot;650001&quot; 
+##                                    Source 
+##                  &quot;  -OEChem-07071010512D&quot; 
+##                                   Comment 
+##                                        &quot;&quot; 
+##                               Counts_Line 
+## &quot; 61 64  0     0  0  0  0  0  0999 V2000&quot; 
+## 
+## &lt;&lt;atomblock&gt;&gt;
+##           C1      C2  C3  C5  C6  C7  C8  C9 C10 C11 C12 C13 C14 C15 C16
+## O_1   7.0468  0.0839   0   0   0   0   0   0   0   0   0   0   0   0   0
+## O_2  12.2708  1.0492   0   0   0   0   0   0   0   0   0   0   0   0   0
+## ...      ...     ... ... ... ... ... ... ... ... ... ... ... ... ... ...
+## H_60  1.8411 -1.5985   0   0   0   0   0   0   0   0   0   0   0   0   0
+## H_61  2.6597 -1.2843   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 
+## &lt;&lt;bondblock&gt;&gt;
+##      C1  C2  C3  C4  C5  C6  C7
+## 1     1  16   2   0   0   0   0
+## 2     2  23   1   0   0   0   0
+## ... ... ... ... ... ... ... ...
+## 63   33  60   1   0   0   0   0
+## 64   33  61   1   0   0   0   0
+## 
+## &lt;&lt;datablock&gt;&gt; (33 data items)
+##           PUBCHEM_COMPOUND_CID PUBCHEM_COMPOUND_CANONICALIZED 
+##                       &quot;650001&quot;                            &quot;1&quot; 
+##      PUBCHEM_CACTVS_COMPLEXITY  PUBCHEM_CACTVS_HBOND_ACCEPTOR 
+##                          &quot;700&quot;                            &quot;7&quot; 
+##                                
+##                          &quot;...&quot;</code></pre>
+<pre class="r"><code># view(sdfset[1:4]) # Returns summarized content of many SDFs, not printed here 
+# as(sdfset[1:4], &quot;list&quot;) # Returns complete content of many SDFs, not printed here </code></pre>
+</div>
+</div>
+<div id="miscellaneous-accessory-methods-for-sdfset-container"
+class="section level3">
+<h3><strong>Miscellaneous Accessory Methods for SDFset
+Container</strong></h3>
+<p>Returns <strong>header</strong> block(s) from an object of class SDF
+or SDFset with named character vector or list of named character
+vectors</p>
+<pre class="r"><code>header(sdfset[1:4])</code></pre>
+<pre><code>## $CMP1
+##                             Molecule_Name 
+##                                  &quot;650001&quot; 
+##                                    Source 
+##                  &quot;  -OEChem-07071010512D&quot; 
+##                                   Comment 
+##                                        &quot;&quot; 
+##                               Counts_Line 
+## &quot; 61 64  0     0  0  0  0  0  0999 V2000&quot; 
+## 
+## $CMP2
+##                             Molecule_Name 
+##                                  &quot;650002&quot; 
+##                                    Source 
+##                  &quot;  -OEChem-07071010512D&quot; 
+##                                   Comment 
+##                                        &quot;&quot; 
+##                               Counts_Line 
+## &quot; 49 51  0     0  0  0  0  0  0999 V2000&quot; 
+## 
+## $CMP3
+##                             Molecule_Name 
+##                                  &quot;650003&quot; 
+##                                    Source 
+##                  &quot;  -OEChem-07071010512D&quot; 
+##                                   Comment 
+##                                        &quot;&quot; 
+##                               Counts_Line 
+## &quot; 44 47  0     0  0  0  0  0  0999 V2000&quot; 
+## 
+## $CMP4
+##                             Molecule_Name 
+##                                  &quot;650004&quot; 
+##                                    Source 
+##                  &quot;  -OEChem-07071010512D&quot; 
+##                                   Comment 
+##                                        &quot;&quot; 
+##                               Counts_Line 
+## &quot; 59 61  0     0  0  0  0  0  0999 V2000&quot;</code></pre>
+<div id="atom-block" class="section level4">
+<h4><strong>Atom Block</strong></h4>
+<p><strong>atomblock()</strong> returns atom block(s) from an object of
+class SDF or SDFse</p>
+<pre class="r"><code># atomblock(sdfset[1:4]) # Not printed here </code></pre>
+<p>Sub-set of atom block(s):</p>
+<pre class="r"><code>atomblock(sdfset[[1]])[1:4,] </code></pre>
+<pre><code>##          C1     C2 C3 C5 C6 C7 C8 C9 C10 C11 C12 C13 C14 C15 C16
+## O_1  7.0468 0.0839  0  0  0  0  0  0   0   0   0   0   0   0   0
+## O_2 12.2708 1.0492  0  0  0  0  0  0   0   0   0   0   0   0   0
+## O_3 12.2708 3.1186  0  0  0  0  0  0   0   0   0   0   0   0   0
+## O_4  7.9128 2.5839  0  0  0  0  0  0   0   0   0   0   0   0   0</code></pre>
+</div>
+<div id="bond-block" class="section level4">
+<h4><strong>Bond Block</strong></h4>
+<p>Returns bond block(s) from an object of class SDF or SDFset</p>
+<pre class="r"><code>bondblock(sdfset[[1]])[1:4,] </code></pre>
+<pre><code>##   C1 C2 C3 C4 C5 C6 C7
+## 1  1 16  2  0  0  0  0
+## 2  2 23  1  0  0  0  0
+## 3  2 27  1  0  0  0  0
+## 4  3 25  1  0  0  0  0</code></pre>
+</div>
+<div id="data-block" class="section level4">
+<h4><strong>Data Block</strong></h4>
+<pre class="r"><code>datablock(sdfset[[1]])[1:4] </code></pre>
+<pre><code>##           PUBCHEM_COMPOUND_CID PUBCHEM_COMPOUND_CANONICALIZED 
+##                       &quot;650001&quot;                            &quot;1&quot; 
+##      PUBCHEM_CACTVS_COMPLEXITY  PUBCHEM_CACTVS_HBOND_ACCEPTOR 
+##                          &quot;700&quot;                            &quot;7&quot;</code></pre>
+</div>
+</div>
+<div id="assigning-compound-ids" class="section level3">
+<h3><strong>Assigning Compound IDs</strong></h3>
+<p>Assigning compound IDs and keeping them unique:</p>
+<pre class="r"><code>cid(sdfset)[1:4] </code></pre>
+<pre><code>## [1] &quot;CMP1&quot; &quot;CMP2&quot; &quot;CMP3&quot; &quot;CMP4&quot;</code></pre>
+<div id="returns-ids-from-sd-file-header-block" class="section level4">
+<h4><strong>Returns IDs from SD file header block</strong></h4>
+<pre class="r"><code>sdfid(sdfset)[1:4] </code></pre>
+<pre><code>## [1] &quot;650001&quot; &quot;650002&quot; &quot;650003&quot; &quot;650004&quot;</code></pre>
+</div>
+</div>
+<div id="unify-cmp-names" class="section level3">
+<h3><strong>Unify CMP Names</strong></h3>
+<p>Creates unique CMP names by appending a counter to each duplicatation
+set. The function can be used for any character vector.</p>
+<pre class="r"><code>unique_ids &lt;- makeUnique(sdfid(sdfset))</code></pre>
+<pre><code>## [1] &quot;No duplicates detected!&quot;</code></pre>
+<pre class="r"><code>cid(sdfset) &lt;- unique_ids </code></pre>
+</div>
+<div id="converting-the-data-blocks-in-an-sdfset-to-a-matrix"
+class="section level3">
+<h3><strong>Converting the Data Blocks in an SDFset to a
+Matrix</strong></h3>
+<p>Convert data blocks in SDFset to character matrix with
+<strong>datablock2ma()</strong>, then store its numeric columns as
+numeric matrix and its character columns as character matrix.</p>
+<pre class="r"><code>blockmatrix &lt;- datablock2ma(datablocklist=datablock(sdfset)) </code></pre>
+<p>Then Splits <strong>blockmatrix</strong> to numeric and character
+matrix</p>
+<pre class="r"><code>numchar &lt;- splitNumChar(blockmatrix=blockmatrix) # Splits to numeric and character matrix </code></pre>
+<p>Slice of numeric matrix</p>
+<pre class="r"><code>numchar[[1]][1:2,1:2] # Slice of numeric matrix </code></pre>
+<pre><code>##        PUBCHEM_COMPOUND_CID PUBCHEM_COMPOUND_CANONICALIZED
+## 650001               650001                              1
+## 650002               650002                              1</code></pre>
+<p>Slice of character matrix</p>
+<pre class="r"><code> numchar[[2]][1:2,10:11] # Slice of character matrix </code></pre>
+<pre><code>##        PUBCHEM_MOLECULAR_FORMULA
+## 650001 &quot;C23H28N4O6&quot;             
+## 650002 &quot;C18H23N5O3&quot;             
+##        PUBCHEM_OPENEYE_CAN_SMILES                                     
+## 650001 &quot;CC1=CC(=NO1)NC(=O)CCC(=O)N(CC(=O)NC2CCCC2)C3=CC4=C(C=C3)OCCO4&quot;
+## 650002 &quot;CN1C2=C(C(=O)NC1=O)N(C(=N2)NCCCO)CCCC3=CC=CC=C3&quot;</code></pre>
+</div>
+<div id="atom-frequency-matrix-molecular-weight-formula"
+class="section level3">
+<h3>*<strong>Atom Frequency Matrix Molecular Weight
+Formula</strong></h3>
+<pre class="r"><code> propma &lt;- data.frame(MF=MF(sdfset), MW=MW(sdfset), atomcountMA(sdfset))
+ propma[1:4, ] </code></pre>
+<pre><code>##                 MF       MW  C  H N O S F Cl
+## 650001  C23H28N4O6 456.4916 23 28 4 6 0 0  0
+## 650002  C18H23N5O3 357.4069 18 23 5 3 0 0  0
+## 650003 C18H18N4O3S 370.4255 18 18 4 3 1 0  0
+## 650004 C21H27N5O5S 461.5346 21 27 5 5 1 0  0</code></pre>
+<div id="assign-matrix-data-to-data-block" class="section level4">
+<h4><strong>Assign matrix data to data block</strong></h4>
+<pre class="r"><code>datablock(sdfset) &lt;- propma 
+datablock(sdfset[1]) </code></pre>
+<pre><code>## $`650001`
+##           MF           MW            C            H            N            O 
+## &quot;C23H28N4O6&quot;   &quot;456.4916&quot;         &quot;23&quot;         &quot;28&quot;          &quot;4&quot;          &quot;6&quot; 
+##            S            F           Cl 
+##          &quot;0&quot;          &quot;0&quot;          &quot;0&quot;</code></pre>
+</div>
+</div>
+<div id="string-search-in-sdfset" class="section level3">
+<h3><strong>String Search in SDFset</strong></h3>
+<p><strong>grepSDFset</strong> a function for string searching in SDFset
+containers.</p>
+<pre class="r"><code>grepSDFset(&quot;650001&quot;, sdfset, field=&quot;datablock&quot;, mode=&quot;subset&quot;) </code></pre>
+<pre><code>## $`650001`
+## An instance of &quot;SDF&quot;
+## 
+## &lt;&lt;header&gt;&gt;
+##                             Molecule_Name 
+##                                  &quot;650001&quot; 
+##                                    Source 
+##                  &quot;  -OEChem-07071010512D&quot; 
+##                                   Comment 
+##                                        &quot;&quot; 
+##                               Counts_Line 
+## &quot; 61 64  0     0  0  0  0  0  0999 V2000&quot; 
+## 
+## &lt;&lt;atomblock&gt;&gt;
+##           C1      C2  C3  C5  C6  C7  C8  C9 C10 C11 C12 C13 C14 C15 C16
+## O_1   7.0468  0.0839   0   0   0   0   0   0   0   0   0   0   0   0   0
+## O_2  12.2708  1.0492   0   0   0   0   0   0   0   0   0   0   0   0   0
+## ...      ...     ... ... ... ... ... ... ... ... ... ... ... ... ... ...
+## H_60  1.8411 -1.5985   0   0   0   0   0   0   0   0   0   0   0   0   0
+## H_61  2.6597 -1.2843   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 
+## &lt;&lt;bondblock&gt;&gt;
+##      C1  C2  C3  C4  C5  C6  C7
+## 1     1  16   2   0   0   0   0
+## 2     2  23   1   0   0   0   0
+## ... ... ... ... ... ... ... ...
+## 63   33  60   1   0   0   0   0
+## 64   33  61   1   0   0   0   0
+## 
+## &lt;&lt;datablock&gt;&gt; (9 data items)
+##           MF           MW            C            H              
+## &quot;C23H28N4O6&quot;   &quot;456.4916&quot;         &quot;23&quot;         &quot;28&quot;        &quot;...&quot;</code></pre>
+<pre class="r"><code>grepSDFset(&quot;650001&quot;, sdfset, field=&quot;datablock&quot;, mode=&quot;index&quot;) </code></pre>
+<pre><code>## 1 1 1 1 1 1 1 1 1 
+## 1 2 3 4 5 6 7 8 9</code></pre>
+</div>
+<div id="export-sdfset-to-sd-file" class="section level3">
+<h3><strong>Export SDFset to SD File</strong></h3>
+<pre class="r"><code> write.SDF(sdfset[1:4], file=&quot;sub.sdf&quot;, sig=TRUE) </code></pre>
+</div>
+<div id="plot-molecule-structure" class="section level3">
+<h3><strong>Plot Molecule Structure</strong></h3>
+<pre class="r"><code>plot(sdfset[1:4], print=FALSE) # Plots structures to R graphics device</code></pre>
+<p><img src="cheminformatics-with-chemminer_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+</div>
+<div id="visualize-an-sdfset-online-using-chemmine-tools"
+class="section level3">
+<h3><strong>Visualize an SDFset online using ChemMine
+Tools</strong></h3>
+<pre class="r"><code>sdf.visualize(sdfset[1:4]) # Compound viewing in web browser </code></pre>
+<pre><code>## [1] &quot;http://chemmine.ucr.edu/ChemmineR/showJob/8bd8a9bb-25df-41a1-96b1-23c3e3967b5b&quot;</code></pre>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

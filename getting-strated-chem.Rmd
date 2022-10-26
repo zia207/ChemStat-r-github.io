@@ -1,0 +1,37 @@
+---
+title: ''
+---
+
+<div style="margin-bottom:40px;">
+</div>
+
+```{r echo=FALSE, out.width='100%', fig.align="center"}
+knitr::include_graphics("F:\\GitHub\\Chemistry_R\\chemstat-r-github.io\\Image\\PNG_FILE_04\\getting_started.png")
+```
+
+<div style="margin-bottom:20px;">
+</div>
+
+
+### **Introduction to cheminformatics**
+
+[Cheminformatics is a relatively new field of information technology that focuses on the collection, storage, analysis, and manipulation of chemical data. The chemical data of interest typically includes information on small molecule formulas, structures, properties, spectra, and activities (biological or industrial). Cheminformatics originally emerged as a vehicle to help the drug discovery and development process, however cheminformatics now plays an increasingly important role in many areas of biology, chemistry, and biochemistry](https://pubmed.ncbi.nlm.nih.gov/18428788/).
+
+The R programming environment has emerged as a powerful platform for a variety of bioinformatics and chemometric analysis. The cheminformatics involves many mathematical and statistical modeling of chemical information. So R is a suitable platform mathematical and statistical modeling for such work. There are many cheminformatics applications that will generate useful information such as descriptors, fingerprints and so on. While one can always run these applications to generate data that is then imported into R, it can be convenient to be able to manipulate chemical structures and generate chemical information with the R environment.
+
+There two R-packages largely used for Chemical Informatics  in R. These are:
+
+[**ChemmineR**](https://www.bioconductor.org/packages/devel/bioc/vignettes/ChemmineR/inst/doc/ChemmineR.html#Getting_Started)
+
+**ChemmineR** is a cheminformatics package for analyzing drug-like small molecule data in R. Its latest version contains functions for efficient processing of large numbers of small molecules, physicochemical/structural property predictions, structural similarity searching, classification and clustering of compound libraries with a wide spectrum of algorithms.
+
+
+[**rcdk**](https://cran.r-project.org/web/packages/rcdk/vignettes/using-rcdk.html)
+
+The **rcdk** package  provides the R user with access to the [**CDK**](https://cdk.github.io/), a Java framework for cheminformatics that hat supports a wide variety of cheminformatics functionality ranging from reading molecular file formats, performing ring perception and armaticity detection to fingerprint generation and molecular descriptors. The CDK website provides links to useful documentation as well as complete Javadocs. 
+
+
+1. [Cheminformatics with ChemmineR](cheminformatics-with-chemminer.html) 
+
+2. [Cheminformatics with CDK](cheminformatics-with-cdk.html) 
+

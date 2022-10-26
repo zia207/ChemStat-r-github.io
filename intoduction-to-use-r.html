@@ -11,9 +11,9 @@
 
 
 
-<title>Introduction to Using R</title>
+<title>intoduction-to-use-r.knit</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.17/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -59,6 +59,7 @@ if (window.hljs) {
 
 
 
+
 <link rel="stylesheet" href="styles.css" type="text/css" />
 
 
@@ -83,6 +84,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -140,11 +144,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -173,8 +181,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -182,16 +190,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -235,7 +236,7 @@ $(document).ready(function () {
 <div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -255,17 +256,20 @@ $(document).ready(function () {
   <a href="getting-started-with-r.html">Getting Started with R</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Essential of The R Language
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="essential-of-r-language.html">Table of Content</a>
+    </li>
+    <li>
       <a href="intoduction-to-use-r.html">Introduction to Using R</a>
     </li>
     <li>
-      <a href="r-data-input-and-type.html">R-Data Input and Types</a>
+      <a href="r-data-input-and-type.html">Importing/Exporting  Data into R</a>
     </li>
     <li>
       <a href="data-wrangling.html">Data Wrangling with R</a>
@@ -281,6 +285,51 @@ $(document).ready(function () {
     </li>
     <li>
       <a href="data-visualization.html">Data Visualization with R</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Curve Fitting with R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="curve-fitting-with-r.html">Table of Content</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Cheminformatics with R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="cheminformatics-with-r.html">Table of Content</a>
+    </li>
+    <li>
+      <a href="getting-strated-chem.html">Getting Started</a>
+    </li>
+    <li>
+      <a href="cheminformatics-with-chemminer.html">Cheminformatics with ChemmineR</a>
+    </li>
+    <li>
+      <a href="cheminformatics-with-cdk.html">Cheminformatics with CDK</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    ICP-MS Data Processing with R.html
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="icp-ms-data-processing-and-analysis-with-r.html">Table of Content</a>
     </li>
   </ul>
 </li>
@@ -314,29 +363,619 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Introduction to Using R</h1>
 
 </div>
 
 
-<div id="table-of-content" class="section level2">
-<h2><strong>Table of content</strong></h2>
+<div style="margin-bottom:20px;">
+
+</div>
+<p><img src="Image/PNG_FILE_02/introduction.png" width="100%" style="display: block; margin: auto;" /></p>
+<div style="margin-bottom:20px;">
+
+</div>
+<div style="margin-bottom:10px;">
+
+</div>
+<div id="table-of-content" class="section level3">
+<h3><strong>Table of content</strong></h3>
 <ul>
-<li>Screen prompt</li>
-<li>R as a calculator</li>
-<li>Built in function</li>
-<li>Number with Exponents</li>
-<li>Rounding</li>
-<li>Missing values NA</li>
-<li>Assignment Statements</li>
-<li>Operators</li>
-<li>Indexing</li>
-<li>Vector</li>
-<li>Matrix</li>
-<li>Data Frame</li>
+<li><p><a href="#screen-prompt">Screen Prompt</a></p></li>
+<li><p><a href="#r-as-a-calculator">R as a Calculator</a></p></li>
+<li><p><a href="#built-in-function">Built in Function</a></p></li>
+<li><p><a href="#number-with-exponents">Number with
+Exponents</a></p></li>
+<li><p><a href="#modulo-and-integer-quotients">Modulo and Integer
+Quotients</a></p></li>
+<li><p><a href="#rounding">Rounding</a></p></li>
+<li><p><a href="#assignment-statements">Assignment
+Statements</a></p></li>
+<li><p><a href="#variable-names">Variable Names</a></p></li>
+<li><p><a href="#Operators">Operators</a></p></li>
+<li><p><a href="#r-data-types">R Data Types</a></p>
+<p>-<a href="#vectors">Vectors</a></p>
+<p>-<a href="#matrix">Matrix</a></p>
+<p>-<a href="#data-frames">Data Frames</a></p>
+<p>-<a href="#lists">Lists</a></p>
+<p>-<a href="#factors">Factors</a></p></li>
 </ul>
-<div id="screen-prompt" class="section level4">
-<h4>Screen prompt</h4>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="screen-prompt" class="section level3">
+<h3><strong>Screen Prompt</strong></h3>
+<p>The screen prompt &gt; in R-console is an place to put command or
+instruction for R to work. Press the “Ctrl” + “L” keys simultaneously.
+The screen will now be refreshed and the console should be cleared.</p>
+<img src="Image/PNG_FILE_02/screen_promote.png" width="80%" style="display: block; margin: auto;" />
+<div style="margin-bottom:10px;">
+
+</div>
+</div>
+<div id="r-as-a-calculator" class="section level3">
+<h3><strong>R as a Calculator</strong></h3>
+<p>We can use R as a calculators</p>
+<p>At the prompt, we enter the expression that we want evaluated and
+when we hit enter, it will compute the result for us . For Example:</p>
+<video width='856' height='656' controls> <source src='F:/GitHub/Chemistry_R/chemstat-r-github.io/Vedio/R_calculator.mp4' type='video/mp4'> Your browser does not support the video tag;  for browser support, please see:  https://www.w3schools.com/tags/tag_video.asp </video>
+<p>Use - for subtraction. Use * for multiply. Use ^ for raised to the
+power of. Use parentheses to ensure that it understands what you are
+trying to compute. The order of doing arithmetic operations is (left
+[done first] to right [done last]) ^ / * - +</p>
+<div style="margin-bottom:15px;">
+
+</div>
+</div>
+<div id="built-in-function" class="section level3">
+<h3><strong>Built in Function</strong></h3>
+<p>There are so many built-in mathematical functions are available in
+base-R. Some are shown in below table.</p>
+<img src="Image/PNG_FILE_02/Table_math_function.png" width="70%" style="display: block; margin: auto;" />
+<div style="margin-bottom:15px;">
+
+</div>
+<p>Here below some examples of R built-in R-functions</p>
+<pre class="r"><code>log(10)</code></pre>
+<pre><code>## [1] 2.302585</code></pre>
+<pre class="r"><code>exp(1)</code></pre>
+<pre><code>## [1] 2.718282</code></pre>
+<pre class="r"><code>pi</code></pre>
+<pre><code>## [1] 3.141593</code></pre>
+<pre class="r"><code>sin(pi/2)</code></pre>
+<pre><code>## [1] 1</code></pre>
+<div style="margin-bottom:15px;">
+
+</div>
+</div>
+<div id="number-with-exponents" class="section level3">
+<h3><strong>Number with Exponents</strong></h3>
+<p>We can use very big numbers or very small numbers in R using the
+following scheme:</p>
+<pre class="r"><code>1.2e3 # means 1200 because the e3 means ‘move the decimal point 3 places to the right </code></pre>
+<pre><code>## [1] 1200</code></pre>
+<pre class="r"><code>1.2e-2 # means 0.012 because the e-2 means ‘move the decimal point 2 places to the left’</code></pre>
+<pre><code>## [1] 0.012</code></pre>
+<div style="margin-bottom:15px;">
+
+</div>
+</div>
+<div id="modulo-and-integer-quotients" class="section level3">
+<h3><strong>Modulo and Integer Quotients</strong></h3>
+<p>We can use notation* <strong>%/%</strong> (percent, divide, percent)
+and <strong>%%</strong> (percent, percent) to obtained Integer quotients
+and remainders, respectively. Suppose we want to know the integer part
+of a division: say, how many 13s are there in 119:</p>
+<pre class="r"><code>119 %/% 13</code></pre>
+<pre><code>## [1] 9</code></pre>
+<p>Suppose we wanted to know the remainder (what is left over when 119
+is divided by 13: in maths this is known as modulo</p>
+<pre class="r"><code>119 %% 13</code></pre>
+<pre><code>## [1] 2</code></pre>
+<div style="margin-bottom:15px;">
+
+</div>
+</div>
+<div id="rounding" class="section level3">
+<h3><strong>Rounding</strong></h3>
+<p>Several types of rounding (rounding up, rounding down, rounding to
+the nearest integer) can be done easily with R.</p>
+<p>The ‘greatest integer less than’ function is
+<strong>floor()</strong></p>
+<pre class="r"><code>floor(5.7)</code></pre>
+<pre><code>## [1] 5</code></pre>
+<p>The ‘next integer’ function is <strong>ceiling</strong>()</p>
+<pre class="r"><code>ceiling(5.7)</code></pre>
+<pre><code>## [1] 6</code></pre>
+<div style="margin-bottom:15px;">
+
+</div>
+</div>
+<div id="assignment-statements" class="section level3">
+<h3><strong>Assignment Statements</strong></h3>
+<p>Just like in algebra, we often want to store a computation under some
+variable name. The result is assigned to a variable with the symbols =
+or &lt; - which is formed by the “less than” symbol followed immediately
+by a hyphen.</p>
+<pre class="r"><code>x&lt;-10; # or
+y = 12</code></pre>
+<p>When you want to know what is in a variable simply ask by typing the
+variable name.</p>
+<pre class="r"><code>x; # or</code></pre>
+<pre><code>## [1] 10</code></pre>
+<pre class="r"><code>y</code></pre>
+<pre><code>## [1] 12</code></pre>
+<p>We can store a computation of two variable names and do some
+calculation and the result is assigned to a new variable</p>
+<pre class="r"><code>a=2;
+b=3;
+c=a+b;
+c</code></pre>
+<pre><code>## [1] 5</code></pre>
+<div style="margin-bottom:15px;">
+
+</div>
+</div>
+<div id="variable-names" class="section level3">
+<h3><strong>Variable Names</strong></h3>
+<ul>
+<li><p>Do not begin a variable name with a period or a number. Variable
+names are case (upper/lower) sensitive.</p></li>
+<li><p>Variable names in R are case-sensitive so x is not the same as
+X.</p></li>
+<li><p>Variable names should not begin with numbers (e.g. 1x) or symbols
+(e.g. %x).</p></li>
+<li><p>Variable names should not contain blank spaces: use
+grain.yield</p></li>
+</ul>
+<div style="margin-bottom:15px;">
+
+</div>
+</div>
+<div id="operators" class="section level3">
+<h3><strong>Operators</strong></h3>
+<pre class="r"><code># + - */%% ^ arithmetic
+# &gt; &gt;= &lt; &lt;= == != relational
+# ! &amp;  logical
+# ~ model formulae
+# &lt;- -&gt; assignment
+# $ list indexing (the ‘element name’ operator)
+# : create a sequence</code></pre>
+<div style="margin-bottom:15px;">
+
+</div>
+</div>
+<div id="r-data-types" class="section level2">
+<h2><strong>R Data Types</strong></h2>
+R has a wide variety of data types including scalars, vectors
+(numerical, character, logical), matrices, data frames, and lists.
+<div style="margin-bottom:15px;">
+
+</div>
+<div id="vectors" class="section level3">
+<h3><strong>Vectors</strong></h3>
+<p>“Vectors are variables with one or more values of the same type:
+logical, integer, real, complex, string (or character) or raw”. A
+variable with a single value (say 4.3) is often known as a scalar, but
+in R a scalar is a vector of length 1.</p>
+<p>A scalar data structure is the most basic data type that holds only a
+<strong>single atomic value</strong> at a time. Using scalars, more
+complex data types can be constructed. The most commonly used scalar
+types in R:</p>
+<ul>
+<li><p>Numeric</p></li>
+<li><p>Character</p></li>
+<li><p>Integer</p></li>
+<li><p>Logical</p></li>
+<li><p>Complex</p></li>
+</ul>
+<p><strong>Numeric</strong> is the default type used in R for
+mathematical computations. Examples of numerics are decimal numbers and
+whole numbers.</p>
+<pre class="r"><code>x=1.5
+x</code></pre>
+<pre><code>## [1] 1.5</code></pre>
+<pre class="r"><code>class(x)</code></pre>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<p><strong>Character</strong> objects are <strong>strings</strong>. They
+could be any sequence of characters including alphabets, numbers,
+punctuation marks, etc. enclosed in quotes. You can see all this playing
+out with this code appearing here:</p>
+<pre class="r"><code>Department = &#39;Chemistry&#39;
+School= &quot;University at Buffalo&quot;
+class(School)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<pre class="r"><code>paste(Department,&quot;,&quot;, School)</code></pre>
+<pre><code>## [1] &quot;Chemistry , University at Buffalo&quot;</code></pre>
+<p><strong>Logical</strong> values are <strong>boolean</strong> values
+of <strong>TRUE</strong> or <strong>FALSE</strong>. Note that R needs
+logical values of TRUE or FALSE to be in upper case. If you use mixed
+case or lowercase, you’ll get an error or unpredictable results.</p>
+<pre class="r"><code>u = TRUE; 
+v = FALSE
+class(u)</code></pre>
+<pre><code>## [1] &quot;logical&quot;</code></pre>
+<pre class="r"><code>class(v)</code></pre>
+<pre><code>## [1] &quot;logical&quot;</code></pre>
+<p>A list of numbers or charterers together to form a <strong>Multiple
+Elements Vector</strong>. Values can be assigned to vectors in many
+different ways. We can create a vector of number from 1 to 10, using the
+concatenation function <strong>c</strong></p>
+<pre class="r"><code>a &lt;- c(1,2,5.3,6,7,8,9,10)
+a</code></pre>
+<pre><code>## [1]  1.0  2.0  5.3  6.0  7.0  8.0  9.0 10.0</code></pre>
+<pre class="r"><code>s &lt;- c(&#39;apple&#39;,&#39;red&#39;,5,TRUE)
+print(s)</code></pre>
+<pre><code>## [1] &quot;apple&quot; &quot;red&quot;   &quot;5&quot;     &quot;TRUE&quot;</code></pre>
+<p>It can be generated by the sequence of integer values 1 to 10 using :
+(colon), the sequence-generating operator,</p>
+<pre class="r"><code>a&lt;-1:10
+a</code></pre>
+<pre><code>##  [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
+<p>We can also create a vector using Using sequence (Seq.) operator.</p>
+<pre class="r"><code># Create vector with elements from 5 to 9 incrementing by 0.4.
+b = seq(5, 9, by = 0.4)
+b</code></pre>
+<pre><code>##  [1] 5.0 5.4 5.8 6.2 6.6 7.0 7.4 7.8 8.2 8.6 9.0</code></pre>
+<p>“One of R’s great strengths is its ability to evaluate functions over
+entire vectors, thereby avoiding the need for loops and subscripts”.
+Important vector functions are listed in below Table:</p>
+<img src="Image/PNG_FILE_02/vector_functions.png" width="80%" style="display: block; margin: auto;" />
+<div style="margin-bottom:10px;">
+
+</div>
+<p>Once we have a vector of numbers we can apply certain built-in
+functions to them to get useful summaries. For example:</p>
+<pre class="r"><code>sum(a)        # sums the values in the vector </code></pre>
+<pre><code>## [1] 55</code></pre>
+<pre class="r"><code>length(a)     # number of the values in the vector </code></pre>
+<pre><code>## [1] 10</code></pre>
+<pre class="r"><code>mean (a)      # the average of the values in the vector </code></pre>
+<pre><code>## [1] 5.5</code></pre>
+<pre class="r"><code>var (a)        # the sample variance of the values </code></pre>
+<pre><code>## [1] 9.166667</code></pre>
+<pre class="r"><code>sd(a)         # the standard of deviations of the values  </code></pre>
+<pre><code>## [1] 3.02765</code></pre>
+<pre class="r"><code>max(a)        # the largest value in the vector  </code></pre>
+<pre><code>## [1] 10</code></pre>
+<pre class="r"><code>min(a)        # the smallest number in the vector </code></pre>
+<pre><code>## [1] 1</code></pre>
+<pre class="r"><code>median(a)     # the sample median </code></pre>
+<pre><code>## [1] 5.5</code></pre>
+<div style="margin-bottom:10px;">
+
+</div>
+<p><strong>Summary()</strong> function will calculate summary statistics
+of a vector</p>
+<pre class="r"><code>summary(a)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    1.00    3.25    5.50    5.50    7.75   10.00</code></pre>
+<p>Two vectors of same length can be added, subtracted, multiplied or
+divided giving the result as a vector output.</p>
+<pre class="r"><code># Create two vectors.
+v1 &lt;- c(3,8,4,5,0,11)
+v2 &lt;- c(4,11,0,8,1,2)
+
+# Vector addition.
+add.result &lt;- v1+v2
+print(add.result)</code></pre>
+<pre><code>## [1]  7 19  4 13  1 13</code></pre>
+<pre class="r"><code># Vector subtraction.
+sub.result &lt;- v1-v2
+print(sub.result)</code></pre>
+<pre><code>## [1] -1 -3  4 -3 -1  9</code></pre>
+<pre class="r"><code># Vector multiplication.
+multi.result &lt;- v1*v2
+print(multi.result)</code></pre>
+<pre><code>## [1] 12 88  0 40  0 22</code></pre>
+<pre class="r"><code># Vector division.
+divi.result &lt;- v1/v2
+print(divi.result)</code></pre>
+<pre><code>## [1] 0.7500000 0.7272727       Inf 0.6250000 0.0000000 5.5000000</code></pre>
+<div style="margin-bottom:15px;">
+
+</div>
+</div>
+<div id="matrix" class="section level3">
+<h3><strong>Matrix</strong></h3>
+<p>Matrices are the R objects in which the elements are arranged in a
+two-dimensional rectangular layout. All columns in a matrix must have
+the same mode (numeric, character, etc.) and the same length.</p>
+<p>All columns in a matrix must have the same mode (numeric, character,
+etc.) and the same length. There are several ways of making a matrix.
+Suppose you were interested in the matrix of 2 x . You could form the
+two rows (vectors) and then bind (<strong>rbind</strong>) them together
+to form the matrix:</p>
+<pre class="r"><code>r1=c(6,2,10)     # row 1
+r2=c(1,3,-2)     # row 2
+X=rbind(r1,r2)   # binds the vectors into rows a matrix
+X</code></pre>
+<pre><code>##    [,1] [,2] [,3]
+## r1    6    2   10
+## r2    1    3   -2</code></pre>
+<pre class="r"><code>class(X)</code></pre>
+<pre><code>## [1] &quot;matrix&quot; &quot;array&quot;</code></pre>
+<p>We can bind them (<strong>cbind</strong>) the same vectors into
+columns of a matrix</p>
+<pre class="r"><code>Y=cbind(r1,r2)   
+Y</code></pre>
+<pre><code>##      r1 r2
+## [1,]  6  1
+## [2,]  2  3
+## [3,] 10 -2</code></pre>
+<p>A Matrix is created using the <strong>matrix()</strong> function from
+the given set of values. The basic function of a matrix is:</p>
+<pre class="r"><code># matrix(data, nrow, ncol, byrow, dimnames)</code></pre>
+<p>The values are:</p>
+<ul>
+<li><p><strong>data</strong> is the input vector which becomes the data
+elements of the matrix.</p></li>
+<li><p><strong>nrow</strong> is the number of rows to be
+created.</p></li>
+<li><p><strong>ncol</strong> is the number of columns to be
+created.</p></li>
+<li><p><strong>byrow</strong> is a logical clue. If TRUE then the input
+vector elements are arranged by row.</p></li>
+<li><p><strong>dimname</strong> is the names assigned to the rows and
+columns.</p></li>
+</ul>
+<pre class="r"><code>X &lt;- matrix(1:9, nrow = 4, ncol = 3, byrow=T) # row matrix</code></pre>
+<pre><code>## Warning in matrix(1:9, nrow = 4, ncol = 3, byrow = T): data length [9] is not a
+## sub-multiple or multiple of the number of rows [4]</code></pre>
+<pre class="r"><code>X</code></pre>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    2    3
+## [2,]    4    5    6
+## [3,]    7    8    9
+## [4,]    1    2    3</code></pre>
+<pre class="r"><code>class(X)</code></pre>
+<pre><code>## [1] &quot;matrix&quot; &quot;array&quot;</code></pre>
+<pre class="r"><code>attributes(X)</code></pre>
+<pre><code>## $dim
+## [1] 4 3</code></pre>
+<p>The class and attributes of X indicate that it is a matrix of four
+rows and three columns (these are its dim attributes)</p>
+<p>We can create matrix with row and column names:</p>
+<pre class="r"><code># create a vector 
+cells=c(1,26,24,68,35,68,73,18,2,56,4,5,34,21,24,20)  # create a vector
+# names of column rows
+cnames = c(&quot;C1&quot;,&quot;C2&quot;,&quot;C3&quot;,&quot;C4&quot;) 
+# names of two rows
+rnames = c(&quot;R1&quot;,&quot;R2&quot;,&quot;R3&quot;,&quot;R4&quot;) 
+# matrix
+Z= matrix(cells,nrow=4, ncol=4, byrow=TRUE,dimnames=list(rnames,cnames))
+Z</code></pre>
+<pre><code>##    C1 C2 C3 C4
+## R1  1 26 24 68
+## R2 35 68 73 18
+## R3  2 56  4  5
+## R4 34 21 24 20</code></pre>
+<p>Or, we can easily naming the rows and columns of matrices. Suppose we
+want to labels rows with Trial names, like Trial.1, Trial.2 etc.:</p>
+<pre class="r"><code>rownames(X)&lt;-rownames(X, do.NULL=FALSE, prefix=&quot;Trial.&quot;)
+X</code></pre>
+<pre><code>##         [,1] [,2] [,3]
+## Trial.1    1    2    3
+## Trial.2    4    5    6
+## Trial.3    7    8    9
+## Trial.4    1    2    3</code></pre>
+<p>For column names, we will create a vector of different names for the
+three most commonly used drugs used in the trial, and use this to
+specify the colnames(X):</p>
+<pre class="r"><code>drug.names&lt;-c(&quot;Aspirin&quot;, &quot;Acetaminophen&quot;, &quot;Ibuprofen&quot;)
+colnames(X)&lt;-drug.names
+X</code></pre>
+<pre><code>##         Aspirin Acetaminophen Ibuprofen
+## Trial.1       1             2         3
+## Trial.2       4             5         6
+## Trial.3       7             8         9
+## Trial.4       1             2         3</code></pre>
+<p><strong>How to access Elements of a matrix?</strong></p>
+<p>We can access elements of a matrix using the square bracket []
+indexing method. Elements can be accessed as var[row, column]. Here rows
+and columns are vectors.</p>
+<pre class="r"><code>X[,2]  # 2nd column of a matrix</code></pre>
+<pre><code>## Trial.1 Trial.2 Trial.3 Trial.4 
+##       2       5       8       2</code></pre>
+<pre class="r"><code>X[3,]  # 3rd row of a matrix</code></pre>
+<pre><code>##       Aspirin Acetaminophen     Ibuprofen 
+##             7             8             9</code></pre>
+<pre class="r"><code>X[,2:3] # 2nd and 3rd column</code></pre>
+<pre><code>##         Acetaminophen Ibuprofen
+## Trial.1             2         3
+## Trial.2             5         6
+## Trial.3             8         9
+## Trial.4             2         3</code></pre>
+<pre class="r"><code>X[2:4,1:2]     # rows 2,3,4 of columns 1 and 2</code></pre>
+<pre><code>##         Aspirin Acetaminophen
+## Trial.2       4             5
+## Trial.3       7             8
+## Trial.4       1             2</code></pre>
+<div id="calculations-on-rows-or-columns-of-the-matrix"
+class="section level4">
+<h4>Calculations on rows or columns of the matrix</h4>
+<pre class="r"><code># summary statistics of each column
+summary(X)</code></pre>
+<pre><code>##     Aspirin     Acetaminophen    Ibuprofen   
+##  Min.   :1.00   Min.   :2.00   Min.   :3.00  
+##  1st Qu.:1.00   1st Qu.:2.00   1st Qu.:3.00  
+##  Median :2.50   Median :3.50   Median :4.50  
+##  Mean   :3.25   Mean   :4.25   Mean   :5.25  
+##  3rd Qu.:4.75   3rd Qu.:5.75   3rd Qu.:6.75  
+##  Max.   :7.00   Max.   :8.00   Max.   :9.00</code></pre>
+<pre class="r"><code># summary statistics and mean of the column 1 of matrix
+summary(X[,1])</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    1.00    1.00    2.50    3.25    4.75    7.00</code></pre>
+<pre class="r"><code># mean
+mean(X[,1])</code></pre>
+<pre><code>## [1] 3.25</code></pre>
+<p>Calculated over all the rows and the mean &amp; variance of the
+bottom row (Trial.4)</p>
+<pre class="r"><code>mean(X[4,])</code></pre>
+<pre><code>## [1] 2</code></pre>
+<pre class="r"><code>var(X[4,])</code></pre>
+<pre><code>## [1] 1</code></pre>
+<p>There are some special functions for calculating summary statistics
+on matrices</p>
+<pre class="r"><code># Total
+rowSums(X)</code></pre>
+<pre><code>## Trial.1 Trial.2 Trial.3 Trial.4 
+##       6      15      24       6</code></pre>
+<pre class="r"><code>colSums(X)</code></pre>
+<pre><code>##       Aspirin Acetaminophen     Ibuprofen 
+##            13            17            21</code></pre>
+<pre class="r"><code># Mean
+rowMeans(X)</code></pre>
+<pre><code>## Trial.1 Trial.2 Trial.3 Trial.4 
+##       2       5       8       2</code></pre>
+<pre class="r"><code>colMeans(X)</code></pre>
+<pre><code>##       Aspirin Acetaminophen     Ibuprofen 
+##          3.25          4.25          5.25</code></pre>
+<p>We can also use <strong>apply()</strong> function to calculate row
+and column means. Here columns are margin no. 2 (rows are margin no.
+1</p>
+<pre class="r"><code>apply(X,2,mean)</code></pre>
+<pre><code>##       Aspirin Acetaminophen     Ibuprofen 
+##          3.25          4.25          5.25</code></pre>
+<pre class="r"><code>apply(X,1,mean)</code></pre>
+<pre><code>## Trial.1 Trial.2 Trial.3 Trial.4 
+##       2       5       8       2</code></pre>
+<div style="margin-bottom:15px;">
+
+</div>
+</div>
+</div>
+<div id="data-frames" class="section level3">
+<h3><strong>Data Frames</strong></h3>
+<p>A data frame is more general than a matrix, in that different columns
+can have different modes (numeric, character, factor, etc.). This is
+similar to SAS and SPSS datasets. The rows contain different
+observations from your study, or measurements from your experiment. The
+columns contain the values of different variables.</p>
+<pre class="r"><code>ID = c(1,2,3,4)    # create a vector of ID coloumn 
+Vegetation = c(&quot;Grassland&quot;,&quot;Forest&quot;, &quot;Arable&quot;, &quot;Urban&quot;) # create a text vector 
+Settlement  = c (FALSE, FALSE, FALSE, TRUE) # creates a logical vector
+pH   = c(6.6,4.5, 6.8, 7.5)   # create a numerical vector
+SOC  = c (1.2, 3.4, 1.1, 0.12) # create a numerical vector
+my.df=data.frame(ID,Vegetation,Settlement, pH, SOC) # create a data frame
+
+my.df</code></pre>
+<pre><code>##   ID Vegetation Settlement  pH  SOC
+## 1  1  Grassland      FALSE 6.6 1.20
+## 2  2     Forest      FALSE 4.5 3.40
+## 3  3     Arable      FALSE 6.8 1.10
+## 4  4      Urban       TRUE 7.5 0.12</code></pre>
+<p>we can see the detail of structure using <strong>str()</strong>
+function</p>
+<pre class="r"><code>str(my.df)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    4 obs. of  5 variables:
+##  $ ID        : num  1 2 3 4
+##  $ Vegetation: chr  &quot;Grassland&quot; &quot;Forest&quot; &quot;Arable&quot; &quot;Urban&quot;
+##  $ Settlement: logi  FALSE FALSE FALSE TRUE
+##  $ pH        : num  6.6 4.5 6.8 7.5
+##  $ SOC       : num  1.2 3.4 1.1 0.12</code></pre>
+<pre class="r"><code>head(my.df)</code></pre>
+<pre><code>##   ID Vegetation Settlement  pH  SOC
+## 1  1  Grassland      FALSE 6.6 1.20
+## 2  2     Forest      FALSE 4.5 3.40
+## 3  3     Arable      FALSE 6.8 1.10
+## 4  4      Urban       TRUE 7.5 0.12</code></pre>
+<pre class="r"><code>summary(my.df$pH)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   4.500   6.075   6.700   6.350   6.975   7.500</code></pre>
+<pre class="r"><code>summary(my.df[,4:5])</code></pre>
+<pre><code>##        pH             SOC       
+##  Min.   :4.500   Min.   :0.120  
+##  1st Qu.:6.075   1st Qu.:0.855  
+##  Median :6.700   Median :1.150  
+##  Mean   :6.350   Mean   :1.455  
+##  3rd Qu.:6.975   3rd Qu.:1.750  
+##  Max.   :7.500   Max.   :3.400</code></pre>
+<p>Components of data frame can be accessed like a list or like a
+matrix.</p>
+<pre class="r"><code>my.df[&quot;Vegetation&quot;]</code></pre>
+<pre><code>##   Vegetation
+## 1  Grassland
+## 2     Forest
+## 3     Arable
+## 4      Urban</code></pre>
+<pre class="r"><code>my.df[[2]]</code></pre>
+<pre><code>## [1] &quot;Grassland&quot; &quot;Forest&quot;    &quot;Arable&quot;    &quot;Urban&quot;</code></pre>
+<pre class="r"><code>my.df[,4:5]</code></pre>
+<pre><code>##    pH  SOC
+## 1 6.6 1.20
+## 2 4.5 3.40
+## 3 6.8 1.10
+## 4 7.5 0.12</code></pre>
+<div style="margin-bottom:15px;">
+
+</div>
+</div>
+<div id="lists" class="section level3">
+<h3><strong>Lists</strong></h3>
+<p>List is a data structure having components of mixed data types or an
+ordered collection of objects (components). A vector having all elements
+of the same type is called atomic vector but a vector having elements of
+different type is called list. An ordered collection of objects
+(components). A list allows you to gather a variety of (possibly
+unrelated) objects under one name.</p>
+<pre class="r"><code>my.list &lt;- list(Location=&quot;NY&quot;, 
+                Year = 2021,
+                LabExp=X, # Lab experimental data
+                FieldData= my.df)  # Field data </code></pre>
+<pre class="r"><code>list(my.list)</code></pre>
+<pre><code>## [[1]]
+## [[1]]$Location
+## [1] &quot;NY&quot;
+## 
+## [[1]]$Year
+## [1] 2021
+## 
+## [[1]]$LabExp
+##         Aspirin Acetaminophen Ibuprofen
+## Trial.1       1             2         3
+## Trial.2       4             5         6
+## Trial.3       7             8         9
+## Trial.4       1             2         3
+## 
+## [[1]]$FieldData
+##   ID Vegetation Settlement  pH  SOC
+## 1  1  Grassland      FALSE 6.6 1.20
+## 2  2     Forest      FALSE 4.5 3.40
+## 3  3     Arable      FALSE 6.8 1.10
+## 4  4      Urban       TRUE 7.5 0.12</code></pre>
+<p>Components of a list can be accessed in similar fashion like matrix
+or data frame:</p>
+<pre class="r"><code>my.list[&quot;LabExp&quot;]</code></pre>
+<pre><code>## $LabExp
+##         Aspirin Acetaminophen Ibuprofen
+## Trial.1       1             2         3
+## Trial.2       4             5         6
+## Trial.3       7             8         9
+## Trial.4       1             2         3</code></pre>
+<pre class="r"><code>my.list[&quot;FieldData&quot;]</code></pre>
+<pre><code>## $FieldData
+##   ID Vegetation Settlement  pH  SOC
+## 1  1  Grassland      FALSE 6.6 1.20
+## 2  2     Forest      FALSE 4.5 3.40
+## 3  3     Arable      FALSE 6.8 1.10
+## 4  4      Urban       TRUE 7.5 0.12</code></pre>
+<div style="margin-bottom:15px;">
+
+</div>
+</div>
+<div id="factors" class="section level3">
+<h3><strong>Factors</strong></h3>
+<p>In R, the factor stores the nominal values as a vector of integers in
+the range [ 1… k ] (where k is the number of unique values in the
+nominal variable), and an internal vector of character strings (the
+original values) mapped to these integers.</p>
+<pre class="r"><code>gender &lt;- c(rep(&quot;male&quot;,20), rep(&quot;female&quot;, 30))
+gender &lt;- factor(gender) # # 1=female, 2=male internally (alphabetically)
+summary(gender)</code></pre>
+<pre><code>## female   male 
+##     30     20</code></pre>
 </div>
 </div>
 

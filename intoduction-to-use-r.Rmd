@@ -1,22 +1,573 @@
 ---
-title: "Introduction to Using R"
+title: ''
 ---
+<div style="margin-bottom:20px;">
+</div>
+
+```{r echo=FALSE, out.width='100%', fig.align="center"}
+knitr::include_graphics("F:\\GitHub\\Chemistry_R\\chemstat-r-github.io\\Image\\PNG_FILE_02\\introduction.png")
+```
+
+<div style="margin-bottom:20px;">
+</div>
 
 
+<div style="margin-bottom:10px;">
+</div>
 
-## **Table of content**
+### **Table of content**
 
--	Screen prompt
--	R as a calculator
--	Built in function
--	Number with Exponents
--	Rounding
--	Missing values NA
--	Assignment Statements
--	Operators
--	Indexing
--	Vector
--	Matrix
--	Data Frame
+-	[Screen Prompt](#screen-prompt)
 
-#### Screen prompt
+-	[R as a Calculator](#r-as-a-calculator)
+
+-	[Built in Function](#built-in-function)
+
+-	[Number with Exponents](#number-with-exponents)
+
+- [Modulo and Integer Quotients](#modulo-and-integer-quotients)
+
+-	[Rounding](#rounding)
+
+- [Assignment Statements](#assignment-statements)
+
+-	[Variable Names](#variable-names)
+
+-	[Operators](#Operators)
+
+- [R Data Types](#r-data-types)
+
+    -[Vectors](#vectors)
+  
+    -[Matrix](#matrix)
+  
+    -[Data Frames](#data-frames)
+  
+    -[Lists](#lists)
+    
+    -[Factors](#factors)
+  
+
+<div style="margin-bottom:20px;">
+</div>
+
+### **Screen Prompt**
+
+The screen prompt >  in R-console is an place to put command or instruction for R to work. Press the “Ctrl” + “L” keys simultaneously. The screen will now be refreshed and the console should be cleared.
+
+
+```{r echo=FALSE, out.width='80%', fig.align="center"}
+knitr::include_graphics("F:\\GitHub\\Chemistry_R\\chemstat-r-github.io\\Image\\PNG_FILE_02\\screen_promote.png")
+```
+<div style="margin-bottom:10px;">
+</div>
+
+### **R as a Calculator**
+
+We can use R as a calculators 
+
+At the prompt, we enter the expression that we want evaluated and when we hit enter, it will compute the result for us . For Example:
+
+```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="Download R"}
+library(embedr)
+embed_video("F:/GitHub/Chemistry_R/chemstat-r-github.io/Vedio/R_calculator.mp4", width = "856", height = "656")
+```
+
+Use -  for subtraction.
+Use * for multiply.
+Use ^ for raised to the power of.
+Use parentheses to ensure that it understands what you are trying to compute.
+The order of doing arithmetic operations is (left [done first] to right [done last]) 
+^ / * - +
+
+<div style="margin-bottom:15px;">
+</div>
+
+### **Built in Function**
+
+There are so many built-in mathematical functions are available in base-R. Some are shown in below table.   
+
+```{r echo=FALSE, out.width='70%', fig.align="center"}
+knitr::include_graphics("F:\\GitHub\\Chemistry_R\\chemstat-r-github.io\\Image\\PNG_FILE_02\\Table_math_function.png")
+```
+<div style="margin-bottom:15px;">
+</div>
+
+Here below some examples of R built-in R-functions
+
+```{r}
+log(10)
+```
+
+```{r}
+exp(1)
+```
+
+```{r}
+pi
+```
+```{r}
+sin(pi/2)
+```
+<div style="margin-bottom:15px;">
+</div>
+
+### **Number with Exponents**
+
+We can use very big numbers or very small numbers  in R using  the following scheme:
+
+```{r}
+1.2e3 # means 1200 because the e3 means ‘move the decimal point 3 places to the right 
+```
+
+```{r}
+1.2e-2 # means 0.012 because the e-2 means ‘move the decimal point 2 places to the left’
+```
+<div style="margin-bottom:15px;">
+</div>
+
+### **Modulo and Integer Quotients**
+
+We can use  notation* **%/%** (percent, divide, percent) and **%%**  (percent, percent) to obtained Integer quotients and remainders, respectively. Suppose we want to know the integer part of a division: say, how many 13s are there in 119:
+
+```{r}
+119 %/% 13
+```
+
+Suppose we wanted to know the remainder (what is left over when 119 is divided by 13: in maths this is known as modulo
+
+```{r}
+119 %% 13
+```
+<div style="margin-bottom:15px;">
+</div>
+
+### **Rounding**
+
+Several types of rounding  (rounding up, rounding down, rounding to the nearest integer) can be done easily with R. 
+
+The ‘greatest integer less than’ function is **floor()**
+
+```{r}
+floor(5.7)
+```
+The ‘next integer’ function is **ceiling**()
+
+```{r}
+ceiling(5.7)
+```
+<div style="margin-bottom:15px;">
+</div>
+
+### **Assignment Statements**
+
+Just like in algebra, we often want to store a computation under some variable name. The result is assigned to a variable with the symbols  = or < - which is formed by the “less than” symbol followed immediately by a hyphen.
+
+```{r}
+x<-10; # or
+y = 12
+```
+
+When you want to know what is in a variable simply ask by typing the variable name.
+
+```{r}
+x; # or
+y
+```
+
+We can store a computation of two variable names  and  do some calculation  and the result is assigned to a new variable 
+
+```{r}
+a=2;
+b=3;
+c=a+b;
+c
+```
+
+<div style="margin-bottom:15px;">
+</div>
+
+### **Variable Names**
+
+* Do not begin a variable name with a period or a number. Variable names are case (upper/lower) sensitive.
+
+* Variable names in R are case-sensitive so x is not the same as X. 
+
+* Variable names should not begin with numbers (e.g. 1x) or symbols (e.g. %x).
+
+* Variable names should not contain blank spaces: use grain.yield 
+
+<div style="margin-bottom:15px;">
+</div>
+
+### **Operators**
+
+```{r}
+# + - */%% ^ arithmetic
+# > >= < <= == != relational
+# ! &  logical
+# ~ model formulae
+# <- -> assignment
+# $ list indexing (the ‘element name’ operator)
+# : create a sequence
+```
+
+<div style="margin-bottom:15px;">
+</div>
+
+
+## **R Data Types** 
+
+R has a wide variety of data types including scalars, vectors (numerical, character, logical), matrices, data frames, and lists.
+<div style="margin-bottom:15px;">
+</div>
+
+### **Vectors**
+
+"Vectors are variables with one or more values of the same type: logical, integer, real, complex, string (or character) or raw".  A variable with a single value (say 4.3) is often known as a scalar, but in R a scalar is a vector of length 1. 
+
+A scalar data structure is the most basic data type that holds only a **single atomic value** at a time. Using scalars, more complex data types can be constructed. The most commonly used scalar types in R:
+
+* Numeric
+
+* Character
+
+* Integer
+
+* Logical
+
+* Complex
+
+**Numeric** is the default type used in R for mathematical computations. Examples of numerics are decimal numbers and whole numbers. 
+
+```{r}
+x=1.5
+x
+class(x)
+```
+**Character** objects are **strings**. They could be any sequence of characters including alphabets, numbers, punctuation marks, etc. enclosed in quotes. You can see all this playing out with this code appearing here:
+
+```{r}
+Department = 'Chemistry'
+School= "University at Buffalo"
+class(School)
+paste(Department,",", School)
+```
+
+**Logical** values are **boolean** values of **TRUE** or **FALSE**. Note that R needs logical values of TRUE or FALSE to be in upper case. If you use mixed case or lowercase, you'll get an error or unpredictable results.
+
+```{r}
+u = TRUE; 
+v = FALSE
+class(u)
+class(v)
+```
+
+A list of numbers or charterers together to form a **Multiple Elements Vector**. Values can be assigned to vectors in many different ways. We can create a vector of number from 1 to 10, using the concatenation function **c**
+
+```{r}
+a <- c(1,2,5.3,6,7,8,9,10)
+a
+```
+```{r}
+s <- c('apple','red',5,TRUE)
+print(s)
+```
+
+
+It can be generated by  the sequence of integer values 1 to 10 using : (colon), the sequence-generating operator,
+
+```{r}
+a<-1:10
+a
+```
+
+We can also create a vector using Using sequence (Seq.) operator.
+
+```{r}
+# Create vector with elements from 5 to 9 incrementing by 0.4.
+b = seq(5, 9, by = 0.4)
+b
+```
+
+"One of R’s great strengths is its ability to evaluate functions over entire vectors, thereby
+avoiding the need for loops and subscripts". Important vector functions are listed in below Table:
+
+
+```{r echo=FALSE, out.width='80%', fig.align="center"}
+knitr::include_graphics("F:\\GitHub\\Chemistry_R\\chemstat-r-github.io\\Image\\PNG_FILE_02\\vector_functions.png")
+```
+<div style="margin-bottom:10px;">
+</div>
+
+Once we have a vector of numbers we can apply certain built-in functions to them to get useful summaries. For example: 
+
+```{r}
+sum(a)        # sums the values in the vector 
+ 
+length(a)     # number of the values in the vector 
+
+mean (a)      # the average of the values in the vector 
+
+var (a)        # the sample variance of the values 
+
+sd(a)         # the standard of deviations of the values  
+
+max(a)        # the largest value in the vector  
+
+min(a)        # the smallest number in the vector 
+
+median(a)     # the sample median 
+```
+<div style="margin-bottom:10px;">
+</div>
+
+**Summary()** function will calculate summary statistics of a vector 
+
+```{r}
+summary(a)
+```
+Two vectors of same length can be added, subtracted, multiplied or divided giving the result as a vector output.
+
+```{r}
+# Create two vectors.
+v1 <- c(3,8,4,5,0,11)
+v2 <- c(4,11,0,8,1,2)
+
+# Vector addition.
+add.result <- v1+v2
+print(add.result)
+
+# Vector subtraction.
+sub.result <- v1-v2
+print(sub.result)
+
+# Vector multiplication.
+multi.result <- v1*v2
+print(multi.result)
+
+# Vector division.
+divi.result <- v1/v2
+print(divi.result)
+```
+<div style="margin-bottom:15px;">
+</div>
+
+### **Matrix**
+
+Matrices are the R objects in which the elements are arranged in a two-dimensional rectangular layout. All columns in a matrix must have the same mode (numeric, character, etc.) and the same length.
+
+All columns in a matrix must have the same mode (numeric, character, etc.) and the same length. There are several ways of making a matrix. Suppose you were interested in the matrix of 2 x . You could form the two rows (vectors) and then bind (**rbind**) them together to form the matrix:  
+
+```{r}
+r1=c(6,2,10)     # row 1
+r2=c(1,3,-2)     # row 2
+X=rbind(r1,r2)   # binds the vectors into rows a matrix
+X
+class(X)
+
+```
+
+We can bind them (**cbind**) the same vectors into columns of a matrix
+
+```{r}
+Y=cbind(r1,r2)   
+Y
+```
+
+A Matrix is created using the **matrix()** function from the given set of values. The basic function of a matrix is: 
+
+```{r}
+# matrix(data, nrow, ncol, byrow, dimnames)
+```
+
+The values are:
+
+* **data** is the input vector which becomes the data elements of the matrix.
+
+* **nrow** is the number of rows to be created.
+
+* **ncol** is the number of columns to be created.
+
+* **byrow** is a logical clue. If TRUE then the input vector elements are arranged by row.
+
+* **dimname** is the names assigned to the rows and columns.
+
+```{r}
+X <- matrix(1:9, nrow = 4, ncol = 3, byrow=T) # row matrix
+X
+```
+
+
+```{r}
+class(X)
+attributes(X)
+```
+
+The class and attributes of X indicate that it is a matrix of four rows and three columns (these are its dim attributes)
+
+We can create matrix with row and column names:
+
+```{r}
+# create a vector 
+cells=c(1,26,24,68,35,68,73,18,2,56,4,5,34,21,24,20)  # create a vector
+# names of column rows
+cnames = c("C1","C2","C3","C4") 
+# names of two rows
+rnames = c("R1","R2","R3","R4") 
+# matrix
+Z= matrix(cells,nrow=4, ncol=4, byrow=TRUE,dimnames=list(rnames,cnames))
+Z
+```
+
+Or, we can easily naming the rows and columns of matrices.  Suppose we want to labels rows with Trial names, like Trial.1, Trial.2 etc.:
+
+```{r}
+rownames(X)<-rownames(X, do.NULL=FALSE, prefix="Trial.")
+X
+```
+
+For column names, we will create  a vector of different names for the three most commonly used drugs used in the trial, and use this to specify the colnames(X): 
+
+```{r}
+drug.names<-c("Aspirin", "Acetaminophen", "Ibuprofen")
+colnames(X)<-drug.names
+X
+```
+
+**How to access Elements of a matrix?**
+
+We can access elements of a matrix using the square bracket [] indexing method. Elements can be accessed as var[row, column]. Here rows and columns are vectors.
+
+```{r}
+X[,2]  # 2nd column of a matrix
+X[3,]  # 3rd row of a matrix
+```
+
+```{r}
+X[,2:3] # 2nd and 3rd column
+```
+```{r}
+X[2:4,1:2]     # rows 2,3,4 of columns 1 and 2
+```
+
+####  Calculations on rows or columns of the matrix
+
+```{r}
+# summary statistics of each column
+summary(X)
+```
+
+```{r}  
+# summary statistics and mean of the column 1 of matrix
+summary(X[,1])
+# mean
+mean(X[,1])
+```
+Calculated over all the rows  and the mean & variance of the bottom row (Trial.4)
+
+```{r}
+mean(X[4,])
+var(X[4,])
+```
+There are some special functions for calculating summary statistics on matrices
+
+```{r}
+# Total
+rowSums(X)
+colSums(X)
+```
+
+```{r}
+# Mean
+rowMeans(X)
+colMeans(X)
+```
+
+We can also  use **apply()** function to calculate row and column means. Here columns
+are margin no. 2 (rows are margin no. 1
+
+```{r}
+apply(X,2,mean)
+```
+```{r}
+apply(X,1,mean)
+```
+<div style="margin-bottom:15px;">
+</div>
+
+### **Data Frames**
+
+A data frame is more general than a matrix, in that different columns can have different modes (numeric, character, factor, etc.). This is similar to SAS and SPSS datasets. The rows contain different observations from your study, or measurements from your experiment. The columns contain the values of different variables.
+
+```{r}
+ID = c(1,2,3,4)    # create a vector of ID coloumn 
+Vegetation = c("Grassland","Forest", "Arable", "Urban") # create a text vector 
+Settlement  = c (FALSE, FALSE, FALSE, TRUE) # creates a logical vector
+pH   = c(6.6,4.5, 6.8, 7.5)   # create a numerical vector
+SOC  = c (1.2, 3.4, 1.1, 0.12) # create a numerical vector
+my.df=data.frame(ID,Vegetation,Settlement, pH, SOC) # create a data frame
+
+my.df
+```
+
+we can see the detail of  structure  using **str()** function
+
+```{r}
+str(my.df)
+```
+
+```{r}
+head(my.df)
+```
+
+```{r}
+summary(my.df$pH)
+summary(my.df[,4:5])
+```
+
+Components of data frame can be accessed like a list or like a matrix.
+
+```{r}
+my.df["Vegetation"]
+my.df[[2]]
+my.df[,4:5]
+```
+<div style="margin-bottom:15px;">
+</div>
+
+### **Lists**
+
+List is a data structure having components of mixed data types or  an ordered collection of objects (components). A vector having all elements of the same type is called atomic vector but a vector having elements of different type is called list. An ordered collection of objects (components). A list allows you to gather a variety of (possibly unrelated) objects under one name.
+
+
+```{r}
+my.list <- list(Location="NY", 
+                Year = 2021,
+                LabExp=X, # Lab experimental data
+                FieldData= my.df)  # Field data 
+```
+
+```{r}
+list(my.list)
+```
+
+Components of a list can be  accessed in similar fashion like matrix or data frame: 
+
+```{r}
+my.list["LabExp"]
+my.list["FieldData"]
+```
+<div style="margin-bottom:15px;">
+</div>
+
+### **Factors** 
+
+In R, the factor stores the nominal values as a vector of integers in the range [ 1... k ] (where k is the number of unique values in the nominal variable), and an internal vector of character strings (the original values) mapped to these integers.
+
+```{r}
+gender <- c(rep("male",20), rep("female", 30))
+gender <- factor(gender) # # 1=female, 2=male internally (alphabetically)
+summary(gender)
+```
+

@@ -12,9 +12,11 @@ navbar:
   - text: Essential of The R Language 
     href: essential-of-r-language.html
     menu:
+    - text: Table of Content
+      href: essential-of-r-language.html
     - text: Introduction to Using R
       href: intoduction-to-use-r.html
-    - text: R-Data Input and Types
+    - text: Importing/Exporting  Data into R
       href: r-data-input-and-type.html
     - text: Data Wrangling with R
       href: data-wrangling.html
@@ -26,6 +28,27 @@ navbar:
       href: sql-with-r.html
     - text: Data Visualization with R
       href: data-visualization.html
+  - text: Curve Fitting with R 
+    href: curve-fitting-with-r.html
+    menu:
+    - text: Table of Content
+      href: curve-fitting-with-r.html
+  - text: Cheminformatics with R 
+    href: cheminformatics-with-r.html
+    menu:
+    - text: Table of Content
+      href: cheminformatics-with-r.html
+    - text: Getting Started
+      href: getting-strated-chem.html
+    - text: Cheminformatics with ChemmineR
+      href: cheminformatics-with-chemminer.html
+    - text: Cheminformatics with CDK
+      href: cheminformatics-with-cdk.html
+  - text: ICP-MS Data Processing with R.html 
+    href: icp-ms-data-processing-and-analysis-with-r.html
+    menu:
+    - text: Table of Content
+      href: icp-ms-data-processing-and-analysis-with-r.html
   right:
   - text: Email
     icon: fa-envelope fa-lg

@@ -11,9 +11,9 @@
 
 
 
-<title>R-Data Input and Types</title>
+<title>r-data-input-and-type.knit</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.17/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -59,6 +59,7 @@ if (window.hljs) {
 
 
 
+
 <link rel="stylesheet" href="styles.css" type="text/css" />
 
 
@@ -83,6 +84,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -140,11 +144,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -173,8 +181,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -182,16 +190,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -235,7 +236,7 @@ $(document).ready(function () {
 <div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -255,17 +256,20 @@ $(document).ready(function () {
   <a href="getting-started-with-r.html">Getting Started with R</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Essential of The R Language
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="essential-of-r-language.html">Table of Content</a>
+    </li>
+    <li>
       <a href="intoduction-to-use-r.html">Introduction to Using R</a>
     </li>
     <li>
-      <a href="r-data-input-and-type.html">R-Data Input and Types</a>
+      <a href="r-data-input-and-type.html">Importing/Exporting  Data into R</a>
     </li>
     <li>
       <a href="data-wrangling.html">Data Wrangling with R</a>
@@ -281,6 +285,51 @@ $(document).ready(function () {
     </li>
     <li>
       <a href="data-visualization.html">Data Visualization with R</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Curve Fitting with R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="curve-fitting-with-r.html">Table of Content</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Cheminformatics with R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="cheminformatics-with-r.html">Table of Content</a>
+    </li>
+    <li>
+      <a href="getting-strated-chem.html">Getting Started</a>
+    </li>
+    <li>
+      <a href="cheminformatics-with-chemminer.html">Cheminformatics with ChemmineR</a>
+    </li>
+    <li>
+      <a href="cheminformatics-with-cdk.html">Cheminformatics with CDK</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    ICP-MS Data Processing with R.html
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="icp-ms-data-processing-and-analysis-with-r.html">Table of Content</a>
     </li>
   </ul>
 </li>
@@ -314,12 +363,637 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">R-Data Input and Types</h1>
 
 </div>
 
 
+<div style="margin-bottom:50px;">
 
+</div>
+<p><img src="Image/PNG_FILE_02/import.png" width="100%" style="display: block; margin: auto;" /></p>
+<div style="margin-bottom:20px;">
+
+</div>
+<p>Reading or importing data into R for analysis and exporting the
+results as text files, Tables, or figures for report writing or
+publications can be done efficiently. There are multiple ways to import
+and export data to/from R. In this tutorial, you will learn some most
+common ways to read and write data with R.</p>
+<div style="margin-bottom:15px;">
+
+</div>
+<div id="table-of-content" class="section level3">
+<h3><strong>Table of Content</strong></h3>
+<ul>
+<li><p><a href="#working-directory">Working directory</a></p></li>
+<li><p><a href="#import-files-into-r">Import filse into R</a></p>
+<ul>
+<li><p><a href="#text-Files">Text Files</a></p></li>
+<li><p><a href="#comma-delimited-text-files">Comma Delimited Text
+Files</a></p></li>
+<li><p><a href="#excel-files">Excel Files</a></p></li>
+</ul></li>
+<li><p><a href="#export-files-from-r">Export files from R</a></p>
+<ul>
+<li><p><a href="#export-data-into-text-or-csv-files">Export Data into
+Text or CSV files</a></p></li>
+<li><p><a href="#export-into-excel">Export into Excel</a></p></li>
+<li><p><a href="#export-as-a-r-data-file">Export as a R data
+file</a></p></li>
+</ul></li>
+<li><p><a href="#import-and-export-large-data-with-datatable">Import and
+Export Large Data with datatable</a></p></li>
+<li><p><a href="#feather-a-fast-on-disk-format-for-data-frames">Feather
+A Fast On-Disk Format for Data Frames</a></p></li>
+<li><p><a href="#data-import-and-export-with-tidyverse-package">Data
+Import and Export with tidyverse Package</a></p></li>
+</ul>
+<div style="margin-bottom:30px;">
+
+</div>
+</div>
+<div id="working-directory" class="section level3">
+<h3><strong>Working directory</strong></h3>
+<p>First, suppose we want to read files from a specific location or
+write files in a folder. In that case, we will need to create or set a
+working directory in R. The following example shows how to set the
+working directory in R to the folder “Data” within the</p>
+<p>In case you want to check the directory of your R session, the
+function <strong>getwd()</strong> will print the current working
+directory path as a string. Hence, the output is the folder where all
+your files will be saved.</p>
+<pre class="r"><code>getwd()</code></pre>
+<pre><code>## [1] &quot;F:/GitHub/Chemistry_R/chemstat-r-github.io&quot;</code></pre>
+<p>If you want to change the working directory in R you just need to
+call the <strong>setwd()</strong> function, specifying as argument the
+path of the new working directory folder.</p>
+<pre class="r"><code>myWD&lt;-setwd(&quot;F:/GitHub/Chemistry_R/chemstat-r-github.io&quot;)    # Set working directory  
+myWD&lt;-setwd(&quot;F://GitHub//Chemistry_R//chemstat-r-github.io&quot;) # Equivelent
+myWD</code></pre>
+<pre><code>## [1] &quot;F:/GitHub/Chemistry_R/chemstat-r-github.io&quot;</code></pre>
+<p>Remember that you must use the forward slash / or double backslash \
+in R! The Windows format of single backslash will not work.</p>
+<p>The files under in a directory can check using <strong>dir()</strong>
+function</p>
+<pre class="r"><code>dir()</code></pre>
+<pre><code>##  [1] &quot;_config.yml&quot;                                    
+##  [2] &quot;_site&quot;                                          
+##  [3] &quot;_site.yml&quot;                                      
+##  [4] &quot;about_a.html&quot;                                   
+##  [5] &quot;about_a.Rmd&quot;                                    
+##  [6] &quot;about_b.html&quot;                                   
+##  [7] &quot;about_b.Rmd&quot;                                    
+##  [8] &quot;anle138b.murcko.fragments.png&quot;                  
+##  [9] &quot;basic-statistics-with-r.html&quot;                   
+## [10] &quot;basic-statistics-with-r.Rmd&quot;                    
+## [11] &quot;cheminformatics-with-cdk.html&quot;                  
+## [12] &quot;cheminformatics-with-cdk.Rmd&quot;                   
+## [13] &quot;cheminformatics-with-cdk_files&quot;                 
+## [14] &quot;cheminformatics-with-chemminer.html&quot;            
+## [15] &quot;cheminformatics-with-chemminer.Rmd&quot;             
+## [16] &quot;cheminformatics-with-chemminer_files&quot;           
+## [17] &quot;cheminformatics-with-r.html&quot;                    
+## [18] &quot;cheminformatics-with-r.Rmd&quot;                     
+## [19] &quot;chemstat-r-github.io.Rproj&quot;                     
+## [20] &quot;curcumin.murcko.fragments.png&quot;                  
+## [21] &quot;curve-fitting-with-r.html&quot;                      
+## [22] &quot;curve-fitting-with-r.Rmd&quot;                       
+## [23] &quot;Data&quot;                                           
+## [24] &quot;data-visualization.html&quot;                        
+## [25] &quot;data-visualization.Rmd&quot;                         
+## [26] &quot;data-wrangling.html&quot;                            
+## [27] &quot;data-wrangling.Rmd&quot;                             
+## [28] &quot;df.chem_02&quot;                                     
+## [29] &quot;essential-of-r-language.html&quot;                   
+## [30] &quot;essential-of-r-language.Rmd&quot;                    
+## [31] &quot;getting-started-with-r.html&quot;                    
+## [32] &quot;getting-started-with-r.Rmd&quot;                     
+## [33] &quot;getting-strated-chem.html&quot;                      
+## [34] &quot;getting-strated-chem.Rmd&quot;                       
+## [35] &quot;icp-ms-data-processing-and-analysis-with-r.html&quot;
+## [36] &quot;icp-ms-data-processing-and-analysis-with-r.Rmd&quot; 
+## [37] &quot;Image&quot;                                          
+## [38] &quot;index.html&quot;                                     
+## [39] &quot;index.Rmd&quot;                                      
+## [40] &quot;intoduction-to-use-r.html&quot;                      
+## [41] &quot;intoduction-to-use-r.Rmd&quot;                       
+## [42] &quot;mathematics-with-r.html&quot;                        
+## [43] &quot;mathematics-with-r.Rmd&quot;                         
+## [44] &quot;r-data-input-and-type.html&quot;                     
+## [45] &quot;r-data-input-and-type.Rmd&quot;                      
+## [46] &quot;README.md&quot;                                      
+## [47] &quot;site_libs&quot;                                      
+## [48] &quot;sql-with-r.html&quot;                                
+## [49] &quot;sql-with-r.Rmd&quot;                                 
+## [50] &quot;sub.sdf&quot;                                        
+## [51] &quot;Vedio&quot;</code></pre>
+<div style="margin-bottom:30px;">
+
+</div>
+</div>
+<div id="import-data-into-r" class="section level2">
+<h2><strong>Import Data into R</strong></h2>
+<div style="margin-bottom:15px;">
+
+</div>
+<div id="text-files" class="section level3">
+<h3><strong>Text Files</strong></h3>
+<p>The easiest form of data to import into R is a simple text file, and
+this will often be acceptable for problems of small or medium scale. The
+primary function to import from a text file is
+<strong>read.table()</strong>. However, <strong>scan()</strong> function
+could be used to scan and read data. It is usually used to read data
+into vector or list or from file in R Language.</p>
+<pre class="r"><code>## Create a data folder
+dataFolder&lt;-&quot;F:/GitHub/Chemistry_R/chemstat-r-github.io/Data/&quot;</code></pre>
+<pre class="r"><code>data.txt&lt;-read.table(paste0(dataFolder,&quot;test_data.txt&quot;), header= TRUE) 
+#data.txt&lt;-read.table(&quot;test_data.txt&quot;, header= TRUE) 
+head(data.txt)</code></pre>
+<pre><code>##    ID treat  var rep    PH   TN   PN   GW ster   DTM   SW   GAs  STAs
+## 1 Low    As BR01   1  84.0 28.3 27.7 35.7 20.5 126.0 28.4 0.762 14.60
+## 2 Low    As BR01   2 111.7 34.0 30.0 58.1 14.8 119.0 36.7 0.722 10.77
+## 3 Low    As BR01   3 102.3 27.7 24.0 44.6  5.8 119.7 32.9 0.858 12.69
+## 4 Low    As BR06   1 118.0 23.3 19.7 46.4 20.3 119.0 40.0 1.053 18.23
+## 5 Low    As BR06   2 115.3 16.7 12.3 19.9 32.3 120.0 28.2 1.130 13.72
+## 6 Low    As BR06   3 111.0 19.0 15.3 35.9 14.9 116.3 42.3 1.011 15.97</code></pre>
+<pre class="r"><code>names(data.txt)</code></pre>
+<pre><code>##  [1] &quot;ID&quot;    &quot;treat&quot; &quot;var&quot;   &quot;rep&quot;   &quot;PH&quot;    &quot;TN&quot;    &quot;PN&quot;    &quot;GW&quot;    &quot;ster&quot; 
+## [10] &quot;DTM&quot;   &quot;SW&quot;    &quot;GAs&quot;   &quot;STAs&quot;</code></pre>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="comma-delimited-text-files" class="section level3">
+<h3><strong>Comma Delimited Text Files</strong></h3>
+<p>The sample data can be in comma-separated values (CSV) format. Each
+cell inside such data file is separated by a special character, which is
+usually a comma, although other characters can be used. Reading data
+from a CSV file is made easy by the <strong>read.csv()</strong>, an
+extension of <strong>read.table()</strong>. It facilitates the direct
+import of data from CSV files.</p>
+<pre class="r"><code>data.csv&lt;-read.csv(paste0(dataFolder,&quot;test_data.csv&quot;), header= TRUE) 
+#head(data.csv)
+names(data.csv)</code></pre>
+<pre><code>##  [1] &quot;ID&quot;    &quot;treat&quot; &quot;var&quot;   &quot;rep&quot;   &quot;PH&quot;    &quot;TN&quot;    &quot;PN&quot;    &quot;GW&quot;    &quot;ster&quot; 
+## [10] &quot;DTM&quot;   &quot;SW&quot;    &quot;GAs&quot;   &quot;STAs&quot;</code></pre>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="excel-files" class="section level3">
+<h3><strong>Excel Files</strong></h3>
+<p>One of the best ways to read an Excel file is to export it to a
+comma-delimited file and import it using the method above.
+Alternatively, we can use the xlsx package to access Excel files. The
+first row should contain variable/column names.</p>
+<pre class="r"><code># install.packages(&quot;xlsx&quot;) # Install &quot;xlsx&quot; package</code></pre>
+<pre class="r"><code># Load xlsx package
+library(xlsx)
+# Import Sheet 1, from a excel file
+data.xlsx &lt;-read.xlsx(paste0(dataFolder,&quot;test_data.xlsx&quot;), 1) 
+#data.xlsx &lt;-read.xlsx(&quot;test_data.xlsx&quot;, 1)  
+names(data.xlsx)</code></pre>
+<pre><code>##  [1] &quot;ID&quot;    &quot;treat&quot; &quot;var&quot;   &quot;rep&quot;   &quot;PH&quot;    &quot;TN&quot;    &quot;PN&quot;    &quot;GW&quot;    &quot;ster&quot; 
+## [10] &quot;DTM&quot;   &quot;SW&quot;    &quot;GAs&quot;   &quot;STAs&quot;</code></pre>
+<div style="margin-bottom:30px;">
+
+</div>
+</div>
+</div>
+<div id="export-files-from-r" class="section level2">
+<h2><strong>Export files from R</strong></h2>
+<p>To export data and save to your local drive, you need the file path
+and an extension. First of all, the path is the location where the data
+will be stored.</p>
+<div style="margin-bottom:15px;">
+
+</div>
+<div id="export-data-into-text-or-csv-files" class="section level3">
+<h3><strong>Export Data into Text or CSV files</strong></h3>
+<p>The popular R base functions for writing data are
+<strong>write.table()</strong>, <strong>write.csv()</strong>,
+<strong>write.csv2()</strong> and <strong>write.delim()</strong>
+functions.</p>
+<p>First of all, let create a data frame that we will going to export
+into a text/CSV file.</p>
+<pre class="r"><code>Variety =c(&quot;BR1&quot;,&quot;BR3&quot;, &quot;BR16&quot;, &quot;BR17&quot;, &quot;BR18&quot;, &quot;BR19&quot;,&quot;BR26&quot;,
+          &quot;BR27&quot;,&quot;BR28&quot;,&quot;BR29&quot;,&quot;BR35&quot;,&quot;BR36&quot;) # create a text vector
+Yield = c(5.2,6.0,6.6,5.6,4.7,5.2,5.7,
+                5.9,5.3,6.8,6.2,5.8) # create numerical vector
+rice.data= data.frame(Variety, Yield)
+head(rice.data)</code></pre>
+<pre><code>##   Variety Yield
+## 1     BR1   5.2
+## 2     BR3   6.0
+## 3    BR16   6.6
+## 4    BR17   5.6
+## 5    BR18   4.7
+## 6    BR19   5.2</code></pre>
+<pre class="r"><code>write.csv(rice.data, paste0(dataFolder, &quot;rice_data.csv&quot;), row.names = F) # no row names
+#write.csv(rice.data, &quot;rice_data.csv&quot;, row.names = F) # no row names</code></pre>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="export-into-excel" class="section level3">
+<h3><strong>Export into Excel</strong></h3>
+<p>We can export data into Excel from R workspace using
+<strong>writexl</strong> package which allows us to export data as an
+Excel file into xlsx format.</p>
+<pre class="r"><code># install writexl
+#install.packages(&quot;writexl&quot;)</code></pre>
+<pre class="r"><code>library(writexl)
+write.xlsx(rice.data, paste0(dataFolder, &quot;rice_data.xlsx&quot;))
+#write.xlsx(rice.data, &quot;rice_data.xlsx&quot;)</code></pre>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="export-as-a-r-data-file" class="section level3">
+<h3><strong>Export as a R data file</strong></h3>
+<p>If you want to share the data from R as Objects and share those with
+your colleagues through different systems so that they can use it right
+away into their R workspace. These objects are of two types
+<strong>.rda/.RData</strong> which can be used to store some or all
+objects, functions from R global environment.</p>
+<p>The <strong>save()</strong> function allows us to save multiple
+objects into our global environment:</p>
+<pre class="r"><code>save(rice.data, Variety, Yield,  file= paste0(dataFolder,&quot;rice_data.RData&quot;))
+#save(rice.data, Variety, Yield,  file=&quot;rice_data.RData&quot;)</code></pre>
+<div style="margin-bottom:30px;">
+
+</div>
+</div>
+</div>
+<div id="import-and-export-large-data-with-datatable"
+class="section level2">
+<h2><strong>Import and Export Large Data with datatable</strong></h2>
+<p>The R-package <a
+href="https://rdatatable.gitlab.io/data.table/">data.tabel</a> a
+improved version data.frame of R-base function. It has following
+advantages:</p>
+<p>• concise syntax: fast to type, fast to read • fast speed • memory
+efficient</p>
+<pre class="r"><code>library(data.table)</code></pre>
+<p>We will use tow important functions of data.table to read and write
+CSV files in R.</p>
+<div id="reading-csv-file-with-fread" class="section level3">
+<h3>Reading CSV file with fread</h3>
+<p><strong>fread</strong>: This function is capable of reading CSV files
+quickly and conveniently.</p>
+<pre class="r"><code>DT&lt;-fread(paste0(dataFolder,&quot;LBC_data.csv&quot;), header= TRUE) 
+str(DT)</code></pre>
+<pre><code>## Classes &#39;data.table&#39; and &#39;data.frame&#39;:   46605 obs. of  10 variables:
+##  $ FIPS   : int  1001 1001 1001 1001 1001 1001 1001 1001 1001 1001 ...
+##  $ X      : num  872679 872679 872679 872679 872679 ...
+##  $ Y      : num  1094433 1094433 1094433 1094433 1094433 ...
+##  $ Year   : int  1998 1999 2000 2001 2002 2003 2004 2005 2006 2007 ...
+##  $ SMOKING: num  27 26 26 26.5 26.6 26.3 27.1 26.4 26.3 25.6 ...
+##  $ POVERTY: num  11.3 11.4 10.5 10.8 10.3 10.4 11.6 10.4 12.5 10.4 ...
+##  $ PM25   : num  17.1 15.4 14 13.9 14.8 ...
+##  $ NO2    : num  1.38 1.04 1.47 1.74 1.1 0.9 1.1 1.17 0.84 0.77 ...
+##  $ SO2    : num  0.057 0.055 0.054 0.051 0.052 0.053 0.05 0.055 0.055 0.056 ...
+##  $ RATE   : num  90.6 90.4 89.5 89.3 89.2 ...
+##  - attr(*, &quot;.internal.selfref&quot;)=&lt;externalptr&gt;</code></pre>
+<pre class="r"><code>#DT&lt;-fread(&quot;usa_geochemical.csv&quot;, header= TRUE) </code></pre>
+</div>
+<div id="writing-csv-file-with-fwrite" class="section level3">
+<h3>Writing CSV file with fwrite</h3>
+<p><strong>fwrite</strong>: This capable to write CSV field very
+fast!</p>
+<pre class="r"><code>fwrite(DT,  paste0(dataFolder, &quot;DT.csv&quot;), row.names=F, quote=TRUE)</code></pre>
+<p>Now we compare reading and writing time of <strong>fread</strong> and
+<strong>frwite</strong> functions with read.csv and write.csv
+functions.</p>
+<div id="reading-time" class="section level4">
+<h4>Reading time</h4>
+<pre class="r"><code># base function read,csv
+system.time(read.csv(paste0(dataFolder,&quot;LBC_data.csv&quot;), header= TRUE)) </code></pre>
+<pre><code>##    user  system elapsed 
+##    0.26    0.01    0.28</code></pre>
+<pre class="r"><code>#fread of data.table
+system.time(fread(paste0(dataFolder,&quot;LBC_data.csv&quot;), header= TRUE)) </code></pre>
+<pre><code>##    user  system elapsed 
+##    0.03    0.00    0.02</code></pre>
+</div>
+<div id="writing-time" class="section level4">
+<h4>Writing time</h4>
+<pre class="r"><code># base-function write.csv
+system.time(write.csv(DT,  paste0(dataFolder, &quot;DT.csv&quot;), row.names=F))</code></pre>
+<pre><code>##    user  system elapsed 
+##    0.98    0.00    0.98</code></pre>
+<pre class="r"><code># fwrite of data.table
+system.time(fwrite(DT,  paste0(dataFolder, &quot;DT.csv&quot;), row.names=F, quote=TRUE))</code></pre>
+<pre><code>##    user  system elapsed 
+##    0.10    0.00    0.03</code></pre>
+<p>Beside two functions, we can perform several data transforming such
+as how to subset rows, select and compute on columns, and perform
+aggregations by group, etc with data.table API. Here is the cheat sheets
+of data.table package</p>
+<p><img src="Image/PNG_FILE_02/data_table_01.png" width="80%" style="display: block; margin: auto;" /></p>
+<div style="margin-bottom:20px;">
+
+</div>
+<p><img src="Image/PNG_FILE_02/data_table_02.png" width="80%" style="display: block; margin: auto;" /></p>
+<div style="margin-bottom:25px;">
+
+</div>
+</div>
+</div>
+</div>
+<div id="feather-a-fast-on-disk-format-for-data-frames"
+class="section level2">
+<h2><strong>Feather: A Fast On-Disk Format for Data Frames</strong></h2>
+<p>Feather is a fast, lightweight, and easy-to-use binary file format
+for storing data frames. It has a few specific design goals:</p>
+<ul>
+<li><p>Lightweight, minimal API: make pushing data frames in and out of
+memory as simple as possible</p></li>
+<li><p>Language agnostic: Feather files are the same whether written by
+Python or R code. Other languages can read and write Feather files,
+too.</p></li>
+</ul>
+<p>Feather is extremely fast. Since Feather does not currently use any
+compression internally, it works best when used with solid-state drives
+as come with most of today’s laptop computers. For this first release,
+we prioritized a simple implementation and are thus writing unmodified
+Arrow memory to disk.</p>
+<p>source: <a href="https://www.rstudio.com/blog/feather/"
+class="uri">https://www.rstudio.com/blog/feather/</a></p>
+<pre class="r"><code>#install.packages(&quot;feather&quot;)
+library(feather)</code></pre>
+<p>First we have to create feather data using
+<strong>write_feather()</strong> function</p>
+<pre class="r"><code>write_feather(DT, paste0(dataFolder, &quot;LBC_data.feather&quot;))</code></pre>
+<p>We can read this feather data with lighting speed using read_feather
+function()</p>
+<pre class="r"><code>DT_feather &lt;- read_feather(paste0(dataFolder, &quot;LBC_data.feather&quot;))
+str(DT_feather)</code></pre>
+<pre><code>## tibble [46,605 × 10] (S3: tbl_df/tbl/data.frame)
+##  $ FIPS   : int [1:46605] 1001 1001 1001 1001 1001 1001 1001 1001 1001 1001 ...
+##  $ X      : num [1:46605] 872679 872679 872679 872679 872679 ...
+##  $ Y      : num [1:46605] 1094433 1094433 1094433 1094433 1094433 ...
+##  $ Year   : int [1:46605] 1998 1999 2000 2001 2002 2003 2004 2005 2006 2007 ...
+##  $ SMOKING: num [1:46605] 27 26 26 26.5 26.6 26.3 27.1 26.4 26.3 25.6 ...
+##  $ POVERTY: num [1:46605] 11.3 11.4 10.5 10.8 10.3 10.4 11.6 10.4 12.5 10.4 ...
+##  $ PM25   : num [1:46605] 17.1 15.4 14 13.9 14.8 ...
+##  $ NO2    : num [1:46605] 1.38 1.04 1.47 1.74 1.1 0.9 1.1 1.17 0.84 0.77 ...
+##  $ SO2    : num [1:46605] 0.057 0.055 0.054 0.051 0.052 0.053 0.05 0.055 0.055 0.056 ...
+##  $ RATE   : num [1:46605] 90.6 90.4 89.5 89.3 89.2 ...</code></pre>
+<p>Compare to and <strong>wrire.csv()</strong> as well as
+<strong>frwite()</strong>, <strong>write_feather()</strong> is very
+fast:</p>
+<pre class="r"><code># CSV file with base write.csv
+system.time(write.csv(DT, paste0(dataFolder, &quot;LBC_data.csv&quot;)))</code></pre>
+<pre><code>##    user  system elapsed 
+##    1.00    0.02    1.02</code></pre>
+<pre class="r"><code># CSV file with fwrite
+system.time(fwrite(DT, paste0(dataFolder, &quot;LBC_data.csv&quot;)))</code></pre>
+<pre><code>##    user  system elapsed 
+##    0.11    0.00    0.05</code></pre>
+<pre class="r"><code># feather file with 
+system.time(write_feather(DT, paste0(dataFolder, &quot;LBC_data.feather&quot;)))</code></pre>
+<pre><code>##    user  system elapsed 
+##       0       0       0</code></pre>
+<div style="margin-bottom:30px;">
+
+</div>
+</div>
+<div id="data-import-and-export-with-tidyverse-package"
+class="section level2">
+<h2><strong>Data Import and Export with tidyverse Package</strong></h2>
+<p>The tidyverse is an collection of several R packages designed for
+data science. All packages share an underlying design philosophy,
+grammar, and data structures. (source:<a
+href="https://www.tidyverse.org/"
+class="uri">https://www.tidyverse.org/</a> )</p>
+<p>The core tidyverse includes the packages that you’re likely to use in
+everyday data analyses. As of tidyverse 1.3.0, the following packages
+are included in the core tidyverse:</p>
+<div style="margin-bottom:20px;">
+
+</div>
+<p><img src="Image/PNG_FILE_02/tidyverse.png" width="80%" style="display: block; margin: auto;" /></p>
+<div style="margin-bottom:20px;">
+
+</div>
+<div id="installation-and-use" class="section level3">
+<h3>Installation and use</h3>
+<ul>
+<li><p>Install all the packages in the tidyverse by running
+install.packages(“tidyverse”).</p></li>
+<li><p>Run library(tidyverse) to load the core tidyverse and make it
+available in your current R session.</p></li>
+</ul>
+<pre class="r"><code># install.packages(&quot;tidyverse&quot;)</code></pre>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<p>As well as <strong>readr</strong>, for reading flat files, the
+tidyverse package installs a number of other packages for reading
+data:</p>
+<ul>
+<li><p><strong>DBI</strong> for relational databases. (Maintained by
+Kirill Müller.) You’ll need to pair DBI with a database specific
+backends like RSQLite, RMariaDB, RPostgres, or odbc. Learn more at <a
+href="https://db.rstudio.com"
+class="uri">https://db.rstudio.com</a>.</p></li>
+<li><p><strong>haven</strong> for SPSS, Stata, and SAS data.</p></li>
+<li><p><strong>httr</strong> for web APIs.</p></li>
+<li><p><strong>readxl</strong> for .xls and .xlsx sheets.</p></li>
+<li><p><strong>googlesheets4</strong> for Google Sheets via the Sheets
+API v4.</p></li>
+<li><p><strong>googledrive</strong> for Google Drive files.</p></li>
+<li><p><strong>rvest</strong> for web scraping.</p></li>
+<li><p><strong>jsonlite</strong> for JSON. (Maintained by Jeroen
+Ooms.)</p></li>
+<li><p><strong>xml2</strong> for XML</p></li>
+</ul>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="read-a-delimited-file-including-csv-and-tsv-into-a-tibble"
+class="section level3">
+<h3><strong>Read a delimited file (including CSV and TSV) into a
+tibble</strong></h3>
+<p>A <strong>tibble</strong>, or <strong>tbl_df</strong>, is the latest
+method for reimagining of modern data-frame and It keeps all the crucial
+features regarding the data frame. Since R is an old language, and some
+things that were useful 10 or 20 years ago now get in your way. It’s
+difficult to change base R without breaking existing code, so most
+innovation occurs in <strong>tibble()</strong> data-frame with tibble
+package.</p>
+<p><em>Key features of Tibble</em></p>
+<ul>
+<li><p>A Tibble never alters the input type.</p></li>
+<li><p>With Tibble, there is no need for us to be bothered about the
+automatic changing of characters to strings.</p></li>
+<li><p>Tibbles can also contain columns that are the lists.</p></li>
+<li><p>We can also use non-standard variable names in Tibble.</p></li>
+<li><p>We can start the name of a Tibble with a number, or we can also
+contain space.</p></li>
+<li><p>To utilize these names, we must mention them in
+backticks.</p></li>
+<li><p>Tibble only recycles the vectors with a length of 1.</p></li>
+<li><p>Tibble can never generate the names of rows.</p></li>
+</ul>
+<p>source: <a
+href="https://www.educative.io/answers/what-is-tibble-versus-data-frame-in-r"
+class="uri">https://www.educative.io/answers/what-is-tibble-versus-data-frame-in-r</a></p>
+<div style="margin-bottom:20px;">
+
+</div>
+<p>We can use following functions <strong>readr</strong> package to
+import tabular data into R as tibble:</p>
+<p><img src="Image/PNG_FILE_02/read_readr_function.png" width="80%" style="display: block; margin: auto;" /></p>
+<div style="margin-bottom:20px;">
+
+</div>
+<p><strong>read_csv()</strong> and <strong>read_tsv()</strong> are
+special cases of the more general read_delim(). They’re useful for
+reading the most common types of flat file data, comma separated values
+and tab separated values, respectively. read_csv2() uses ⁠;⁠ for the field
+separator and ⁠,⁠ for the decimal point. This format is common in some
+European countries.</p>
+<p>For example, importing CSV file:</p>
+<pre class="r"><code>df.chem_01&lt;-read_csv(paste0(dataFolder,&quot;PAHdata.csv&quot;))</code></pre>
+<pre><code>## Rows: 20 Columns: 23
+## ── Column specification ──────────────────────────────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr  (1): Subject
+## dbl (22): Napthalene, 1-Methyl Napthalene, 2-Methyl Napthalene, Acenapthylen...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>str(df.chem_01)</code></pre>
+<pre><code>## spc_tbl_ [20 × 23] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+##  $ Subject                  : chr [1:20] &quot;P1&quot; &quot;P3&quot; &quot;P4&quot; &quot;P5&quot; ...
+##  $ Napthalene               : num [1:20] 0.899 3.626 3.392 3.577 4.491 ...
+##  $ 1-Methyl Napthalene      : num [1:20] 4.97 4.69 3.54 4.75 5.11 ...
+##  $ 2-Methyl Napthalene      : num [1:20] 2.15 3.93 1.7 2.94 4 ...
+##  $ Acenapthylene            : num [1:20] 0.0131 3.0151 1.3859 3.3943 6.6593 ...
+##  $ 1,2 Dimethyl napthalene  : num [1:20] NA NA 1.24 2.64 2.14 ...
+##  $ 1,6 Dimethyl Napthalene  : num [1:20] 0.7 2.64 1.38 1.1 2.26 ...
+##  $ Fluorene                 : num [1:20] 2.25 7.35 7.16 8.44 9.24 ...
+##  $ 1,6,7 Trimethylnapthalene: num [1:20] 5.1 6.79 6.52 4.68 6.46 ...
+##  $ Anthracene               : num [1:20] 10.17 9.64 22.4 26.38 20.96 ...
+##  $ Dibenzothiopene          : num [1:20] 1.16 4.12 4.23 3.99 3.26 ...
+##  $ 2-Methyl Anthracene      : num [1:20] 0.541 4.519 8.401 13.01 4.49 ...
+##  $ 1-Methylphenanthrene     : num [1:20] 14.96 12.09 19.49 11.21 2.03 ...
+##  $ 2-Methylphenanthrene     : num [1:20] 5.48 18.25 36.43 16.46 10.8 ...
+##  $ Pyrene                   : num [1:20] 4.85 14.94 10.11 26.06 20.87 ...
+##  $ Fluoranthene             : num [1:20] 4.48 9.72 9.8 19.05 20.09 ...
+##  $ 1-Phenyl napthalene      : num [1:20] 2.88 6.25 5.3 7.95 10.16 ...
+##  $ 2-Phenyl napthalene      : num [1:20] 3.41 8.74 3.7 12.85 15.1 ...
+##  $ 1 Methylpyrene           : num [1:20] 4.58 7.51 13.6 8.11 19.24 ...
+##  $ Benzo(c)phenanthrene     : num [1:20] 3.65 7.04 5.1 3.38 8.16 ...
+##  $ Triphenylene/Chrysene    : num [1:20] 1.74 5.14 3.16 5.71 6.75 ...
+##  $ Benz(a)pyrene            : num [1:20] NA 2.845 NA 5.07 0.587 ...
+##  $ Benz(e)pyrene            : num [1:20] NA 1.816 0.298 0.662 2.367 ...
+##  - attr(*, &quot;spec&quot;)=
+##   .. cols(
+##   ..   Subject = col_character(),
+##   ..   Napthalene = col_double(),
+##   ..   `1-Methyl Napthalene` = col_double(),
+##   ..   `2-Methyl Napthalene` = col_double(),
+##   ..   Acenapthylene = col_double(),
+##   ..   `1,2 Dimethyl napthalene` = col_double(),
+##   ..   `1,6 Dimethyl Napthalene` = col_double(),
+##   ..   Fluorene = col_double(),
+##   ..   `1,6,7 Trimethylnapthalene` = col_double(),
+##   ..   Anthracene = col_double(),
+##   ..   Dibenzothiopene = col_double(),
+##   ..   `2-Methyl Anthracene` = col_double(),
+##   ..   `1-Methylphenanthrene` = col_double(),
+##   ..   `2-Methylphenanthrene` = col_double(),
+##   ..   Pyrene = col_double(),
+##   ..   Fluoranthene = col_double(),
+##   ..   `1-Phenyl napthalene` = col_double(),
+##   ..   `2-Phenyl napthalene` = col_double(),
+##   ..   `1 Methylpyrene` = col_double(),
+##   ..   `Benzo(c)phenanthrene` = col_double(),
+##   ..   `Triphenylene/Chrysene` = col_double(),
+##   ..   `Benz(a)pyrene` = col_double(),
+##   ..   `Benz(e)pyrene` = col_double()
+##   .. )
+##  - attr(*, &quot;problems&quot;)=&lt;externalptr&gt;</code></pre>
+<p>with read.csv():</p>
+<pre class="r"><code>df.chem_02&lt;-read.csv(paste0(dataFolder,&quot;PAHdata.csv&quot;))
+str(df.chem_02)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    20 obs. of  23 variables:
+##  $ Subject                   : chr  &quot;P1&quot; &quot;P3&quot; &quot;P4&quot; &quot;P5&quot; ...
+##  $ Napthalene                : num  0.899 3.626 3.392 3.577 4.491 ...
+##  $ X1.Methyl.Napthalene      : num  4.97 4.69 3.54 4.75 5.11 ...
+##  $ X2.Methyl.Napthalene      : num  2.15 3.93 1.7 2.94 4 ...
+##  $ Acenapthylene             : num  0.0131 3.0151 1.3859 3.3943 6.6593 ...
+##  $ X1.2.Dimethyl.napthalene  : num  NA NA 1.24 2.64 2.14 ...
+##  $ X1.6.Dimethyl.Napthalene  : num  0.7 2.64 1.38 1.1 2.26 ...
+##  $ Fluorene                  : num  2.25 7.35 7.16 8.44 9.24 ...
+##  $ X1.6.7.Trimethylnapthalene: num  5.1 6.79 6.52 4.68 6.46 ...
+##  $ Anthracene                : num  10.17 9.64 22.4 26.38 20.96 ...
+##  $ Dibenzothiopene           : num  1.16 4.12 4.23 3.99 3.26 ...
+##  $ X2.Methyl.Anthracene      : num  0.541 4.519 8.401 13.01 4.49 ...
+##  $ X1.Methylphenanthrene     : num  14.96 12.09 19.49 11.21 2.03 ...
+##  $ X2.Methylphenanthrene     : num  5.48 18.25 36.43 16.46 10.8 ...
+##  $ Pyrene                    : num  4.85 14.94 10.11 26.06 20.87 ...
+##  $ Fluoranthene              : num  4.48 9.72 9.8 19.05 20.09 ...
+##  $ X1.Phenyl.napthalene      : num  2.88 6.25 5.3 7.95 10.16 ...
+##  $ X2.Phenyl.napthalene      : num  3.41 8.74 3.7 12.85 15.1 ...
+##  $ X1.Methylpyrene           : num  4.58 7.51 13.6 8.11 19.24 ...
+##  $ Benzo.c.phenanthrene      : num  3.65 7.04 5.1 3.38 8.16 ...
+##  $ Triphenylene.Chrysene     : num  1.74 5.14 3.16 5.71 6.75 ...
+##  $ Benz.a.pyrene             : num  NA 2.845 NA 5.07 0.587 ...
+##  $ Benz.e.pyrene             : num  NA 1.816 0.298 0.662 2.367 ...</code></pre>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="write-a-data-frame-to-a-delimited-file-with-readr-package"
+class="section level3">
+<h3><strong>Write a data frame to a delimited file with readr
+package</strong></h3>
+<p>The <strong>write_()</strong>⁠ family of functions are an improvement
+to analogous function such as write.csv() because they are approximately
+twice as fast. Unlike write.csv(), these functions do not include row
+names as a column in the written file. A generic function,
+output_column(), is applied to each variable to coerce columns to
+suitable output.</p>
+<p>We can use following functions <strong>readr</strong> package to
+extort tabular data from R:</p>
+<p><img src="Image/PNG_FILE_02/write_readr_function.png" width="100%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>write_csv(df.chem_02, &quot;df.chem_02&quot;)</code></pre>
+<div style="margin-bottom:20px;">
+
+</div>
+<p>We can also use <strong>as_tibble()</strong> function of
+<strong>tibble</strong> package</p>
+<pre class="r"><code>df.chem_03&lt;-as_tibble(read.csv(paste0(dataFolder,&quot;PAHdata.csv&quot;), check.names = FALSE))
+str(df.chem_03)</code></pre>
+<pre><code>## tibble [20 × 23] (S3: tbl_df/tbl/data.frame)
+##  $ Subject                  : chr [1:20] &quot;P1&quot; &quot;P3&quot; &quot;P4&quot; &quot;P5&quot; ...
+##  $ Napthalene               : num [1:20] 0.899 3.626 3.392 3.577 4.491 ...
+##  $ 1-Methyl Napthalene      : num [1:20] 4.97 4.69 3.54 4.75 5.11 ...
+##  $ 2-Methyl Napthalene      : num [1:20] 2.15 3.93 1.7 2.94 4 ...
+##  $ Acenapthylene            : num [1:20] 0.0131 3.0151 1.3859 3.3943 6.6593 ...
+##  $ 1,2 Dimethyl napthalene  : num [1:20] NA NA 1.24 2.64 2.14 ...
+##  $ 1,6 Dimethyl Napthalene  : num [1:20] 0.7 2.64 1.38 1.1 2.26 ...
+##  $ Fluorene                 : num [1:20] 2.25 7.35 7.16 8.44 9.24 ...
+##  $ 1,6,7 Trimethylnapthalene: num [1:20] 5.1 6.79 6.52 4.68 6.46 ...
+##  $ Anthracene               : num [1:20] 10.17 9.64 22.4 26.38 20.96 ...
+##  $ Dibenzothiopene          : num [1:20] 1.16 4.12 4.23 3.99 3.26 ...
+##  $ 2-Methyl Anthracene      : num [1:20] 0.541 4.519 8.401 13.01 4.49 ...
+##  $ 1-Methylphenanthrene     : num [1:20] 14.96 12.09 19.49 11.21 2.03 ...
+##  $ 2-Methylphenanthrene     : num [1:20] 5.48 18.25 36.43 16.46 10.8 ...
+##  $ Pyrene                   : num [1:20] 4.85 14.94 10.11 26.06 20.87 ...
+##  $ Fluoranthene             : num [1:20] 4.48 9.72 9.8 19.05 20.09 ...
+##  $ 1-Phenyl napthalene      : num [1:20] 2.88 6.25 5.3 7.95 10.16 ...
+##  $ 2-Phenyl napthalene      : num [1:20] 3.41 8.74 3.7 12.85 15.1 ...
+##  $ 1 Methylpyrene           : num [1:20] 4.58 7.51 13.6 8.11 19.24 ...
+##  $ Benzo(c)phenanthrene     : num [1:20] 3.65 7.04 5.1 3.38 8.16 ...
+##  $ Triphenylene/Chrysene    : num [1:20] 1.74 5.14 3.16 5.71 6.75 ...
+##  $ Benz(a)pyrene            : num [1:20] NA 2.845 NA 5.07 0.587 ...
+##  $ Benz(e)pyrene            : num [1:20] NA 1.816 0.298 0.662 2.367 ...</code></pre>
+</div>
+</div>
 
 
 

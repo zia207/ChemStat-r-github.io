@@ -13,4 +13,4 @@ RnwWeave: Sweave
 LaTeX: pdfLaTeX
 
 BuildType: Website
-WebsitePath: E:/GitHub/Chemistry_R/chemstat-r-github.io
+WebsitePath: F:/GitHub/Chemistry_R/chemstat-r-github.io

@@ -25,14 +25,15 @@ knitr::include_graphics('F:\\GitHub\\Chemistry_R\\chemstat-r-github.io\\Image\\B
 This tutorial  consists of four modules: 
 
 
+### 1. [Getting Started with R](getting-started-with-r.html)
 
-#### 1. [Getting Started with R](getting-started-with-r.html)
+### 2. [Essential of The R Language](essential-of-r-language.html)
 
-#### 2. [Essential of The R Language](essential-of-r-language.html)
+### 3. [Curve Fitting with R](curve-fitting-with-r.html)
 
+### 4. [Cheminformatics with R](cheminformatics-with-r.html)
 
-
-
+### 5. [ICP-MS data Processing and analysis with R](icp-ms-data-processing-and-analysis-with-r.html)
 
 
 <div style="margin-bottom:50px;">
