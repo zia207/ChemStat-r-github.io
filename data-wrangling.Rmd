@@ -520,5 +520,49 @@ datatable(as.data.frame(stat.mf),
 ```
 
 
+### Cleaning a Messy Data   
 
+In this exercise you will learn how a clean data and make it ready for analysis, such as dealing with missing values, data with below detection limit and cleaning spatial characters. We will use data from United States Geological Survey (USGS) as a part of the USGS Geochemical Landscapes Project [(Smith et al., 2011)](https://pubs.usgs.gov/ds/801/).
+
+#### Load the data 
+
+```{r message=FALSE, warning=FALSE}
+## Create a data folder
+dataFolder<-"E:/Dropbox/GitHub/chemstat-r-github.io/Data/"
+df.geo<-read_csv(paste0(dataFolder,"usa_geochemical.csv"))
+meta.geo<-read_csv(paste0(dataFolder,"usa_geochemical_meta_data.csv"))
+
+```
+
+```{r}
+glimpse(df.geo)
+```
+
+```{r}
+glimpse(meta.geo)
+```
+
+We first create a file with limited number of variables using **select** functions
+
+
+```{r}
+mf.geo <- df.geo %>%
+      select(A_LabID, StateID,  LandCover1, A_Depth, A_C_Tot, A_C_Inorg, A_C_Org, A_As, A_Cd,  A_Pb, A_Cr) %>%
+      rename("LAB_ID"=A_LabID,
+             "LandCover" =LandCover1,
+             "Soil_depth" = A_Depth,
+             "Total_Carbon" = A_C_Tot,
+             "Inorg_Carbon" = A_C_Inorg,
+             "Organic_Carbon"= A_C_Org, 
+             "Arsenic" = A_As,
+             "Cadmium" = A_Cd,
+             "Lead" = A_Pb,
+             "Cromimum" = A_Cr)
+glimpse(mf.geo)
+```
+
+
+```{r}
+names(mf.geo) = gsub(pattern = "A_*", replacement = "", x = names(mf.geo))
+```
 
