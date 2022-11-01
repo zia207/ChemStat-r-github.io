@@ -24,8 +24,8 @@ navbar:
       href: mathematics-with-r.html
     - text: Basic Statistics with R
       href: basic-statistics-with-r.html
-    - text: SQL with R
-      href: sql-with-r.html
+    - text: Mltivariate Statistics with R
+      href: multivariate-statistics.html
     - text: Data Visualization with R
       href: data-visualization.html
   - text: Curve Fitting with R 
@@ -44,7 +44,7 @@ navbar:
       href: cheminformatics-with-chemminer.html
     - text: Cheminformatics with CDK
       href: cheminformatics-with-cdk.html
-  - text: ICP-MS Data Processing with R.html 
+  - text: ICP-MS Data Processing with R 
     href: icp-ms-data-processing-and-analysis-with-r.html
     menu:
     - text: Table of Content
