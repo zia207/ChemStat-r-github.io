@@ -479,7 +479,7 @@ function</p>
 ## [41] &quot;intoduction-to-use-r.html&quot;                      
 ## [42] &quot;intoduction-to-use-r.Rmd&quot;                       
 ## [43] &quot;mathematics-with-r.html&quot;                        
-## [44] &quot;mathematics-with-r.knit.md&quot;                     
+## [44] &quot;mathematics-with-r.knit.html&quot;                   
 ## [45] &quot;mathematics-with-r.Rmd&quot;                         
 ## [46] &quot;multivariate-statistics.html&quot;                   
 ## [47] &quot;multivariate-statistics.Rmd&quot;                    
@@ -672,22 +672,22 @@ functions.</p>
 <pre class="r"><code># base function read,csv
 system.time(read.csv(paste0(dataFolder,&quot;LBC_data.csv&quot;), header= TRUE)) </code></pre>
 <pre><code>##    user  system elapsed 
-##    0.22    0.01    0.23</code></pre>
+##    0.22    0.02    0.23</code></pre>
 <pre class="r"><code>#fread of data.table
 system.time(fread(paste0(dataFolder,&quot;LBC_data.csv&quot;), header= TRUE)) </code></pre>
 <pre><code>##    user  system elapsed 
-##    0.02    0.02    0.02</code></pre>
+##    0.02    0.00    0.02</code></pre>
 </div>
 <div id="writing-time" class="section level4">
 <h4>Writing time</h4>
 <pre class="r"><code># base-function write.csv
 system.time(write.csv(DT,  paste0(dataFolder, &quot;DT.csv&quot;), row.names=F))</code></pre>
 <pre><code>##    user  system elapsed 
-##    0.92    0.00    0.92</code></pre>
+##    0.87    0.03    0.89</code></pre>
 <pre class="r"><code># fwrite of data.table
 system.time(fwrite(DT,  paste0(dataFolder, &quot;DT.csv&quot;), row.names=F, quote=TRUE))</code></pre>
 <pre><code>##    user  system elapsed 
-##    0.06    0.00    0.03</code></pre>
+##    0.03    0.01    0.03</code></pre>
 <p>Beside two functions, we can perform several data transforming such
 as how to subset rows, select and compute on columns, and perform
 aggregations by group, etc with data.table API. Here is the cheat sheets
@@ -746,11 +746,11 @@ fast:</p>
 <pre class="r"><code># CSV file with base write.csv
 system.time(write.csv(DT, paste0(dataFolder, &quot;LBC_data.csv&quot;)))</code></pre>
 <pre><code>##    user  system elapsed 
-##    1.02    0.00    1.02</code></pre>
+##       1       0       1</code></pre>
 <pre class="r"><code># CSV file with fwrite
 system.time(fwrite(DT, paste0(dataFolder, &quot;LBC_data.csv&quot;)))</code></pre>
 <pre><code>##    user  system elapsed 
-##    0.03    0.00    0.01</code></pre>
+##    0.11    0.00    0.04</code></pre>
 <pre class="r"><code># feather file with 
 system.time(write_feather(DT, paste0(dataFolder, &quot;LBC_data.feather&quot;)))</code></pre>
 <pre><code>##    user  system elapsed 

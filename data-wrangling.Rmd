@@ -1,8 +1,5 @@
 ---
 title: ''
-output:
-  html_document:
-    df_print: paged
 ---
 
 <div style="margin-bottom:50px;">
