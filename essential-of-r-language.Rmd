@@ -5,7 +5,7 @@ title: ''
 </div>
 
 ```{r echo=FALSE, out.width='100%', fig.align="center"}
-knitr::include_graphics("F:\\GitHub\\Chemistry_R\\chemstat-r-github.io\\Image\\PNG_FILE_02\\essential_R.png")
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\essential_R.png")
 ```
 
 <div style="margin-bottom:20px;">
@@ -22,7 +22,7 @@ There is an enormous range of things that R can do, and one of the hardest parts
 
 * [Introduction to Using R](intoduction-to-use-r.html)
 
-* [R-data Input and Types](r-data-input-and-type.html)
+* [R Data Import/Export](r-data-input-and-type.html)
 
 * [Data Wrangling with R](data-wrangling.html)
 
@@ -30,6 +30,6 @@ There is an enormous range of things that R can do, and one of the hardest parts
 
 * [Basic Statistics with R](basic-statistics-with-r.html)
 
-* [SQL with R](sql-with-r.html)
+* [Multivariate Statistics with R](multivariate-statistics.html)
 
 * [Data Visualization with R](data-visualization.html)

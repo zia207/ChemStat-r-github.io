@@ -6,7 +6,7 @@ title: ''
 </div>
 
 ```{r echo=FALSE, out.width='100%', fig.align="center"}
-knitr::include_graphics("F:\\GitHub\\Chemistry_R\\chemstat-r-github.io\\Image\\PNG_FILE_04\\Chemminer.png")
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_04\\Chemminer.png")
 ```
 <div style="margin-bottom:20px;">
 </div>

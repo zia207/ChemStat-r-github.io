@@ -1,4 +1,521 @@
 ---
-title: "Data Wrangling"
+title: ''
+output:
+  html_document:
+    df_print: paged
 ---
+
+<div style="margin-bottom:50px;">
+</div>
+
+```{r echo=FALSE, out.width='100%', fig.align="center"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\data_wragling.png")
+```
+
+<div style="margin-bottom:20px;">
+</div>
+
+
+### **Table of Content**
+
+* [Data Wrangling](#data-wrangling)
+
+* [Important R Packages for Data Wrangling](#important-r-rackages-for-data-wrangling)
+
+* [Data Processing with dplyr](#data-processing-with-dplyr)
+
+  - Pipe Operator (%>%)
+
+  - _join()
+  
+  - filter()
+  
+  - select
+  
+  - rename()
+  
+  - arrange()
+  
+  - Combined multiple functions with Pipes (%>%)
+  
+  - Pivoting dataframe
+  
+    - pivot_wider()
+    
+    - pivot_longer()
+    
+  - mutate()
+  
+  - summarize()
+  
+  - group_by()
+
+<div style="margin-bottom:60px;">
+</div>
+
+
+##  **Data Wrangling**
+
+**Data wrangling**, also known as **data munging**, is a series of assembling, cleaning, and transforming processes to understand data better and make them more accessible and easier to analyze. Due to the availability of a large amount of data from different sources with different formats, data wrangling has become an essential part of data modeling which helps data scientists fasten the decision-making process.  
+
+<div style="margin-bottom:20px;">
+</div>
+
+## **Important R Packages for Data Wrangling**
+
+
+* [dplyr](https://dplyr.tidyverse.org/index.html) 
+
+* [purr](https://purrr.tidyverse.org/)
+
+* [tidyr](https://tidyr.tidyverse.org/)
+
+* [lubridate](https://lubridate.tidyverse.org/)
+
+* [magrittr](https://magrittr.tidyverse.org/)
+
+* [plyr](http://plyr.had.co.nz/)
+
+* [purrrlyr](https://cran.r-project.org/web/packages/purrrlyr/index.html)
+
+* [data.table](https://rdatatable.gitlab.io/data.table/)
+
+* [sqldf](https://cran.r-project.org/web/packages/sqldf/index.html)
+
+* [dtplyr](https://www.tidyverse.org/blog/2019/11/dtplyr-1-0-0/)
+
+* [DT](https://rstudio.github.io/DT/)
+
+
+
+[dplyr](https://dplyr.tidyverse.org/index.html), [purr](https://purrr.tidyverse.org/), [tidyr](https://tidyr.tidyverse.org/), [lubridate](https://lubridate.tidyverse.org/), and [magrittr](https://magrittr.tidyverse.org/) are installed with [tidyverse](https://www.tidyverse.org/packages/) package as  discussed before. 
+
+<div style="margin-bottom:20px;">
+</div>
+
+## **Data Processing with dplyr**
+
+ 
+The **dplyr**  is the most commonly use data manipulation package, providing a set of functions that help us solve the most common data manipulation challenges. These are:
+ 
+* **mutate()** adds new variables that are functions of existing variables
+
+* **select()** picks variables based on their names.
+
+* **filter()** picks cases based on their values.
+
+* **summarise()**  reduces multiple values down to a single summary.
+
+* **arrange()** changes the ordering of the rows.
+
+* **join()** join two data-frames
+
+* **groupby()** All above combine naturally with group_by() which allows you to perform any operation “by group”. 
+ 
+ 
+### Load tidyverse package
+ 
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(data.table)
+library(DT)
+# library(dplyr)
+# library(readr)
+```
+
+
+
+###  Load data
+
+In this exercise  we will use two data sets: USA county level lung cancer mortality rates with risk factors from 1998 t0 2012 and USA  County FIPS Codes. We will use **read_csv()** function of **readr** package to import data a **Tidy** data. 
+
+
+```{r message=FALSE, warning=FALSE}
+## Create a data folder
+dataFolder<-"E:/Dropbox/GitHub/chemstat-r-github.io/Data/"
+df<-read_csv(paste0(dataFolder,"LBC_data.csv"))
+fips<-read_csv(paste0(dataFolder, "US_FIPS.csv"))
+regions<-read_csv(paste0(dataFolder, "US_regions.csv"))
+```
+
+We examine structure of the data: 
+
+```{r}
+str(df); str(fips); str(regions)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+
+### **Pipe Operator**
+
+Before starting this tutorial, I like to brief you about the **Pipe Operator**. This is the most important operator for data wrangling in R. The pipe operator, written as **%>%**, has been a longstanding feature of the **magrittr** package for R.  It takes the output of one function and passes it into another function as an argument. This allows us to link a sequence of analysis steps.  In this tutorial,  you can see exactly how this works in a real example.  (Source:https://towardsdatascience.com/an-introduction-to-the-pipe-in-r-823090760d64)  
+
+#
+## **_join() function**
+
+In R we use **base::merge()** function to merge two dataframes. This function is present inside **join()** function of dplyr package. The most important condition for joining two dataframes is that the column type should be the same of “key” variable by  the merging happens. Types of **base::merge()** and **join()** function of dplyr available in R are:
+
+
+```{r echo=FALSE, out.width='100%', fig.align="center"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\join_functions.png")
+```
+<div style="margin-bottom:20px;">
+</div>
+
+The advantages of the specific dplyr verbs is that they It automatic identify the common "key" columns of two data-frames. dplyr’s joins are considerably faster and don’t mess with the order of the rows. 
+(source: https://r4ds.had.co.nz/relational-data.html) . 
+
+
+First we will join fips and regions file using *inner_join*()* and then join df files. 
+
+```{r}
+fips_df = inner_join(fips, regions)
+head(fips_df)
+```
+
+```{r}
+mf = inner_join(fips_df, df)
+head(mf)
+```
+
+
+Now we will move  REGION, DIVISION column after FIPS for organizing the columns in the following order: 
+FIPS, REGION, DIVISION,  STATE, COUNTY, X, Y, Year, SMOKING, POVERTY, PM25, NO2, SO2, LBC_RATE.  We will use **relocate()** fuction: 
+
+```{r}
+mf<-relocate(mf, REGION,   DIVISION, .after = FIPS)
+head(mf)
+```
+
+Now explore regions names with **levels()**
+
+```{r}
+levels(as.factor(mf$REGION))
+```
+<div style="margin-bottom:20px;">
+</div>
+
+### **filter() function**
+
+The **filter()** function is used to subset a data frame, retaining all rows that satisfy your conditions. To be retained, the row must produce a value of TRUE for all conditions. Note that when a condition evaluates to NA the row will be dropped, unlike base subsetting with
+
+There are many functions and operators that are useful when constructing the expressions used to filter the data:
+
+* ==, >, >= etc
+
+* &, |, !, xor()
+
+* is.na()
+
+* between(), near()
+
+
+
+We will use **filter()**  to extract data only for northeast (single criteria)
+
+```{r}
+mf.northeast<-mf %>% filter(REGION == "Northeast")
+levels(as.factor(mf.northeast$REGION))
+```
+
+
+Filtering by multiple criteria within a single logical expression - select both Northeast and Midwest
+
+```{r}
+mf.north_mid_01<- mf %>% filter(REGION %in%c("Northeast","Midwest"))
+levels(as.factor(mf.north_mid_01$REGION))
+```
+
+
+or we can use  **|** which represents **OR** in the logical condition, any of the two conditions.
+
+```{r}
+mf.north_mid_02<- mf %>% filter(REGION == "Northeast" | REGION == "Midwest")
+levels(as.factor(mf.north_mid_02$REGION))
+```
+
+
+Following filter create a  files for the Northeast region only with NY state. 
+
+```{r}
+mf.ny<-mf %>% filter(REGION == "Northeast" & STATE == "New York")
+```
+
+
+Following filters will select counties rows where `LBC_RATE` is greater than the global average of LBC - rate:
+
+```{r}
+mean.LBC <- mf %>% filter(LBC_RATE > mean(LBC_RATE, na.rm = TRUE))
+```
+
+
+We will **&** in the following filters to  select counties or rows where `LBC_RATE` is greater than the global average of for the year 2012
+
+```{r}
+mean.LBC.2012 <- mf %>% filter(LBC_RATE > mean(LBC_RATE, na.rm = TRUE) & Year ==2012)
+```
+
+
+Following command will select counties start with "A". filter() with **grepl()** is used to search for pattern matching.
+
+
+```{r}
+counties.a <- mf %>% filter(grepl("^A", COUNTY))
+head(counties.a)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+### **select( ) function**
+
+
+**dplyr** selections implement a dialect of R where operators make it easy to select variable
+
+* **:** for selecting a range of consecutive variables.
+
+* **!** for taking the complement of a set of variables.
+
+* **&** and **|** for selecting the intersection or the union of two sets of variables.
+
+* **c()** for combining selections.
+
+
+#### Selecting Variables (or Columns)
+
+Following will create a dataframe with FIPS, Year and LBC rate
+
+```{r}
+LBC.df <- mf %>% select(FIPS, Year, LBC_RATE)
+head(LBC.df)
+```
+
+Following will create a dataframe with FIPS, Year all risk factors (SMOKING, POVERTY, PM25, NO2, SO2)
+
+```{r}
+riskfactors.df <- mf %>%  select(FIPS, Year, SMOKING:SO2)
+head(riskfactors.df)
+```
+
+Following command will give same output.  The minus sign before a variable tells R to drop the variable or variables.  **-(REGION:Y)**, **-LBC_RATE**   will drop these columns: REGION, DIVISION, STATE,  COUNTY, X, Y and LBC_RATE.
+
+```{r}
+riskfactors_01.df= mf %>% select(-(REGION:Y), -LBC_RATE)
+head(riskfactors_01.df)
+```
+
+The following functions helps you to select variables based on their names.
+
+```{r echo=FALSE, out.width='80%', fig.align="center"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\select.png")
+```
+<div style="margin-bottom:20px;">
+</div>
+
+#### **rename( ) Function**
+
+The rename function can be used to rename variables.
+
+
+```{r}
+mf.new <- mf %>% rename("LBC Mortality Rate"= LBC_RATE)
+names(mf.new)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+### **arrange function**
+
+
+**arrange()** orders the rows of a data frame by the values of selected columns.
+
+
+```{r}
+# arrange ascending order as default
+mf.arrange.ac<- mf %>% arrange(SMOKING) 
+head(mf.arrange.ac$SMOKING)
+```
+
+```{r}
+# arrange descending order
+mf.arrange.de<- mf %>% arrange(desc(SMOKING)) 
+head(mf.arrange.de$SMOKING)
+```
+
+
+### Combined multiple functions with Pipes (**%>%**)
+
+In this exercise will use **select()**,  *filter()* and **rename()** in a single commands with **%>%**. First we select data FIPS, SATE, LBC rate and then filter out the data NY state data for the year 2012 and then rename LBC_RATE column.  
+
+
+```{r}
+LBC.NY <- mf %>% select(FIPS, Year, STATE, LBC_RATE) %>%
+                 filter (STATE=="New York", Year == 2012)  %>%
+                 rename("LBC Mortality Rate"= LBC_RATE)
+                 
+head(LBC.NY)        
+```
+
+### Pivoting dataframe
+
+**pivot_longer()** and **pivot_wider()** are very flexible, and can easily tidy a wide variety of non-tidy datasets
+
+
+#### **pivot_wider**
+
+pivot_wider() convert  a dataset wider by increasing the number of columns and decreasing the number of rows.
+
+
+```{r}
+LBC.wider<- mf %>% select (FIPS, Year, STATE, COUNTY, LBC_RATE) %>%
+                  pivot_wider(names_from = Year, # column need to be wider
+                              values_from = LBC_RATE) # data
+str(LBC.wider)
+```
+
+#### **pivot_longer**
+
+
+The pivot_longer() function can be used to pivot a data frame from a wide format to a long format.
+
+```{r}
+names(LBC.wider)
+```
+
+```{r}
+LBC.longer<- LBC.wider %>% 
+              pivot_longer(cols= c("1998", "1999", "2000", "2001", "2002",
+                                    "2003", "2004", "2005", "2006", "2007",
+                                    "2008", "2009", "2010", "2011", "2012"),
+                          names_to = "Year", # column need to be wider
+                          values_to = "LBC_RATE") # data
+str(LBC.longer)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+### mutate() function
+
+**mutate()** – adds new variables while retaining old variables to a data frame. In this exerciser, we will add log10 of LBC rate to mf data-frame. 
+
+```{r}
+mf.new<- mf %>% mutate(logLBC = log10(LBC_RATE))
+head(mf.new[9:15])
+```
+
+
+Below series of codes, will create a wider datafrme of LBC mortality rate than  add three additional columns, such as Mean, Median and SD which are represents yearly (1998-2012) mean, median and standard deviation of  LBC mortality rates. Before **mutate()** we use **rowwise()** function which  allows us to compute on a dataframe a row-at-a-time, in our cases all 3107 counties. 
+
+
+```{r}
+LBC.wider.summary<- mf %>% select (FIPS, Year, STATE, COUNTY, LBC_RATE) %>%
+                  pivot_wider(names_from = Year, # column need to be wider
+                  values_from = LBC_RATE) %>%
+                  rowwise() %>%
+                  mutate(Mean = mean(c_across(4:18)),
+                         Median= median(c_across(4:18)),
+                         SD= sd(c_across(4:18))) # calculates the median 
+head(LBC.wider.summary)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+### **summarize( ) Function**
+
+
+**summarise()** creates a new data frame. It will have one (or more) rows for each combination of grouping variables; if there are no grouping variables, the output will have a single row summarising all observations in the input. It will contain one column for each grouping variable and one column for each of the summary statistics that you have specified.
+
+**summarise()** and **summarize()** are synonyms.
+
+
+* **Center**: mean(), median()
+
+* **Spread**: sd(), IQR(), mad()
+
+* **Range**: min(), max(), quantile()
+
+* **Position**: first(), last(), nth(),
+
+* **Count**: n(), n_distinct()
+
+* **Logical**: any(), all()
+
+
+```{r}
+# mean
+summarise(mf, Mean=mean(LBC_RATE))
+# median
+summarise(mf, Median=median(LBC_RATE))
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+The **scoped variants (_if, _at, _all)** of summarise() make it easy to apply the same transformation to multiple variables. There are three variants.
+
+
+* summarise_all() affects every variable
+
+* summarise_at() affects variables selected with a character vector or vars()
+
+* summarise_if() affects variables selected with a predicate function
+
+Following series of codes create a **datatable** of summary statistics of LBC_RATE, SMOKING, POVERTY, PM25, NO2, SO2 variables. 
+
+```{r}
+
+summary_statistics <- mf %>% 
+  # First select  numerical columns
+  select(LBC_RATE, SMOKING, POVERTY, PM25, NO2, SO2) %>%
+  # rename LBC_rate to LBC
+  rename("LBC"= LBC_RATE) %>%
+  # get summary statistics
+   summarise_all(funs(min = min, 
+                      q25 = quantile(., 0.25), 
+                      median = median, 
+                      q75 = quantile(., 0.75), 
+                      max = max,
+                      mean = mean, 
+                      sd = sd)) %>% 
+# create a nice looking table
+  pivot_longer(everything(), names_sep = "_", names_to = c( "variable", ".value"))
+
+```
+
+We can visualize the summary_statistics using **datatable()** function of **DT** package DT which provides an R interface to the JavaScript library DataTables.   *datatable()** creates an HTML widget to display R data objects with DataTables.  
+
+```{r}
+datatable(as.data.frame(summary_statistics), 
+          rownames = T, options = list(pageLength = 10, scrollX = TRUE, round)) %>%
+  formatRound(columns = 2:8, digits = 3)
+```
+
+
+Now, we can apply the **group_by()** and **summarize()** functions to calculate mean all variables  by States:
+
+
+```{r}
+stat.mf<-mf %>% 
+  group_by(STATE) %>% 
+  summarize(LBC_RATE = mean(LBC_RATE),
+            SMOKING = mean(SMOKING),
+            POVERTY = mean(POVERTY),
+            PM25 = mean(PM25),
+            NO2 = mean(NO2),
+            SO2 = mean(SO2))
+```
+
+
+```{r}
+datatable(as.data.frame(stat.mf), 
+          rownames = T, options = list(pageLength = 10, scrollX = TRUE, round)) %>%
+  formatRound(columns = 2:7, digits = 3)
+```
+
+
+
 

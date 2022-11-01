@@ -281,7 +281,7 @@ $(document).ready(function () {
       <a href="basic-statistics-with-r.html">Basic Statistics with R</a>
     </li>
     <li>
-      <a href="sql-with-r.html">SQL with R</a>
+      <a href="multivariate-statistics.html">Mltivariate Statistics with R</a>
     </li>
     <li>
       <a href="data-visualization.html">Data Visualization with R</a>
@@ -323,7 +323,7 @@ $(document).ready(function () {
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    ICP-MS Data Processing with R.html
+    ICP-MS Data Processing with R
      
     <span class="caret"></span>
   </a>
@@ -423,14 +423,14 @@ function <strong>getwd()</strong> will print the current working
 directory path as a string. Hence, the output is the folder where all
 your files will be saved.</p>
 <pre class="r"><code>getwd()</code></pre>
-<pre><code>## [1] &quot;F:/GitHub/Chemistry_R/chemstat-r-github.io&quot;</code></pre>
+<pre><code>## [1] &quot;E:/Dropbox/GitHub/chemstat-r-github.io&quot;</code></pre>
 <p>If you want to change the working directory in R you just need to
 call the <strong>setwd()</strong> function, specifying as argument the
 path of the new working directory folder.</p>
-<pre class="r"><code>myWD&lt;-setwd(&quot;F:/GitHub/Chemistry_R/chemstat-r-github.io&quot;)    # Set working directory  
-myWD&lt;-setwd(&quot;F://GitHub//Chemistry_R//chemstat-r-github.io&quot;) # Equivelent
+<pre class="r"><code>myWD&lt;-setwd(&quot;E:\\Dropbox\\GitHub\\chemstat-r-github.io&quot;)    # Set working directory  
+myWD&lt;-setwd(&quot;E:/Dropbox/GitHub/chemstat-r-github.io&quot;) # Equivelent
 myWD</code></pre>
-<pre><code>## [1] &quot;F:/GitHub/Chemistry_R/chemstat-r-github.io&quot;</code></pre>
+<pre><code>## [1] &quot;E:/Dropbox/GitHub/chemstat-r-github.io&quot;</code></pre>
 <p>Remember that you must use the forward slash / or double backslash \
 in R! The Windows format of single backslash will not work.</p>
 <p>The files under in a directory can check using <strong>dir()</strong>
@@ -440,53 +440,57 @@ function</p>
 ##  [2] &quot;_site&quot;                                          
 ##  [3] &quot;_site.yml&quot;                                      
 ##  [4] &quot;about_a.html&quot;                                   
-##  [5] &quot;about_a.Rmd&quot;                                    
-##  [6] &quot;about_b.html&quot;                                   
-##  [7] &quot;about_b.Rmd&quot;                                    
-##  [8] &quot;anle138b.murcko.fragments.png&quot;                  
-##  [9] &quot;basic-statistics-with-r.html&quot;                   
-## [10] &quot;basic-statistics-with-r.Rmd&quot;                    
-## [11] &quot;cheminformatics-with-cdk.html&quot;                  
-## [12] &quot;cheminformatics-with-cdk.Rmd&quot;                   
-## [13] &quot;cheminformatics-with-cdk_files&quot;                 
-## [14] &quot;cheminformatics-with-chemminer.html&quot;            
-## [15] &quot;cheminformatics-with-chemminer.Rmd&quot;             
-## [16] &quot;cheminformatics-with-chemminer_files&quot;           
-## [17] &quot;cheminformatics-with-r.html&quot;                    
-## [18] &quot;cheminformatics-with-r.Rmd&quot;                     
-## [19] &quot;chemstat-r-github.io.Rproj&quot;                     
-## [20] &quot;curcumin.murcko.fragments.png&quot;                  
-## [21] &quot;curve-fitting-with-r.html&quot;                      
-## [22] &quot;curve-fitting-with-r.Rmd&quot;                       
-## [23] &quot;Data&quot;                                           
-## [24] &quot;data-visualization.html&quot;                        
-## [25] &quot;data-visualization.Rmd&quot;                         
-## [26] &quot;data-wrangling.html&quot;                            
-## [27] &quot;data-wrangling.Rmd&quot;                             
-## [28] &quot;df.chem_02&quot;                                     
-## [29] &quot;essential-of-r-language.html&quot;                   
-## [30] &quot;essential-of-r-language.Rmd&quot;                    
-## [31] &quot;getting-started-with-r.html&quot;                    
-## [32] &quot;getting-started-with-r.Rmd&quot;                     
-## [33] &quot;getting-strated-chem.html&quot;                      
-## [34] &quot;getting-strated-chem.Rmd&quot;                       
-## [35] &quot;icp-ms-data-processing-and-analysis-with-r.html&quot;
-## [36] &quot;icp-ms-data-processing-and-analysis-with-r.Rmd&quot; 
-## [37] &quot;Image&quot;                                          
-## [38] &quot;index.html&quot;                                     
-## [39] &quot;index.Rmd&quot;                                      
-## [40] &quot;intoduction-to-use-r.html&quot;                      
-## [41] &quot;intoduction-to-use-r.Rmd&quot;                       
-## [42] &quot;mathematics-with-r.html&quot;                        
-## [43] &quot;mathematics-with-r.Rmd&quot;                         
-## [44] &quot;r-data-input-and-type.html&quot;                     
-## [45] &quot;r-data-input-and-type.Rmd&quot;                      
-## [46] &quot;README.md&quot;                                      
-## [47] &quot;site_libs&quot;                                      
-## [48] &quot;sql-with-r.html&quot;                                
-## [49] &quot;sql-with-r.Rmd&quot;                                 
-## [50] &quot;sub.sdf&quot;                                        
-## [51] &quot;Vedio&quot;</code></pre>
+##  [5] &quot;about_a.knit.html&quot;                              
+##  [6] &quot;about_a.Rmd&quot;                                    
+##  [7] &quot;about_b.html&quot;                                   
+##  [8] &quot;about_b.Rmd&quot;                                    
+##  [9] &quot;anle138b.murcko.fragments.png&quot;                  
+## [10] &quot;basic-statistics-with-r.html&quot;                   
+## [11] &quot;basic-statistics-with-r.Rmd&quot;                    
+## [12] &quot;cheminformatics-with-cdk.html&quot;                  
+## [13] &quot;cheminformatics-with-cdk.Rmd&quot;                   
+## [14] &quot;cheminformatics-with-cdk_files&quot;                 
+## [15] &quot;cheminformatics-with-chemminer.html&quot;            
+## [16] &quot;cheminformatics-with-chemminer.Rmd&quot;             
+## [17] &quot;cheminformatics-with-chemminer_files&quot;           
+## [18] &quot;cheminformatics-with-r.html&quot;                    
+## [19] &quot;cheminformatics-with-r.Rmd&quot;                     
+## [20] &quot;chemstat-r-github.io.Rproj&quot;                     
+## [21] &quot;curcumin.murcko.fragments.png&quot;                  
+## [22] &quot;curve-fitting-with-r.html&quot;                      
+## [23] &quot;curve-fitting-with-r.Rmd&quot;                       
+## [24] &quot;Data&quot;                                           
+## [25] &quot;data-visualization.html&quot;                        
+## [26] &quot;data-visualization.Rmd&quot;                         
+## [27] &quot;data-wrangling.html&quot;                            
+## [28] &quot;data-wrangling.Rmd&quot;                             
+## [29] &quot;df.chem_02&quot;                                     
+## [30] &quot;essential-of-r-language.html&quot;                   
+## [31] &quot;essential-of-r-language.Rmd&quot;                    
+## [32] &quot;getting-started-with-r.html&quot;                    
+## [33] &quot;getting-started-with-r.Rmd&quot;                     
+## [34] &quot;getting-strated-chem.html&quot;                      
+## [35] &quot;getting-strated-chem.Rmd&quot;                       
+## [36] &quot;icp-ms-data-processing-and-analysis-with-r.html&quot;
+## [37] &quot;icp-ms-data-processing-and-analysis-with-r.Rmd&quot; 
+## [38] &quot;Image&quot;                                          
+## [39] &quot;index.html&quot;                                     
+## [40] &quot;index.Rmd&quot;                                      
+## [41] &quot;intoduction-to-use-r.html&quot;                      
+## [42] &quot;intoduction-to-use-r.Rmd&quot;                       
+## [43] &quot;mathematics-with-r.html&quot;                        
+## [44] &quot;mathematics-with-r.knit.md&quot;                     
+## [45] &quot;mathematics-with-r.Rmd&quot;                         
+## [46] &quot;multivariate-statistics.html&quot;                   
+## [47] &quot;multivariate-statistics.Rmd&quot;                    
+## [48] &quot;r-data-input-and-type.html&quot;                     
+## [49] &quot;r-data-input-and-type.Rmd&quot;                      
+## [50] &quot;README.md&quot;                                      
+## [51] &quot;site_libs&quot;                                      
+## [52] &quot;sql-with-r.html&quot;                                
+## [53] &quot;sql-with-r.Rmd&quot;                                 
+## [54] &quot;sub.sdf&quot;                                        
+## [55] &quot;Vedio&quot;</code></pre>
 <div style="margin-bottom:30px;">
 
 </div>
@@ -505,7 +509,7 @@ primary function to import from a text file is
 could be used to scan and read data. It is usually used to read data
 into vector or list or from file in R Language.</p>
 <pre class="r"><code>## Create a data folder
-dataFolder&lt;-&quot;F:/GitHub/Chemistry_R/chemstat-r-github.io/Data/&quot;</code></pre>
+dataFolder&lt;-&quot;E:/Dropbox/GitHub/chemstat-r-github.io/Data/&quot;</code></pre>
 <pre class="r"><code>data.txt&lt;-read.table(paste0(dataFolder,&quot;test_data.txt&quot;), header= TRUE) 
 #data.txt&lt;-read.table(&quot;test_data.txt&quot;, header= TRUE) 
 head(data.txt)</code></pre>
@@ -643,17 +647,15 @@ CSV files in R.</p>
 quickly and conveniently.</p>
 <pre class="r"><code>DT&lt;-fread(paste0(dataFolder,&quot;LBC_data.csv&quot;), header= TRUE) 
 str(DT)</code></pre>
-<pre><code>## Classes &#39;data.table&#39; and &#39;data.frame&#39;:   46605 obs. of  10 variables:
-##  $ FIPS   : int  1001 1001 1001 1001 1001 1001 1001 1001 1001 1001 ...
-##  $ X      : num  872679 872679 872679 872679 872679 ...
-##  $ Y      : num  1094433 1094433 1094433 1094433 1094433 ...
-##  $ Year   : int  1998 1999 2000 2001 2002 2003 2004 2005 2006 2007 ...
-##  $ SMOKING: num  27 26 26 26.5 26.6 26.3 27.1 26.4 26.3 25.6 ...
-##  $ POVERTY: num  11.3 11.4 10.5 10.8 10.3 10.4 11.6 10.4 12.5 10.4 ...
-##  $ PM25   : num  17.1 15.4 14 13.9 14.8 ...
-##  $ NO2    : num  1.38 1.04 1.47 1.74 1.1 0.9 1.1 1.17 0.84 0.77 ...
-##  $ SO2    : num  0.057 0.055 0.054 0.051 0.052 0.053 0.05 0.055 0.055 0.056 ...
-##  $ RATE   : num  90.6 90.4 89.5 89.3 89.2 ...
+<pre><code>## Classes &#39;data.table&#39; and &#39;data.frame&#39;:   46605 obs. of  8 variables:
+##  $ FIPS    : int  1001 1001 1001 1001 1001 1001 1001 1001 1001 1001 ...
+##  $ Year    : int  1998 1999 2000 2001 2002 2003 2004 2005 2006 2007 ...
+##  $ SMOKING : num  27 26 26 26.5 26.6 26.3 27.1 26.4 26.3 25.6 ...
+##  $ POVERTY : num  11.3 11.4 10.5 10.8 10.3 10.4 11.6 10.4 12.5 10.4 ...
+##  $ PM25    : num  17.1 15.4 14 13.9 14.8 ...
+##  $ NO2     : num  1.38 1.04 1.47 1.74 1.1 0.9 1.1 1.17 0.84 0.77 ...
+##  $ SO2     : num  0.057 0.055 0.054 0.051 0.052 0.053 0.05 0.055 0.055 0.056 ...
+##  $ LBC_RATE: num  90.6 90.4 89.5 89.3 89.2 ...
 ##  - attr(*, &quot;.internal.selfref&quot;)=&lt;externalptr&gt;</code></pre>
 <pre class="r"><code>#DT&lt;-fread(&quot;usa_geochemical.csv&quot;, header= TRUE) </code></pre>
 </div>
@@ -670,22 +672,22 @@ functions.</p>
 <pre class="r"><code># base function read,csv
 system.time(read.csv(paste0(dataFolder,&quot;LBC_data.csv&quot;), header= TRUE)) </code></pre>
 <pre><code>##    user  system elapsed 
-##    0.26    0.01    0.28</code></pre>
+##    0.22    0.01    0.23</code></pre>
 <pre class="r"><code>#fread of data.table
 system.time(fread(paste0(dataFolder,&quot;LBC_data.csv&quot;), header= TRUE)) </code></pre>
 <pre><code>##    user  system elapsed 
-##    0.03    0.00    0.02</code></pre>
+##    0.02    0.02    0.02</code></pre>
 </div>
 <div id="writing-time" class="section level4">
 <h4>Writing time</h4>
 <pre class="r"><code># base-function write.csv
 system.time(write.csv(DT,  paste0(dataFolder, &quot;DT.csv&quot;), row.names=F))</code></pre>
 <pre><code>##    user  system elapsed 
-##    0.98    0.00    0.98</code></pre>
+##    0.92    0.00    0.92</code></pre>
 <pre class="r"><code># fwrite of data.table
 system.time(fwrite(DT,  paste0(dataFolder, &quot;DT.csv&quot;), row.names=F, quote=TRUE))</code></pre>
 <pre><code>##    user  system elapsed 
-##    0.10    0.00    0.03</code></pre>
+##    0.06    0.00    0.03</code></pre>
 <p>Beside two functions, we can perform several data transforming such
 as how to subset rows, select and compute on columns, and perform
 aggregations by group, etc with data.table API. Here is the cheat sheets
@@ -729,28 +731,26 @@ library(feather)</code></pre>
 function()</p>
 <pre class="r"><code>DT_feather &lt;- read_feather(paste0(dataFolder, &quot;LBC_data.feather&quot;))
 str(DT_feather)</code></pre>
-<pre><code>## tibble [46,605 × 10] (S3: tbl_df/tbl/data.frame)
-##  $ FIPS   : int [1:46605] 1001 1001 1001 1001 1001 1001 1001 1001 1001 1001 ...
-##  $ X      : num [1:46605] 872679 872679 872679 872679 872679 ...
-##  $ Y      : num [1:46605] 1094433 1094433 1094433 1094433 1094433 ...
-##  $ Year   : int [1:46605] 1998 1999 2000 2001 2002 2003 2004 2005 2006 2007 ...
-##  $ SMOKING: num [1:46605] 27 26 26 26.5 26.6 26.3 27.1 26.4 26.3 25.6 ...
-##  $ POVERTY: num [1:46605] 11.3 11.4 10.5 10.8 10.3 10.4 11.6 10.4 12.5 10.4 ...
-##  $ PM25   : num [1:46605] 17.1 15.4 14 13.9 14.8 ...
-##  $ NO2    : num [1:46605] 1.38 1.04 1.47 1.74 1.1 0.9 1.1 1.17 0.84 0.77 ...
-##  $ SO2    : num [1:46605] 0.057 0.055 0.054 0.051 0.052 0.053 0.05 0.055 0.055 0.056 ...
-##  $ RATE   : num [1:46605] 90.6 90.4 89.5 89.3 89.2 ...</code></pre>
+<pre><code>## tibble [46,605 × 8] (S3: tbl_df/tbl/data.frame)
+##  $ FIPS    : int [1:46605] 1001 1001 1001 1001 1001 1001 1001 1001 1001 1001 ...
+##  $ Year    : int [1:46605] 1998 1999 2000 2001 2002 2003 2004 2005 2006 2007 ...
+##  $ SMOKING : num [1:46605] 27 26 26 26.5 26.6 26.3 27.1 26.4 26.3 25.6 ...
+##  $ POVERTY : num [1:46605] 11.3 11.4 10.5 10.8 10.3 10.4 11.6 10.4 12.5 10.4 ...
+##  $ PM25    : num [1:46605] 17.1 15.4 14 13.9 14.8 ...
+##  $ NO2     : num [1:46605] 1.38 1.04 1.47 1.74 1.1 0.9 1.1 1.17 0.84 0.77 ...
+##  $ SO2     : num [1:46605] 0.057 0.055 0.054 0.051 0.052 0.053 0.05 0.055 0.055 0.056 ...
+##  $ LBC_RATE: num [1:46605] 90.6 90.4 89.5 89.3 89.2 ...</code></pre>
 <p>Compare to and <strong>wrire.csv()</strong> as well as
 <strong>frwite()</strong>, <strong>write_feather()</strong> is very
 fast:</p>
 <pre class="r"><code># CSV file with base write.csv
 system.time(write.csv(DT, paste0(dataFolder, &quot;LBC_data.csv&quot;)))</code></pre>
 <pre><code>##    user  system elapsed 
-##    1.00    0.02    1.02</code></pre>
+##    1.02    0.00    1.02</code></pre>
 <pre class="r"><code># CSV file with fwrite
 system.time(fwrite(DT, paste0(dataFolder, &quot;LBC_data.csv&quot;)))</code></pre>
 <pre><code>##    user  system elapsed 
-##    0.11    0.00    0.05</code></pre>
+##    0.03    0.00    0.01</code></pre>
 <pre class="r"><code># feather file with 
 system.time(write_feather(DT, paste0(dataFolder, &quot;LBC_data.feather&quot;)))</code></pre>
 <pre><code>##    user  system elapsed 

@@ -6,16 +6,49 @@ title: ''
 </div>
 
 ```{r echo=FALSE, out.width='100%', fig.align="center"}
-knitr::include_graphics("F:\\GitHub\\Chemistry_R\\chemstat-r-github.io\\Image\\PNG_FILE_01\\getting_started.png")
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_01\\getting_started.png")
 ```
 
 <div style="margin-bottom:20px;">
 </div>
 
 
+### **Table of Content**
+
+* [What is R?](#what-is-r) 
+
+* [Download R](#download-r)
+
+* [Install R on Windows](#install-r-on-windows)
+
+* [Install R on Mac OSX](#install-r-on-mac-osx)
+
+* [Install R on Ubuntu](#install-r-on-ubuntu)
+
+* [Open R-Base](#open-r-base)
+
+* [Integrated Development Environment for R](#integrated-development-environment-for-r)
+
+* [Download and Installation RStudio](#download-and-installation-rstudio)
+
+  - [Open RStudio](#open-rstudio)
+  
+  - [Change RStudio Appearance and  Themes](#change-rstudio-appearance-and-themes)
+  
+* [R Packages or Libraries](#r-packages-or-libraries)
+
+* [R Markdown](#r-markdown)
+
+<div style="margin-bottom:30px;">
+</div>
+
+
 ### **What is R?** 
 
 [R](https://www.r-project.org/) is one of the most popular open-source statistical computing and visualization environments. It was developed in 1980 based on the [S-language](https://en.wikipedia.org/wiki/S_(programming_language)), and an open-source community regularly updates the software for a robust, programmable, portable, and open-source computing environment. We can use it to solve complex and sophisticated problems and "routine" analysis without restrictions on access or use.
+
+<div style="margin-bottom:20px;">
+</div>
 
 ### **Download R**
 
@@ -30,7 +63,7 @@ The R can be downloaded from the [R project](https://www.r-project.org/) of a re
 
 ```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="Download R"}
 library(embedr)
-embed_video("F:/GitHub/Chemistry_R/chemstat-r-github.io/Vedio/download_r.mp4", width = "856", height = "656")
+embed_video("E:/Dropbox/GitHub/chemstat-r-github.io/Vedio/download_r.mp4", width = "856", height = "656")
 ```
 
 <div style="margin-bottom:20px;">
@@ -46,28 +79,31 @@ Installation instruction of R  in Windows and MAC could be found  [here](https:/
 3. Double-click this **exe** file and follow the instruction as shown in the video below: 
 
 ```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="Download R"}
-embed_video("F:/GitHub/Chemistry_R/chemstat-r-github.io/Vedio/install_r.mp4", width = "856", height = "656")
+embed_video("E:/Dropbox/GitHub/chemstat-r-github.io/Vedio/install_r.mp4", width = "856", height = "656")
 ```
 
 <div style="margin-bottom:20px;">
 </div>
 
-### **Installing R on Mac OSX**
+### **Install R on Mac OSX**
 
 Installing R on Mac OS is similar to Windows.  The easiest way is to install it through CRAN by going to the CRAN downloads page and following description as  as shown [here](https://itslinuxfoss.com/install-r-ubuntu-22-04/)
 
 <div style="margin-bottom:20px;">
 </div>
-### **Install R-base on Ubuntu**  
+
+### **Install R on Ubuntu**  
 
 The installation of R in Ubuntu little tricky for those who are not familiar with command line. Details R installation on Ubuntu 19.04/18.04/16.04 could be found [here](https://itslinuxfoss.com/install-r-ubuntu-22-04/).  
 
 ```{r echo=FALSE, out.width='80%', fig.align="center"}
-knitr::include_graphics("F:\\GitHub\\Chemistry_R\\chemstat-r-github.io\\Image\\PNG_FILE_02\\r_ubuntu.png")
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\r_ubuntu.png")
 ```
 
 <div style="margin-bottom:20px;">
 </div>
+
+
 
 ### **Open R-Base** 
 
@@ -76,14 +112,14 @@ You can work in the console and use R with the command line. However, the comman
  
 
 ```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="Download R"}
-embed_video("F:/GitHub/Chemistry_R/chemstat-r-github.io/Vedio/open_r.mp4", width = "856", height = "656")
+embed_video("E:/Dropbox/GitHub/chemstat-r-github.io/Vedio/open_r.mp4", width = "856", height = "656")
 ```
 
 <div style="margin-bottom:20px;">
 </div>
 
 
-### **Integrated development environment (IDE)**
+## **Integrated Development Environment for R**
 
 R can be run in the command line  and graphical user interfaces in [integrated development environment (IDE)](https://en.wikipedia.org/wiki/Integrated_development_environment). Below are the best programming IDE for R: 
 
@@ -95,11 +131,12 @@ R can be run in the command line  and graphical user interfaces in [integrated d
 6. [R AnalyticalFlow](https://r.analyticflow.com/en/)
 7. [Radiant](https://radiant-rstats.github.io/docs/install.html)
 8. [RBox](https://atom.io/packages/rbox)
+9. [Code](https://code.visualstudio.com/)
 
-<div style="margin-bottom:10px;">
+<div style="margin-bottom:15px;">
 </div>
 
-### **Download and Installation R-Studio**
+### **Download and Installation RStudio**
 
 [RStudio](https://www.rstudio.com/) is one of the best [integrated development environment  (IDE)](https://en.wikipedia.org/wiki/Integrated_development_environment) for R that includes a [console](https://support.rstudio.com/hc/en-us/articles/200404846-Working-in-the-Console), a [terminal](https://support.rstudio.com/hc/en-us/articles/115010737148-Using-the-RStudio-Terminal-in-the-RStudio-IDE) syntax-highlighting editor that supports direct code execution, as well as tools for plotting, history, debugging and workspace management. RStudio Desktop and RStudio Server for Windows, Mac, and Linux are open sources. 
 
@@ -109,7 +146,7 @@ For windows user, and just run the installation file and it normally detects you
 For installation instruction of R and RStudio in Mac OS could be found [here](https://web.stanford.edu/~kjytay/courses/stats32-aut2018/Session%201/Installation%20for%20Mac.html). 
 Installing R Studio on Ubuntu could be found [here](https://www.geeksforgeeks.org/how-to-install-r-studio-on-windows-and-linux/)
 
-<div style="margin-bottom:10px;">
+<div style="margin-bottom:15px;">
 </div>
 
 ### **Open RStudio**
@@ -117,24 +154,24 @@ Installing R Studio on Ubuntu could be found [here](https://www.geeksforgeeks.or
 We may open RStudio just double click Rstudio icon on your Desktop or on the task bar. It has several components: console, terminal, editors, global environment etc. 
 
 ```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="Download R"}
-embed_video("F:/GitHub/Chemistry_R/chemstat-r-github.io/Vedio/rStudio_01.mp4", width = "856", height = "656")
+embed_video("E:/Dropbox/GitHub/chemstat-r-github.io/Vedio/rStudio_01.mp4", width = "856", height = "656")
 ```
 
 <div style="margin-bottom:20px;">
 </div>
 
-### **Change RStudio Apperance & Themes**
+### **Change RStudio Appearance and Themes**
 
 Navigate to **Tools → Global options → Appearance** and switch the theme in the Editor Theme option. By default, you will have the Textmate theme activated. There is a wide in-built variety of themes to choose, from light to dark themes
 
 ```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="Download R"}
-embed_video("F:/GitHub/Chemistry_R/chemstat-r-github.io/Vedio/rStudio_02.mp4", width = "856", height = "656")
+embed_video("E:/Dropbox/GitHub/chemstat-r-github.io/Vedio/rStudio_02.mp4", width = "856", height = "656")
 ```
 
 <div style="margin-bottom:20px;">
 </div>
 
-## **R Packages** 
+## **R Packages or Libraries** 
 
 R Packages are collections of R functions, data, and compiled code in a well-defined format. The directory where packages are stored is called the **library**. We can install any R 'package' or multiple package  directly from the console, using r-script and GUI (Tools > Install Packages) through internet. 
 
@@ -150,24 +187,59 @@ Use **install.packages()** function in your console or in  a script:
 ```
 
 ```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="Download R"}
-embed_video("F:/GitHub/Chemistry_R/chemstat-r-github.io/Vedio/r_package.mp4", width = "856", height = "656")
+embed_video("E:/Dropbox/GitHub/chemstat-r-github.io/Vedio/r_package.mp4", width = "856", height = "656")
 ```
 
+<div style="margin-bottom:30px;">
 
 ###  **Use Libraries in R**
 
 To use any installed libraries, simply type the **library()** function with the name of the library in brackets. For example
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 library(spatial)
 ```
 
 If we want see content of any library, just use **help()** function 
 
 ```{r}
-library(help=spatial)
+#library(help=spatial)
 ```
 
 
 <div style="margin-bottom:30px;">
-</div>
+
+## **R Markdown**
+
+Markdown is a lightweight markup language for creating formatted text using a plain-text editor. John Gruber and Aaron Swartz created Markdown in 2004 as a markup language that is appealing to human readers in its source code form. Markdown is widely used in blogging, instant messaging, online forums, collaborative software, documentation pages, and readme files. (source: [wikipedia)](https://en.wikipedia.org/wiki/Markdown)
+
+
+R Markdown provides an authoring framework for data science. You can use a single R Markdown file to both 
+save and execute code generate high quality reports that can be shared with an audience R Markdown documents are fully reproducible and support dozens of static and dynamic output formats. This 1-minute video provides a quick tour of what’s possible with R Markdown (source: [R Markdown)](https://rmarkdown.rstudio.com/index.html)
+
+```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="Download R"}
+embed_video("E:/Dropbox/GitHub/chemstat-r-github.io/Vedio/r-markdown.mp4", width = "856", height = "656")
+```
+
+<div style="margin-bottom:15px;">
+
+For a brief a brief tutorial, please visit [here](https://rmarkdown.rstudio.com/lesson-2.html)
+
+
+<div style="margin-bottom:15px;">
+
+below the  cheatsheets that  for  RStudio IDE:  
+
+```{r echo=FALSE, out.width='100%', fig.align="center"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_01\\rarkdown_cheat_sheet_01.png")
+```
+
+<div style="margin-bottom:15px;">
+
+```{r echo=FALSE, out.width='100%', fig.align="center"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_01\\rarkdown_cheat_sheet_02.png")
+```
+
+<div style="margin-bottom:15px;">
+
+For a brief a brief tutorial, please visit [here](https://rmarkdown.rstudio.com/lesson-2.html)

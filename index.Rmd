@@ -4,13 +4,13 @@ title: ''
 
 
 ```{r echo=FALSE, out.width='100%', fig.align="center"}
-knitr::include_graphics("F:\\GitHub\\Chemistry_R\\chemstat-r-github.io\\Image\\empty_banner.png")
+#knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\empty_banner.png")
 ```
 <div style="margin-bottom:30px;">
 </div>
 
 ```{r echo=FALSE, out.width='100%', fig.align="center"}
-knitr::include_graphics('F:\\GitHub\\Chemistry_R\\chemstat-r-github.io\\Image\\Banner.png')
+knitr::include_graphics('E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\Banner.png')
 ```
 
 
@@ -51,5 +51,5 @@ Research Associate Professor (Data & Visualization)
 </div>
 
 ```{r echo=FALSE, out.width='40%', fig.align="left"}
-knitr::include_graphics('F:\\GitHub\\Chemistry_R\\chemstat-r-github.io\\Image\\RENEW.png')
+knitr::include_graphics('E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\RENEW.png')
 ```

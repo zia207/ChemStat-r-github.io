@@ -1,3 +1,14 @@
 ---
-title: "Basic Statistics with R"
+title: ''
 ---
+
+
+<div style="margin-bottom:20px;">
+</div>
+
+```{r echo=FALSE, out.width='100%', fig.align="center"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\basic_statistics.png")
+```
+
+<div style="margin-bottom:20px;">
+</div>

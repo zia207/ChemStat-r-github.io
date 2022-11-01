@@ -3,7 +3,7 @@ title: "Getting Started with R"
 ---
 
 ```{r echo=FALSE, out.width='100%', fig.align="center"}
-knitr::include_graphics("F:\\GitHub\\Chemistry_R\\chemstat-r-github.io\\Image\\empty_banner.png")
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\empty_banner.png")
 ```
 <div style="margin-bottom:30px;">
 </div>
