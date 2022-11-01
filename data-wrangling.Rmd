@@ -138,10 +138,16 @@ regions<-read_csv(paste0(dataFolder, "US_regions.csv"))
 We examine structure of the data: 
 
 ```{r}
-str(df); str(fips); str(regions)
+str(df); 
 ```
 <div style="margin-bottom:20px;">
 </div>
+
+take a **glimpse** of the df dataset:
+
+```{r}
+glimpse(df)
+```
 
 
 
