@@ -46,6 +46,10 @@ knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_F
   - summarize()
   
   - group_by()
+  
+* [Cleaning a Messy Data](#cleaning-a-messy-data) 
+
+* [Further Reading](#further-reading)
 
 <div style="margin-bottom:60px;">
 </div>
@@ -110,12 +114,13 @@ The **dplyr**  is the most commonly use data manipulation package, providing a s
 * **groupby()** All above combine naturally with group_by() which allows you to perform any operation “by group”. 
  
  
-### Load tidyverse package
+### Load Package
  
 ```{r message=FALSE, warning=FALSE}
 library(tidyverse)
 library(data.table)
 library(DT)
+#require(plyr)
 # library(dplyr)
 # library(readr)
 ```
@@ -188,7 +193,7 @@ head(mf)
 
 
 Now we will move  REGION, DIVISION column after FIPS for organizing the columns in the following order: 
-FIPS, REGION, DIVISION,  STATE, COUNTY, X, Y, Year, SMOKING, POVERTY, PM25, NO2, SO2, LBC_RATE.  We will use **relocate()** fuction: 
+FIPS, REGION, DIVISION,  STATE, COUNTY, X, Y, Year, SMOKING, POVERTY, PM25, NO2, SO2, LBC_RATE.  We will use **relocate()** function: 
 
 ```{r}
 mf<-relocate(mf, REGION,   DIVISION, .after = FIPS)
@@ -326,7 +331,8 @@ The rename function can be used to rename variables.
 
 
 ```{r}
-mf.new <- mf %>% rename("LBC Mortality Rate"= LBC_RATE)
+mf.new <- mf %>% 
+        rename("LBC_Mortality_Rate" = "LBC_RATE")
 names(mf.new)
 ```
 <div style="margin-bottom:20px;">
@@ -478,7 +484,7 @@ summary_statistics <- mf %>%
   # First select  numerical columns
   select(LBC_RATE, SMOKING, POVERTY, PM25, NO2, SO2) %>%
   # rename LBC_rate to LBC
-  rename("LBC"= LBC_RATE) %>%
+  dplyr::rename("LBC"= LBC_RATE) %>%
   # get summary statistics
    summarise_all(funs(min = min, 
                       q25 = quantile(., 0.25), 
@@ -505,8 +511,8 @@ Now, we can apply the **group_by()** and **summarize()** functions to calculate 
 
 
 ```{r}
-stat.mf<-mf %>% 
-  group_by(STATE) %>% 
+state.mf<-mf %>% 
+  group_by(STATE) %>%
   summarize(LBC_RATE = mean(LBC_RATE),
             SMOKING = mean(SMOKING),
             POVERTY = mean(POVERTY),
@@ -517,13 +523,14 @@ stat.mf<-mf %>%
 
 
 ```{r}
-datatable(as.data.frame(stat.mf), 
+datatable(as.data.frame(state.mf), 
           rownames = T, options = list(pageLength = 10, scrollX = TRUE, round)) %>%
   formatRound(columns = 2:7, digits = 3)
 ```
+<div style="margin-bottom:30px;">
+</div>
 
-
-### Cleaning a Messy Data   
+## **Cleaning a Messy Data**   
 
 In this exercise you will learn how a clean data and make it ready for analysis, such as dealing with missing values, data with below detection limit and cleaning spatial characters. We will use data from United States Geological Survey (USGS) as a part of the USGS Geochemical Landscapes Project [(Smith et al., 2011)](https://pubs.usgs.gov/ds/801/).
 
@@ -544,6 +551,7 @@ glimpse(df.geo)
 glimpse(meta.geo)
 ```
 
+
 We first create a file with limited number of variables using **select** functions
 
 
@@ -559,8 +567,114 @@ mf.geo <- df.geo %>%
              "Arsenic" = A_As,
              "Cadmium" = A_Cd,
              "Lead" = A_Pb,
-             "Cromimum" = A_Cr)
-glimpse(mf.geo)
+             "Chromium" = A_Cr) %>% glimpse()
 ```
 
 
+Now, we filter the data where records have N.S. values INS: 
+
+```{r}
+mf.geo<- mf.geo %>% 
+        filter(Soil_depth != "N.S." & Total_Carbon !="INS")
+```
+
+
+Then, we will convert all N.D. values to empty string: 
+
+
+```{r}
+mf.geo[mf.geo=="N.D."]<- ""
+```
+
+Here detection limits of As, Cd, Pb and Cr are  0.6, 0.1, 0.5, and 1 mg/kg, respectively. We will replace  the  values below detection limits by half of detection limits of these heavy-metals. Before that we have to remove **"<"** and convert the all **<chr>** to **<double>**.
+
+
+```{r}
+mf.geo <- mf.geo %>%
+      mutate_at(c("Arsenic", "Cadmium", "Lead", "Chromium"), str_replace, "<", "") %>%
+      mutate_at(c(5:11), as.numeric) %>% glimpse()
+```
+
+
+Now replace values below detection limits:
+
+
+```{r}
+mf.geo["Arsenic"][mf.geo["Arsenic"] == 0.6] <- 0.3
+mf.geo["Cadmium"][mf.geo["Cadmium"] == 0.1] <- 0.05
+mf.geo["Lead"][mf.geo["Lead"] == 0.5] <- 0.25
+mf.geo["Chromium"][mf.geo["Chromium"] == 1] <- 0.5
+```
+
+
+Now will check the missing values of the data:
+
+```{r}
+# counting unique, missing, and median values
+Arsenic<- mf.geo %>% summarise(N = length(Arsenic),
+                 na = sum(is.na(Arsenic)),
+                 Min = min(Arsenic, na.rm = TRUE),
+                 Max =max(Arsenic, na.rm = TRUE))
+
+Cadmium<- mf.geo %>% summarise(N = length(Cadmium),
+                 na = sum(is.na(Cadmium)),
+                 Min = min(Cadmium, na.rm = TRUE),
+                 Max =max(Cadmium, na.rm = TRUE))
+
+Lead<- mf.geo %>% summarise(N = length(Lead),
+                 na = sum(is.na(Lead)),
+                 Min = min(Lead, na.rm = TRUE),
+                 Max =max(Lead, na.rm = TRUE))
+
+Chromium<- mf.geo %>% summarise(N = length(Chromium),
+                 na = sum(is.na(Chromium)),
+                 Min = min(Chromium, na.rm = TRUE),
+                 Max =max(Chromium, na.rm = TRUE),
+                 )
+
+#bind the data
+geo.sum<- bind_rows(Arsenic, Cadmium, Lead, Chromium)
+
+#add.row.names
+row.names(geo.sum) <- c("Arsenic", "Cadmium", "Lead", "Chromium")
+datatable(geo.sum)
+```
+
+One of the common method of replacing missing values  is **na.omit**. The function **na.omit()** returns the object with listwise deletion of missing values and function create new dataset without missing data.
+
+
+```{r}
+newdata <- na.omit(mf.geo)
+glimpse(newdata)
+```
+
+This function delete all  records with missing values. Now newdata have only 1,167 records, since Inorg_Carbon variable has 3,690 missing values which all are omitted. 
+
+We can impute missing values in several ways. The easiest way to impute missing values is by replacing the mean values of the variable. The following  code replace missing of Arsenic, Cadmium, Lead and  Chromium with their mean values. 
+
+
+```{r}
+mf.geo.new<-mf.geo %>% mutate_at(vars(Arsenic, Cadmium, Lead, Chromium),~ifelse(is.na(.x), mean(.x, na.rm = TRUE), .x)) %>% glimpse()
+```
+
+```{r}
+mf.geo.new %>% summarise(sum(is.na(Chromium)))
+```
+
+<div style="margin-bottom:40px;">
+</div>
+
+## **Further Reading**
+
+
+1. [R for Data Science](https://r4ds.had.co.nz/) 
+
+2. [Data Wrangling with R](https://cengel.github.io/R-data-wrangling/)
+
+3. [Book: Data Wrangling with R](https://link.springer.com/book/10.1007/978-3-319-45599-0)
+
+4. [PDF Data wrangling with R and RStudio](https://github.com/rstudio/webinars/blob/master/05-Data-Wrangling-with-R-and-RStudio/wrangling-webinar.pdf)
+
+5. [Youtube Data Wrangling with R and the Tidyverse - Workshop](https://www.youtube.com/watch?v=CnY5Y5ANnjE)
+ 
+ 
