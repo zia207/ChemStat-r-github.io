@@ -436,8 +436,8 @@ base-R. Some are shown in below table.</p>
 
 </div>
 <p>Here below some examples of R built-in R-functions</p>
-<pre class="r"><code>log(10)</code></pre>
-<pre><code>## [1] 2.302585</code></pre>
+<pre class="r"><code>log10(2)</code></pre>
+<pre><code>## [1] 0.30103</code></pre>
 <pre class="r"><code>exp(1)</code></pre>
 <pre><code>## [1] 2.718282</code></pre>
 <pre class="r"><code>pi</code></pre>
@@ -575,9 +575,9 @@ whole numbers.</p>
 <div style="margin-bottom:10px;">
 
 </div>
-<pre class="r"><code>x=1.5
+<pre class="r"><code>x=1.2
 x</code></pre>
-<pre><code>## [1] 1.5</code></pre>
+<pre><code>## [1] 1.2</code></pre>
 <pre class="r"><code>class(x)</code></pre>
 <pre><code>## [1] &quot;numeric&quot;</code></pre>
 <p><strong>Character</strong> objects are <strong>strings</strong>. They
@@ -666,9 +666,8 @@ of a vector</p>
 divided giving the result as a vector output.</p>
 <pre class="r"><code># Create two vectors.
 v1 &lt;- c(3,8,4,5,0,11)
-v2 &lt;- c(4,11,0,8,1,2)
-
-# Vector addition.
+v2 &lt;- c(4,11,0,8,1,2)</code></pre>
+<pre class="r"><code># Vector addition.
 add.result &lt;- v1+v2
 print(add.result)</code></pre>
 <pre><code>## [1]  7 19  4 13  1 13</code></pre>
@@ -688,8 +687,9 @@ print(divi.result)</code></pre>
 
 </div>
 </div>
-<div id="matrix" class="section level3">
-<h3><strong>Matrix</strong></h3>
+</div>
+<div id="matrix" class="section level1">
+<h1><strong>Matrix</strong></h1>
 <p>Matrices are the R objects in which the elements are arranged in a
 two-dimensional rectangular layout. All columns in a matrix must have
 the same mode (numeric, character, etc.) and the same length.</p>
@@ -855,7 +855,6 @@ and column means. Here columns are margin no. 2 (rows are margin no.
 ##       2       5       8       2</code></pre>
 <div style="margin-bottom:15px;">
 
-</div>
 </div>
 </div>
 <div id="data-frames" class="section level3">
