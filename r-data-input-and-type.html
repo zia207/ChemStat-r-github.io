@@ -675,22 +675,22 @@ functions.</p>
 <pre class="r"><code># base function read,csv
 system.time(read.csv(paste0(dataFolder,&quot;LBC_data.csv&quot;), header= TRUE)) </code></pre>
 <pre><code>##    user  system elapsed 
-##    0.22    0.00    0.22</code></pre>
+##    0.25    0.01    0.25</code></pre>
 <pre class="r"><code>#fread of data.table
 system.time(fread(paste0(dataFolder,&quot;LBC_data.csv&quot;), header= TRUE)) </code></pre>
 <pre><code>##    user  system elapsed 
-##    0.02    0.00    0.02</code></pre>
+##    0.00    0.02    0.02</code></pre>
 </div>
 <div id="writing-time" class="section level4">
 <h4>Writing time</h4>
 <pre class="r"><code># base-function write.csv
 system.time(write.csv(DT,  paste0(dataFolder, &quot;DT.csv&quot;), row.names=F))</code></pre>
 <pre><code>##    user  system elapsed 
-##    0.91    0.02    1.06</code></pre>
+##    0.84    0.02    0.86</code></pre>
 <pre class="r"><code># fwrite of data.table
 system.time(fwrite(DT,  paste0(dataFolder, &quot;DT.csv&quot;), row.names=F, quote=TRUE))</code></pre>
 <pre><code>##    user  system elapsed 
-##    0.10    0.00    0.05</code></pre>
+##    0.06    0.00    0.03</code></pre>
 <p>Beside two functions, we can perform several data transforming such
 as how to subset rows, select and compute on columns, and perform
 aggregations by group, etc with data.table API. Here is the cheat sheets
@@ -749,11 +749,11 @@ fast:</p>
 <pre class="r"><code># CSV file with base write.csv
 system.time(write.csv(DT, paste0(dataFolder, &quot;LBC_data.csv&quot;)))</code></pre>
 <pre><code>##    user  system elapsed 
-##    0.95    0.02    0.97</code></pre>
+##    0.98    0.00    0.99</code></pre>
 <pre class="r"><code># CSV file with fwrite
 system.time(fwrite(DT, paste0(dataFolder, &quot;LBC_data.csv&quot;)))</code></pre>
 <pre><code>##    user  system elapsed 
-##    0.08    0.00    0.05</code></pre>
+##    0.04    0.00    0.03</code></pre>
 <pre class="r"><code># feather file with 
 system.time(write_feather(DT, paste0(dataFolder, &quot;LBC_data.feather&quot;)))</code></pre>
 <pre><code>##    user  system elapsed 
