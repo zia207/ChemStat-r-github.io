@@ -444,11 +444,11 @@ function</p>
 ##  [6] &quot;about_a.Rmd&quot;                                    
 ##  [7] &quot;about_b.html&quot;                                   
 ##  [8] &quot;about_b.knit.html&quot;                              
-##  [9] &quot;about_b.knit.md&quot;                                
-## [10] &quot;about_b.Rmd&quot;                                    
-## [11] &quot;anle138b.murcko.fragments.png&quot;                  
-## [12] &quot;basic-statistics-with-r.html&quot;                   
-## [13] &quot;basic-statistics-with-r.Rmd&quot;                    
+##  [9] &quot;about_b.Rmd&quot;                                    
+## [10] &quot;anle138b.murcko.fragments.png&quot;                  
+## [11] &quot;basic-statistics-with-r.html&quot;                   
+## [12] &quot;basic-statistics-with-r.Rmd&quot;                    
+## [13] &quot;basic-statistics-with-r_files&quot;                  
 ## [14] &quot;cheminformatics-with-cdk.html&quot;                  
 ## [15] &quot;cheminformatics-with-cdk.Rmd&quot;                   
 ## [16] &quot;cheminformatics-with-cdk_files&quot;                 
@@ -483,18 +483,17 @@ function</p>
 ## [45] &quot;intoduction-to-use-r.Rmd&quot;                       
 ## [46] &quot;mathematics-with-r.html&quot;                        
 ## [47] &quot;mathematics-with-r.knit.html&quot;                   
-## [48] &quot;mathematics-with-r.knit.md&quot;                     
-## [49] &quot;mathematics-with-r.Rmd&quot;                         
-## [50] &quot;multivariate-statistics.html&quot;                   
-## [51] &quot;multivariate-statistics.Rmd&quot;                    
-## [52] &quot;r-data-input-and-type.html&quot;                     
-## [53] &quot;r-data-input-and-type.Rmd&quot;                      
-## [54] &quot;README.md&quot;                                      
-## [55] &quot;site_libs&quot;                                      
-## [56] &quot;sql-with-r.html&quot;                                
-## [57] &quot;sql-with-r.Rmd&quot;                                 
-## [58] &quot;sub.sdf&quot;                                        
-## [59] &quot;Vedio&quot;</code></pre>
+## [48] &quot;mathematics-with-r.Rmd&quot;                         
+## [49] &quot;multivariate-statistics.html&quot;                   
+## [50] &quot;multivariate-statistics.Rmd&quot;                    
+## [51] &quot;r-data-input-and-type.html&quot;                     
+## [52] &quot;r-data-input-and-type.Rmd&quot;                      
+## [53] &quot;README.md&quot;                                      
+## [54] &quot;site_libs&quot;                                      
+## [55] &quot;sql-with-r.html&quot;                                
+## [56] &quot;sql-with-r.Rmd&quot;                                 
+## [57] &quot;sub.sdf&quot;                                        
+## [58] &quot;Vedio&quot;</code></pre>
 <div style="margin-bottom:30px;">
 
 </div>
@@ -676,22 +675,22 @@ functions.</p>
 <pre class="r"><code># base function read,csv
 system.time(read.csv(paste0(dataFolder,&quot;LBC_data.csv&quot;), header= TRUE)) </code></pre>
 <pre><code>##    user  system elapsed 
-##    0.24    0.00    0.23</code></pre>
+##    0.22    0.00    0.22</code></pre>
 <pre class="r"><code>#fread of data.table
 system.time(fread(paste0(dataFolder,&quot;LBC_data.csv&quot;), header= TRUE)) </code></pre>
 <pre><code>##    user  system elapsed 
-##    0.01    0.00    0.01</code></pre>
+##    0.02    0.00    0.02</code></pre>
 </div>
 <div id="writing-time" class="section level4">
 <h4>Writing time</h4>
 <pre class="r"><code># base-function write.csv
 system.time(write.csv(DT,  paste0(dataFolder, &quot;DT.csv&quot;), row.names=F))</code></pre>
 <pre><code>##    user  system elapsed 
-##    0.92    0.00    0.94</code></pre>
+##    0.91    0.02    1.06</code></pre>
 <pre class="r"><code># fwrite of data.table
 system.time(fwrite(DT,  paste0(dataFolder, &quot;DT.csv&quot;), row.names=F, quote=TRUE))</code></pre>
 <pre><code>##    user  system elapsed 
-##    0.04    0.00    0.03</code></pre>
+##    0.10    0.00    0.05</code></pre>
 <p>Beside two functions, we can perform several data transforming such
 as how to subset rows, select and compute on columns, and perform
 aggregations by group, etc with data.table API. Here is the cheat sheets
@@ -750,11 +749,11 @@ fast:</p>
 <pre class="r"><code># CSV file with base write.csv
 system.time(write.csv(DT, paste0(dataFolder, &quot;LBC_data.csv&quot;)))</code></pre>
 <pre><code>##    user  system elapsed 
-##    0.99    0.03    1.01</code></pre>
+##    0.95    0.02    0.97</code></pre>
 <pre class="r"><code># CSV file with fwrite
 system.time(fwrite(DT, paste0(dataFolder, &quot;LBC_data.csv&quot;)))</code></pre>
 <pre><code>##    user  system elapsed 
-##    0.05    0.00    0.03</code></pre>
+##    0.08    0.00    0.05</code></pre>
 <pre class="r"><code># feather file with 
 system.time(write_feather(DT, paste0(dataFolder, &quot;LBC_data.feather&quot;)))</code></pre>
 <pre><code>##    user  system elapsed 

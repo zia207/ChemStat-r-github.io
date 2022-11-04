@@ -1,0 +1,28 @@
+---
+title: "Test"
+author: "Zia Ahmed"
+date: "2022-11-02"
+output:
+  word_document: default
+  html_document: default
+---
+
+### Import data
+
+```{r Set workin., message=FALSE, warning=FALSE}
+setwd("D:\\Dropbox\\GitHub\\chemstat-r-github.io\\Data")
+```
+
+```{r}
+dir()
+```
+
+
+```{r}
+df=read.csv("LBC_data.csv", header = TRUE)
+```
+
+```{r}
+str(df)
+```
+

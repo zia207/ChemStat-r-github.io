@@ -19,33 +19,29 @@ knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_F
 
 * [Important R Packages for Data Wrangling](#important-r-rackages-for-data-wrangling)
 
-* [Data Processing with dplyr](#data-processing-with-dplyr)
+* [Data Processing with dplyr and tidyr](#data-processing-with-dplyr-tidyr)
 
-  - Pipe Operator (%>%)
+  - [Pipe Operator](#Pipe-Operator) 
 
-  - _join()
-  
-  - filter()
-  
-  - select
-  
-  - rename()
-  
-  - arrange()
-  
-  - Combined multiple functions with Pipes (%>%)
-  
-  - Pivoting dataframe
-  
-    - pivot_wider()
-    
-    - pivot_longer()
-    
-  - mutate()
-  
-  - summarize()
-  
-  - group_by()
+  - [Join](#jOIN)
+
+  - [Filter](#filter)
+
+  - [Select](#select)
+
+  - [Rename](#rename)
+
+  - [Arrange](#arrange)
+
+  - [Combined multiple functions with Pipes](#combined-multiple-functions-with-pipes)
+
+  - [Pivoting dataframe](#pivoting-dataframe)
+
+  - [Mutate]((#mutate))
+
+  - [summarize](#summarize)
+
+  - [Group by](#group-by)
   
 * [Cleaning a Messy Data](#cleaning-a-messy-data) 
 
@@ -59,8 +55,32 @@ knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_F
 
 **Data wrangling**, also known as **data munging**, is a series of assembling, cleaning, and transforming processes to understand data better and make them more accessible and easier to analyze. Due to the availability of a large amount of data from different sources with different formats, data wrangling has become an essential part of data modeling which helps data scientists fasten the decision-making process.  
 
+Here below [6 steps data wrangling](https://favtutor.com/blogs/data-wrangling):
+
+1. **Discovering**: The first step in data wrangling is analyzing the data before imputing the data. Wrangling needs to be done in a systematic fashion, based on some criteria which could demarcate and divide the data accordingly – these are identified in this step.
+
+2. **Structuring**: In most cases, the raw data extracted as user information generally doesn’t have structured data. The data should be restructured in a fashion that better suits the analytical method used. Based on the category identified in the first step, the data should be segregated to make use easier. For better analysis we have to select one column that may become two or rows may be split, this is also called feature engineering.
+
+3. **Cleaning**: Processed datasets definitely have some outliers, which can skew the results of the analysis. The dataset should be cleaned for optimum results. In this step, the data is cleaned thoroughly for high-quality data analysis. Null values should be imputed, and the formatting will be standardized to create higher quality processed data
+
+4.  **Enriching**: After processing the data, it will have to be enriched – this is performed in the fourth step. This implies that you one has to take stock of what is in the data and strategize whether you have upscale, downsample, or perform data augmentation. There are different methods to resample the data, one downsampling the data, and the other creating synthetic data using upsampling.
+
+5. **Validating**: Validation refers to iterative programming steps that are used to verify the consistency and the quality of data after processing. For example, you will have to ascertain whether the fields in the data set are accurate via validating data, or checking whether the attributes are normally distributed.
+
+6. **Publishing**: The processed and wrangled data is published so that it can be used further – which is the sole purpose of data wrangling. If needed, the complete data wrangling process should be documented efficiently for the users and clients for easy usage.
+
 <div style="margin-bottom:20px;">
 </div>
+
+```{r echo=FALSE, out.width='100%', fig.align="center"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\data_wrangling_background.png")
+```
+
+<div style="margin-bottom:20px;">
+</div>
+
+
+
 
 ## **Important R Packages for Data Wrangling**
 
@@ -94,10 +114,10 @@ knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_F
 <div style="margin-bottom:20px;">
 </div>
 
-## **Data Processing with dplyr**
+## **Data Processing with dplyr and tidyr**
 
  
-The **dplyr**  is the most commonly use data manipulation package, providing a set of functions that help us solve the most common data manipulation challenges. These are:
+The **dplyr**  and **tidyr** are the most commonly use data manipulation packages, providing a set of functions that help us solve the most common data manipulation challenges. These are:
  
 * **mutate()** adds new variables that are functions of existing variables
 
@@ -111,10 +131,30 @@ The **dplyr**  is the most commonly use data manipulation package, providing a s
 
 * **join()** join two data-frames
 
-* **groupby()** All above combine naturally with group_by() which allows you to perform any operation “by group”. 
+* **group_by()** All above combine naturally with group_by() which allows you to perform any operation “by group”. 
  
+ <div style="margin-bottom:40px;">
+</div>
  
-### Load Package
+Here below data Wrangling with [dplyr and tidyr Cheat Sheets](https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf):
+
+<div style="margin-bottom:20px;">
+</div>
+
+```{r echo=FALSE, out.width='100%', fig.align="center"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\data_wragling cheat_sheet_01.png")
+```
+
+
+```{r echo=FALSE, out.width='100%', fig.align="center"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\data_wragling cheat_sheet_02.png")
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+ 
+### **Load Package**
  
 ```{r message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -128,7 +168,7 @@ library(DT)
 </div>
 
 
-###  Load data
+###  **Load data**
 
 In this exercise  we will use two data sets: USA county level lung cancer mortality rates with risk factors from 1998 t0 2012 and USA  County FIPS Codes. We will use **read_csv()** function of **readr** package to import data a **Tidy** data. 
 
@@ -164,7 +204,7 @@ glimpse(df)
 Before starting this tutorial, I like to brief you about the **Pipe Operator**. This is the most important operator for data wrangling in R. The pipe operator, written as **%>%**, has been a longstanding feature of the **magrittr** package for R.  It takes the output of one function and passes it into another function as an argument. This allows us to link a sequence of analysis steps.  In this tutorial,  you can see exactly how this works in a real example.  (Source:https://towardsdatascience.com/an-introduction-to-the-pipe-in-r-823090760d64)  
 
 #
-## **_join() function**
+## **Join**
 
 In R we use **base::merge()** function to merge two dataframes. This function is present inside **join()** function of dplyr package. The most important condition for joining two dataframes is that the column type should be the same of “key” variable by  the merging happens. Types of **base::merge()** and **join()** function of dplyr available in R are:
 
@@ -208,7 +248,7 @@ levels(as.factor(mf$REGION))
 <div style="margin-bottom:20px;">
 </div>
 
-### **filter() function**
+### **Filter**
 
 The **filter()** function is used to subset a data frame, retaining all rows that satisfy your conditions. To be retained, the row must produce a value of TRUE for all conditions. Note that when a condition evaluates to NA the row will be dropped, unlike base subsetting with
 
@@ -280,7 +320,7 @@ head(counties.a)
 </div>
 
 
-### **select( ) function**
+### **select**
 
 
 **dplyr** selections implement a dialect of R where operators make it easy to select variable
@@ -325,7 +365,7 @@ knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_F
 <div style="margin-bottom:20px;">
 </div>
 
-#### **rename( ) Function**
+#### **Rename**
 
 The rename function can be used to rename variables.
 
@@ -339,7 +379,7 @@ names(mf.new)
 </div>
 
 
-### **arrange function**
+### **Arrange**
 
 
 **arrange()** orders the rows of a data frame by the values of selected columns.
@@ -358,7 +398,7 @@ head(mf.arrange.de$SMOKING)
 ```
 
 
-### Combined multiple functions with Pipes (**%>%**)
+### **Combined multiple functions with Pipes**
 
 In this exercise will use **select()**,  *filter()* and **rename()** in a single commands with **%>%**. First we select data FIPS, SATE, LBC rate and then filter out the data NY state data for the year 2012 and then rename LBC_RATE column.  
 
@@ -371,7 +411,7 @@ LBC.NY <- mf %>% select(FIPS, Year, STATE, LBC_RATE) %>%
 head(LBC.NY)        
 ```
 
-### Pivoting dataframe
+### **Pivoting dataframe**
 
 **pivot_longer()** and **pivot_wider()** are very flexible, and can easily tidy a wide variety of non-tidy datasets
 
@@ -410,7 +450,7 @@ str(LBC.longer)
 </div>
 
 
-### mutate() function
+### **Mutate**
 
 **mutate()** – adds new variables while retaining old variables to a data frame. In this exerciser, we will add log10 of LBC rate to mf data-frame. 
 
@@ -436,7 +476,7 @@ head(LBC.wider.summary)
 <div style="margin-bottom:20px;">
 </div>
 
-### **summarize( ) Function**
+### **Summarize**
 
 
 **summarise()** creates a new data frame. It will have one (or more) rows for each combination of grouping variables; if there are no grouping variables, the output will have a single row summarising all observations in the input. It will contain one column for each grouping variable and one column for each of the summary statistics that you have specified.
@@ -506,6 +546,7 @@ datatable(as.data.frame(summary_statistics),
   formatRound(columns = 2:8, digits = 3)
 ```
 
+### **Group by**
 
 Now, we can apply the **group_by()** and **summarize()** functions to calculate mean all variables  by States:
 

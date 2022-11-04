@@ -388,24 +388,21 @@ $(document).ready(function () {
 <li><p><a href="#data-wrangling">Data Wrangling</a></p></li>
 <li><p><a href="#important-r-rackages-for-data-wrangling">Important R
 Packages for Data Wrangling</a></p></li>
-<li><p><a href="#data-processing-with-dplyr">Data Processing with
-dplyr</a></p>
+<li><p><a href="#data-processing-with-dplyr-tidyr">Data Processing with
+dplyr and tidyr</a></p>
 <ul>
-<li><p>Pipe Operator (%&gt;%)</p></li>
-<li><p>_join()</p></li>
-<li><p>filter()</p></li>
-<li><p>select</p></li>
-<li><p>rename()</p></li>
-<li><p>arrange()</p></li>
-<li><p>Combined multiple functions with Pipes (%&gt;%)</p></li>
-<li><p>Pivoting dataframe</p>
-<ul>
-<li><p>pivot_wider()</p></li>
-<li><p>pivot_longer()</p></li>
-</ul></li>
-<li><p>mutate()</p></li>
-<li><p>summarize()</p></li>
-<li><p>group_by()</p></li>
+<li><p><a href="#Pipe-Operator">Pipe Operator</a></p></li>
+<li><p><a href="#jOIN">Join</a></p></li>
+<li><p><a href="#filter">Filter</a></p></li>
+<li><p><a href="#select">Select</a></p></li>
+<li><p><a href="#rename">Rename</a></p></li>
+<li><p><a href="#arrange">Arrange</a></p></li>
+<li><p><a href="#combined-multiple-functions-with-pipes">Combined
+multiple functions with Pipes</a></p></li>
+<li><p><a href="#pivoting-dataframe">Pivoting dataframe</a></p></li>
+<li><p><a href="(#mutate)">Mutate</a></p></li>
+<li><p><a href="#summarize">summarize</a></p></li>
+<li><p><a href="#group-by">Group by</a></p></li>
 </ul></li>
 <li><p><a href="#cleaning-a-messy-data">Cleaning a Messy
 Data</a></p></li>
@@ -424,6 +421,49 @@ easier to analyze. Due to the availability of a large amount of data
 from different sources with different formats, data wrangling has become
 an essential part of data modeling which helps data scientists fasten
 the decision-making process.</p>
+<p>Here below <a href="https://favtutor.com/blogs/data-wrangling">6
+steps data wrangling</a>:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Discovering</strong>: The first step in data wrangling is
+analyzing the data before imputing the data. Wrangling needs to be done
+in a systematic fashion, based on some criteria which could demarcate
+and divide the data accordingly – these are identified in this
+step.</p></li>
+<li><p><strong>Structuring</strong>: In most cases, the raw data
+extracted as user information generally doesn’t have structured data.
+The data should be restructured in a fashion that better suits the
+analytical method used. Based on the category identified in the first
+step, the data should be segregated to make use easier. For better
+analysis we have to select one column that may become two or rows may be
+split, this is also called feature engineering.</p></li>
+<li><p><strong>Cleaning</strong>: Processed datasets definitely have
+some outliers, which can skew the results of the analysis. The dataset
+should be cleaned for optimum results. In this step, the data is cleaned
+thoroughly for high-quality data analysis. Null values should be
+imputed, and the formatting will be standardized to create higher
+quality processed data</p></li>
+<li><p><strong>Enriching</strong>: After processing the data, it will
+have to be enriched – this is performed in the fourth step. This implies
+that you one has to take stock of what is in the data and strategize
+whether you have upscale, downsample, or perform data augmentation.
+There are different methods to resample the data, one downsampling the
+data, and the other creating synthetic data using upsampling.</p></li>
+<li><p><strong>Validating</strong>: Validation refers to iterative
+programming steps that are used to verify the consistency and the
+quality of data after processing. For example, you will have to
+ascertain whether the fields in the data set are accurate via validating
+data, or checking whether the attributes are normally
+distributed.</p></li>
+<li><p><strong>Publishing</strong>: The processed and wrangled data is
+published so that it can be used further – which is the sole purpose of
+data wrangling. If needed, the complete data wrangling process should be
+documented efficiently for the users and clients for easy
+usage.</p></li>
+</ol>
+<div style="margin-bottom:20px;">
+
+</div>
+<p><img src="Image/PNG_FILE_02/data_wrangling_background.png" width="100%" style="display: block; margin: auto;" /></p>
 <div style="margin-bottom:20px;">
 
 </div>
@@ -460,11 +500,12 @@ discussed before.</p>
 
 </div>
 </div>
-<div id="data-processing-with-dplyr" class="section level2">
-<h2><strong>Data Processing with dplyr</strong></h2>
-<p>The <strong>dplyr</strong> is the most commonly use data manipulation
-package, providing a set of functions that help us solve the most common
-data manipulation challenges. These are:</p>
+<div id="data-processing-with-dplyr-and-tidyr" class="section level2">
+<h2><strong>Data Processing with dplyr and tidyr</strong></h2>
+<p>The <strong>dplyr</strong> and <strong>tidyr</strong> are the most
+commonly use data manipulation packages, providing a set of functions
+that help us solve the most common data manipulation challenges. These
+are:</p>
 <ul>
 <li><p><strong>mutate()</strong> adds new variables that are functions
 of existing variables</p></li>
@@ -477,12 +518,26 @@ single summary.</p></li>
 <li><p><strong>arrange()</strong> changes the ordering of the
 rows.</p></li>
 <li><p><strong>join()</strong> join two data-frames</p></li>
-<li><p><strong>groupby()</strong> All above combine naturally with
+<li><p><strong>group_by()</strong> All above combine naturally with
 group_by() which allows you to perform any operation “by
 group”.</p></li>
 </ul>
+<div style="margin-bottom:40px;">
+
+</div>
+<p>Here below data Wrangling with <a
+href="https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf">dplyr
+and tidyr Cheat Sheets</a>:</p>
+<div style="margin-bottom:20px;">
+
+</div>
+<p><img src="Image/PNG_FILE_02/data_wragling%20cheat_sheet_01.png" width="100%" style="display: block; margin: auto;" /></p>
+<img src="Image/PNG_FILE_02/data_wragling%20cheat_sheet_02.png" width="100%" style="display: block; margin: auto;" />
+<div style="margin-bottom:20px;">
+
+</div>
 <div id="load-package" class="section level3">
-<h3>Load Package</h3>
+<h3><strong>Load Package</strong></h3>
 <pre class="r"><code>library(tidyverse)
 library(data.table)
 library(DT)
@@ -494,7 +549,7 @@ library(DT)
 </div>
 </div>
 <div id="load-data" class="section level3">
-<h3>Load data</h3>
+<h3><strong>Load data</strong></h3>
 <p>In this exercise we will use two data sets: USA county level lung
 cancer mortality rates with risk factors from 1998 t0 2012 and USA
 County FIPS Codes. We will use <strong>read_csv()</strong> function of
@@ -563,8 +618,8 @@ class="uri">https://towardsdatascience.com/an-introduction-to-the-pipe-in-r-8230
 </div>
 <div id="section" class="section level1">
 <h1></h1>
-<div id="join-function" class="section level2">
-<h2>**_join() function**</h2>
+<div id="join" class="section level2">
+<h2><strong>Join</strong></h2>
 <p>In R we use <strong>base::merge()</strong> function to merge two
 dataframes. This function is present inside <strong>join()</strong>
 function of dplyr package. The most important condition for joining two
@@ -630,8 +685,8 @@ head(mf)</code></pre>
 <div style="margin-bottom:20px;">
 
 </div>
-<div id="filter-function" class="section level3">
-<h3><strong>filter() function</strong></h3>
+<div id="filter" class="section level3">
+<h3><strong>Filter</strong></h3>
 <p>The <strong>filter()</strong> function is used to subset a data
 frame, retaining all rows that satisfy your conditions. To be retained,
 the row must produce a value of TRUE for all conditions. Note that when
@@ -689,8 +744,8 @@ head(counties.a)</code></pre>
 
 </div>
 </div>
-<div id="select-function" class="section level3">
-<h3><strong>select( ) function</strong></h3>
+<div id="select" class="section level3">
+<h3><strong>select</strong></h3>
 <p><strong>dplyr</strong> selections implement a dialect of R where
 operators make it easy to select variable</p>
 <ul>
@@ -751,8 +806,8 @@ names.</p>
 
 </div>
 </div>
-<div id="rename-function" class="section level4">
-<h4><strong>rename( ) Function</strong></h4>
+<div id="rename" class="section level4">
+<h4><strong>Rename</strong></h4>
 <p>The rename function can be used to rename variables.</p>
 <pre class="r"><code>mf.new &lt;- mf %&gt;% 
         rename(&quot;LBC_Mortality_Rate&quot; = &quot;LBC_RATE&quot;)
@@ -767,8 +822,8 @@ names(mf.new)</code></pre>
 </div>
 </div>
 </div>
-<div id="arrange-function" class="section level3">
-<h3><strong>arrange function</strong></h3>
+<div id="arrange" class="section level3">
+<h3><strong>Arrange</strong></h3>
 <p><strong>arrange()</strong> orders the rows of a data frame by the
 values of selected columns.</p>
 <pre class="r"><code># arrange ascending order as default
@@ -781,8 +836,7 @@ head(mf.arrange.de$SMOKING)</code></pre>
 <pre><code>## [1] 44.0 42.8 42.4 42.1 41.6 41.5</code></pre>
 </div>
 <div id="combined-multiple-functions-with-pipes" class="section level3">
-<h3>Combined multiple functions with Pipes
-(<strong>%&gt;%</strong>)</h3>
+<h3><strong>Combined multiple functions with Pipes</strong></h3>
 <p>In this exercise will use <strong>select()</strong>,
 <em>filter()</em> and <strong>rename()</strong> in a single commands
 with <strong>%&gt;%</strong>. First we select data FIPS, SATE, LBC rate
@@ -804,7 +858,7 @@ head(LBC.NY)        </code></pre>
 ## 6 36011  2012 New York                 57.6</code></pre>
 </div>
 <div id="pivoting-dataframe" class="section level3">
-<h3>Pivoting dataframe</h3>
+<h3><strong>Pivoting dataframe</strong></h3>
 <p><strong>pivot_longer()</strong> and <strong>pivot_wider()</strong>
 are very flexible, and can easily tidy a wide variety of non-tidy
 datasets</p>
@@ -862,8 +916,8 @@ str(LBC.longer)</code></pre>
 </div>
 </div>
 </div>
-<div id="mutate-function" class="section level3">
-<h3>mutate() function</h3>
+<div id="mutate" class="section level3">
+<h3><strong>Mutate</strong></h3>
 <p><strong>mutate()</strong> – adds new variables while retaining old
 variables to a data frame. In this exerciser, we will add log10 of LBC
 rate to mf data-frame.</p>
@@ -909,8 +963,8 @@ head(LBC.wider.summary)</code></pre>
 
 </div>
 </div>
-<div id="summarize-function" class="section level3">
-<h3><strong>summarize( ) Function</strong></h3>
+<div id="summarize" class="section level3">
+<h3><strong>Summarize</strong></h3>
 <p><strong>summarise()</strong> creates a new data frame. It will have
 one (or more) rows for each combination of grouping variables; if there
 are no grouping variables, the output will have a single row summarising
@@ -988,6 +1042,9 @@ DataTables.</p>
   formatRound(columns = 2:8, digits = 3)</code></pre>
 <div id="htmlwidget-52b63661bfc7b47148fc" style="width:100%;height:auto;" class="datatables html-widget"></div>
 <script type="application/json" data-for="htmlwidget-52b63661bfc7b47148fc">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6"],["LBC","SMOKING","POVERTY","PM25","NO2","SO2"],[11.18,7.1,1.7,1.04,0.06,0],[54,23.2,10.6,7.21,0.65,0.003],[65.39,25.9,13.9,9.66,1.1,0.016],[76.83,28.5,18.1,12.24,1.97,0.05],[223.6,44,62,26.05,21.56,0.632],[65.9127359725351,25.7768887458427,14.8396893037228,9.87051389335908,1.54664928655724,0.0404577620426993],[16.8038181332256,4.03719998402545,6.01448709239405,3.49528981707318,1.38791622382339,0.0640602709148616]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>variable<\/th>\n      <th>min<\/th>\n      <th>q25<\/th>\n      <th>median<\/th>\n      <th>q75<\/th>\n      <th>max<\/th>\n      <th>mean<\/th>\n      <th>sd<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"scrollX":true,"columnDefs":[{"targets":2,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"targets":3,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"targets":4,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"targets":5,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"targets":6,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"targets":7,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"targets":8,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"className":"dt-right","targets":[2,3,4,5,6,7,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render","options.columnDefs.2.render","options.columnDefs.3.render","options.columnDefs.4.render","options.columnDefs.5.render","options.columnDefs.6.render"],"jsHooks":[]}</script>
+</div>
+<div id="group-by" class="section level3">
+<h3><strong>Group by</strong></h3>
 <p>Now, we can apply the <strong>group_by()</strong> and
 <strong>summarize()</strong> functions to calculate mean all variables
 by States:</p>
