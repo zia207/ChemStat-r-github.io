@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>stat_test.knit</title>
+
+<script src="site_libs/header-attrs-2.17/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">ChemStat-R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="getting-started-with-r.html">Getting Started with R</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Essential of The R Language
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="essential-of-r-language.html">Table of Content</a>
+    </li>
+    <li>
+      <a href="intoduction-to-use-r.html">Introduction to Using R</a>
+    </li>
+    <li>
+      <a href="r-data-input-and-type.html">Importing/Exporting Data into R</a>
+    </li>
+    <li>
+      <a href="data-wrangling.html">Data Wrangling</a>
+    </li>
+    <li>
+      <a href="eda.html">Exploratory Data Analysis</a>
+    </li>
+    <li>
+      <a href="stat_test.html">Statistical Test</a>
+    </li>
+    <li>
+      <a href="anova.html">Analysis of Variance (ANOVA)</a>
+    </li>
+    <li>
+      <a href="correlation.html">Correlation Analysis</a>
+    </li>
+    <li>
+      <a href="regression.html">Regression Analysis</a>
+    </li>
+    <li>
+      <a href="stepwise-regression.html">Stepwise Regression</a>
+    </li>
+    <li>
+      <a href="non-linear-regression.html">Nonlinear Regression</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Cheminformatics with R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="cheminformatics-with-r.html">Table of Content</a>
+    </li>
+    <li>
+      <a href="getting-strated-chem.html">Getting Started</a>
+    </li>
+    <li>
+      <a href="cheminformatics-with-chemminer.html">Cheminformatics with ChemmineR</a>
+    </li>
+    <li>
+      <a href="cheminformatics-with-cdk.html">Cheminformatics with CDK</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    ICP-MS Data Processing with R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="icp-ms-data-processing-and-analysis-with-r.html">Table of Content</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="mailto:zia207@gmail.com">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+    Email
+  </a>
+</li>
+<li>
+  <a href="http://github.com/zia207">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://www.linkedin.com/in/zia-ahmed-a7653578">
+    <span class="fa fa-linkedin fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+
+</div>
+
+
+<div style="margin-bottom:20px;">
+
+</div>
+<img src="Image/PNG_FILE_02/stat_test.png" width="100%" style="display: block; margin: auto;" />
+<div style="margin-bottom:20px;">
+
+</div>
+<div id="table-of-content" class="section level3">
+<h3><strong>Table of Content</strong></h3>
+<ul>
+<li><p><a href="#load-library">Load Library</a></p></li>
+<li><p><a href="#load-data">Load Data</a></p></li>
+</ul>
+</div>
+<div id="load-library" class="section level3">
+<h3><strong>Load Library</strong></h3>
+<p>In this exercise We will use following R-packages:</p>
+<pre class="r"><code># load library
+library(tidyverse)
+library(dlookr)
+library(moments)
+library(car)
+library(plyr)
+library(data.table)
+library(DT)
+library(Hmisc)
+library(corrplot) 
+library(corrr)
+library(gridExtra)
+library(ggExtra)
+library(BSDA)
+library(GGally)
+library(agricolae) 
+library(multcomp)
+library(multcompView)
+library(ggfortify)
+# install.packages(&quot;Metrics&quot;)
+library(caret)
+library(Metrics)</code></pre>
+<div style="margin-bottom:30px;">
+
+</div>
+</div>
+<div id="import-data" class="section level3">
+<h3><strong>Import Data</strong></h3>
+<p>In this excersise, we use following data set:</p>
+<p><strong>water_soil_rice_arsenic_data.csv</strong>: Arsenic (As) data
+in irrigation water, paddy soil and and rice grain in a contaminated
+cites from Bangladesh</p>
+<ol start="2" style="list-style-type: decimal">
+<li><strong>green_house.csv</strong>: Rice yield and As content in
+contaminated and non-contaminated soils in a greenhouse experiment.</li>
+</ol>
+<p>These data set could be found <a
+href="https://www.dropbox.com/sh/ctjv2eiifhfh2ts/AAAVXmWxPntD-O-5AE_YH3VHa?dl=0">here</a>.</p>
+<p>We import this data using <strong>read_csv()</strong> from
+<strong>readr</strong> package.</p>
+<pre class="r"><code># define working directory
+dataFolder&lt;-&quot;E:/Dropbox/GitHub/chemstat-r-github.io/Data/&quot;
+df&lt;-readr::read_csv(paste0(dataFolder,&quot;water_soil_rice_arsenic_data.csv&quot;))
+gh.df&lt;-readr::read_csv(paste0(dataFolder,&quot;green_house.csv&quot;))</code></pre>
+<div style="margin-bottom:30px;">
+
+</div>
+</div>
+<div id="statistical-test" class="section level3">
+<h3><strong>Statistical Test</strong></h3>
+<div id="z-test" class="section level4">
+<h4><strong>Z-Test</strong></h4>
+<p>Z-test is the statistical test used to analyze whether two population
+means are different or not when the variances are known, and the sample
+size is large. The z-test is based on the normal distribution.</p>
+<p>The assumptions for Z-test are:</p>
+<ul>
+<li><p>All observations are independent.</p></li>
+<li><p>The size of the sample should be more than 30.</p></li>
+<li><p>The Z distribution is normal when the mean is 0, and the variance
+is 1.</p></li>
+</ul>
+<p>(Source: <a
+href="https://www.simplilearn.com/tutorials/statistics-tutorial/z-test-vs-t-test#hypothesis_testing"
+class="uri">https://www.simplilearn.com/tutorials/statistics-tutorial/z-test-vs-t-test#hypothesis_testing</a>)</p>
+<p>A <strong>z-score</strong>, or <strong>z-statistic</strong>, is a
+number representing how many standard deviations above or below the mean
+population the score derived from a z-test. It is a numerical
+measurement that describes a value’s relationship to the mean of a group
+of values. If a z-score is 0, it indicates that the data point’s score
+is identical to the mean score. A z-score of 1.0 would indicate a value
+that is one standard deviation from the mean. Z-scores may be positive
+or negative, with a positive value indicating the score is above the
+mean and a negative score indicating it is below the mean.</p>
+<div id="one-sample-z-test" class="section level5">
+<h5><strong>One sample Z-test</strong></h5>
+<p>The test statistic is defined by:</p>
+<img src="Image/PNG_FILE_02/z_test.png" width="40%" style="display: block; margin: auto auto auto 0;" />
+<div style="margin-bottom:20px;">
+
+</div>
+<p>Where, Xbar is the sample mean, σ is the population standard
+deviation, n is the sample size and μ is the population mean.</p>
+<p>The following code shows how to perform a <strong>one sample
+z-test</strong> in R to determine if the Irrigation Water As causes a
+significant difference in mmean Soil As levels. We will
+<strong>BSDA</strong> package for this analysis. The Null hypothesis is
+the mean SAs is 17.887 and the Alternative hypothesis is mean As is
+greater or less than 17.887 or not equal to 17.887.</p>
+<pre class="r"><code>z.test(df$SAs, mu=mean(df$SAs), sigma.x= sd(df$SAs))</code></pre>
+<pre><code>## 
+##  One-sample z-Test
+## 
+## data:  df$SAs
+## z = 0, p-value = 1
+## alternative hypothesis: true mean is not equal to 17.887
+## 95 percent confidence interval:
+##  16.99414 18.77985
+## sample estimates:
+## mean of x 
+##    17.887</code></pre>
+<p>The test statistic for the one sample z-test is 0 and the
+corresponding p-value is 1. Since this p-value is not less than .05, we
+do not have sufficient evidence to reject the null hypothesis.</p>
+</div>
+<div id="two-sample-z-test" class="section level5">
+<h5><strong>Two sample Z-test</strong></h5>
+<p>The two sample Z-test statistic is defined by:</p>
+<img src="Image/PNG_FILE_02/two_sample_z_test.png" width="50%" style="display: block; margin: auto auto auto 0;" />
+<div style="margin-bottom:20px;">
+
+</div>
+<p>Lets perform the two sample z-test in R to determine if the mean As
+level is different between HL and MHL with 5% level of significance.</p>
+<pre class="r"><code># Create dataframes
+df.HL &lt;- df %&gt;% dplyr::select(SAs, Land_type) %&gt;%
+         filter(Land_type == &quot;HL&quot;)
+
+df.MHL &lt;- df %&gt;% dplyr::select(SAs, Land_type) %&gt;%
+         filter(Land_type == &quot;MHL&quot;)
+
+# z-test - two tails
+z.test(x=df.HL$SAs, 
+       y=df.MHL$SAs, 
+       mu=mean(df$SAs), # population mean
+       sigma.x=sd(df.HL$SAs), # standard deviation for HL 
+       sigma.y=sd(df.MHL$SAs), # standard deviation for MHL 
+       alternative = &quot;two.sided&quot;)</code></pre>
+<pre><code>## 
+##  Two-sample z-Test
+## 
+## data:  df.HL$SAs and df.MHL$SAs
+## z = -31.767, p-value &lt; 2.2e-16
+## alternative hypothesis: true difference in means is not equal to 17.887
+## 95 percent confidence interval:
+##  -8.615270 -5.535039
+## sample estimates:
+## mean of x mean of y 
+##  14.09385  21.16901</code></pre>
+<p>Since the p-value &lt; 2.2e-16 is lower than the level of
+significance (α) = 0.05, we reject the null hypothesis. This means we
+have sufficient evidence to say mean As in HL and MHL are not equal.</p>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+</div>
+<div id="two-sample-t-test" class="section level4">
+<h4><strong>Two-Sample T-test</strong></h4>
+<p>A T-test is a parametric test applied to identify how the average of
+two data sets differs when variance is not given. When the population
+standard deviation is unknown, the T-test is used in conjunction with
+the t-distribution. The degree of freedom significantly impacts the
+shape of a t-distribution. The number of independent observations in a
+given set of observations is the degree of freedom.</p>
+<p><strong>Paired t-test</strong> is used when we have the two related
+samples which. This test is used to check whether there is a significant
+difference between two population means when their data is in the form
+of matched pairs</p>
+<p>Assumptions for Paired t-test are as follows:</p>
+<ul>
+<li><p>The parent population from which the sample is drawn should be
+normal.</p></li>
+<li><p>The samples should be independent of each other.</p></li>
+<li><p>The sample size should be equal for both the samples, i.e. n1 =
+n2.</p></li>
+<li><p>The dependent variable should be continuous.</p></li>
+</ul>
+<img src="Image/PNG_FILE_02/two_sample_t_test.png" width="40%" style="display: block; margin: auto auto auto 0;" />
+<div style="margin-bottom:20px;">
+
+</div>
+<p>source: <a
+href="https://www.simplilearn.com/tutorials/statistics-tutorial/z-test-vs-t-test#hypothesis_testing"
+class="uri">https://www.simplilearn.com/tutorials/statistics-tutorial/z-test-vs-t-test#hypothesis_testing</a></p>
+<p>In this exercise we will use rice arsenic data in a greenhouse
+experiemnt which could be found <a
+href="https://www.dropbox.com/s/en7c6ypu5fsgbox/green_house.csv?dl=0">here</a></p>
+<p>We will perform two-sample t-test with the hypothesis that the rice
+grain As is higher when it grow in soil with high soil As at a 5% level
+of significance.</p>
+<pre class="r"><code>glimpse(gh.df)</code></pre>
+<pre><code>## Rows: 42
+## Columns: 13
+## $ ID        &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 1…
+## $ Treatment &lt;chr&gt; &quot;Low As&quot;, &quot;Low As&quot;, &quot;Low As&quot;, &quot;Low As&quot;, &quot;Low As&quot;, &quot;Low As&quot;, …
+## $ Variety   &lt;chr&gt; &quot;BR01&quot;, &quot;BR01&quot;, &quot;BR01&quot;, &quot;BR06&quot;, &quot;BR06&quot;, &quot;BR06&quot;, &quot;BR28&quot;, &quot;BR2…
+## $ REP       &lt;dbl&gt; 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, …
+## $ PH        &lt;dbl&gt; 84.0, 111.7, 102.3, 118.0, 115.3, 111.0, 114.3, 124.0, 120.3…
+## $ TN        &lt;dbl&gt; 28.3, 34.0, 27.7, 23.3, 16.7, 19.0, 21.7, 25.3, 23.0, 19.7, …
+## $ PN        &lt;dbl&gt; 27.7, 30.0, 24.0, 19.7, 12.3, 15.3, 19.3, 21.0, 19.0, 14.7, …
+## $ GW        &lt;dbl&gt; 35.7, 58.1, 44.6, 46.4, 19.9, 35.9, 56.2, 49.2, 48.6, 36.6, …
+## $ ster      &lt;dbl&gt; 20.5, 14.8, 5.8, 20.3, 32.3, 14.9, 6.1, 9.2, 4.2, 12.1, 11.5…
+## $ DTM       &lt;dbl&gt; 126.0, 119.0, 119.7, 119.0, 120.0, 116.3, 123.7, 114.3, 113.…
+## $ SW        &lt;dbl&gt; 28.4, 36.7, 32.9, 40.0, 28.2, 42.3, 35.4, 60.6, 69.8, 57.3, …
+## $ GAs       &lt;dbl&gt; 0.762, 0.722, 0.858, 1.053, 1.130, 1.011, 0.965, 0.969, 0.89…
+## $ STAs      &lt;dbl&gt; 14.60, 10.77, 12.69, 18.23, 13.72, 15.97, 14.49, 16.02, 15.2…</code></pre>
+<pre class="r"><code># Create dataframes
+low &lt;- gh.df %&gt;% dplyr::select(GAs, Treatment) %&gt;%
+         filter(Treatment == &quot;Low As&quot;)
+
+high &lt;- gh.df %&gt;% dplyr::select(GAs, Treatment) %&gt;%
+         filter(Treatment == &quot;High As&quot;)
+
+# Two-Sample T-test
+t.test(x=high$GAs,
+       y=low$GAs, 
+       paired = TRUE,
+       alternative = &quot;greater&quot;)</code></pre>
+<pre><code>## 
+##  Paired t-test
+## 
+## data:  high$GAs and low$GAs
+## t = 12.835, df = 20, p-value = 2.052e-11
+## alternative hypothesis: true mean difference is greater than 0
+## 95 percent confidence interval:
+##  0.754535      Inf
+## sample estimates:
+## mean difference 
+##       0.8716667</code></pre>
+<p>Since the p-value [2.052e-11] is less than the level of significance
+(α) = 0.05, we may to reject the null hypothesis and means rice grain As
+in contaminated and non-contaminated soil are not equal.</p>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="chi-squared-test" class="section level4">
+<h4><strong>Chi-Squared Test</strong></h4>
+<p>The chi-square test of independence is used to analyze the frequency
+table (i.e. contengency table) formed by two categorical variables. The
+chi-square test evaluates whether there is a significant association
+between the categories of the two variables. This article describes the
+basics of chi-square test and provides practical examples using R
+software.</p>
+<img src="Image/PNG_FILE_02/chi_test.png" width="40%" style="display: block; margin: auto auto auto 0;" />
+<div style="margin-bottom:20px;">
+
+</div>
+<p>Source: <a
+href="http://www.sthda.com/english/wiki/chi-square-test-of-independence-in-r/"
+class="uri">http://www.sthda.com/english/wiki/chi-square-test-of-independence-in-r/</a></p>
+<pre class="r"><code>cat.df = df %&gt;% dplyr::select(Land_type, Soil_As_Class)
+table(cat.df$Land_type, cat.df$Soil_As_Class)</code></pre>
+<pre><code>##      
+##       High Low
+##   HL    52  70
+##   MHL  118  23</code></pre>
+<pre class="r"><code># Chi-Squared Test
+chisq.test(cat.df$Land_type, cat.df$Soil_As_Class, correct=FALSE)</code></pre>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test
+## 
+## data:  cat.df$Land_type and cat.df$Soil_As_Class
+## X-squared = 48.255, df = 1, p-value = 3.742e-12</code></pre>
+<p>We have a chi-squared value of 48.255. Since we get a p-Value less
+than the significance level of 0.05, we reject the null hypothesis and
+conclude that the two variables are in fact dependent. The row and the
+column variables are statistically significantly associate</p>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

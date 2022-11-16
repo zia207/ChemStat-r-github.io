@@ -1,0 +1,110 @@
+---
+title: "Import"
+author: "Zia Ahmed"
+date: "2022-11-10"
+output: html_document
+---
+
+## Set working dirctory
+
+```{r}
+setwd("D:\\Dropbox\\GitHub\\chemstat-r-github.io\\Data")
+```
+
+```{r}
+getwd()
+```
+```{r}
+dir()
+```
+
+
+```{r}
+df_csv<-read.csv("LBC_data.csv")
+```
+
+
+
+```{r}
+df_txt<-read.table("test_data.txt", header=T)
+```
+
+```{r}
+tail(df_csv)
+```
+
+```{r}
+str(df_csv)
+```
+
+```{r message=FALSE, warning=FALSE}
+library(xlsx)
+```
+
+```{r}
+df_xlsx <-read.xlsx("test_data.xlsx", 1) 
+```
+
+
+
+Variety =c("BR1","BR3", "BR16", "BR17", "BR18", "BR19","BR26",
+          "BR27","BR28","BR29","BR35","BR36") # create a text vector
+Yield = c(5.2,6.0,6.6,5.6,4.7,5.2,5.7,
+                5.9,5.3,6.8,6.2,5.8) # create numerical vector
+rice.data= data.frame(Variety, Yield)
+
+
+```{r}
+Variety =c("BR1","BR3", "BR16", "BR17", "BR18", "BR19","BR26",
+          "BR27","BR28","BR29","BR35","BR36")
+```
+
+
+```{r}
+Yield = c(5.2,6.0,6.6,5.6,4.7,5.2,5.7,
+                5.9,5.3,6.8,6.2,5.8) # create numerical vector
+```
+
+
+```{r}
+rice.data= data.frame(Variety, Yield)
+
+```
+
+```{r}
+write.csv(rice.data, "rice_data.csv", row.names = F)
+```
+
+
+
+```{r}
+mf<-read.csv("PAHdata.csv")
+names(mf)
+```
+
+
+
+```{r}
+library(tidyverse)
+```
+
+
+```{r}
+mf_01<-read_csv("PAHdata.csv")
+```
+```{r}
+glimpse(mf_01)
+```
+
+
+```{r}
+```
+
+
+```{r}
+df<-read_csv("LBC_data.csv")
+fips<-read_csv("US_FIPS.csv")
+regions<-read_csv("US_regions.csv")
+```
+
+

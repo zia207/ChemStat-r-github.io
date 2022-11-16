@@ -32,6 +32,7 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/vembedr-0.1.5/css/vembedr.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
@@ -269,34 +270,31 @@ $(document).ready(function () {
       <a href="intoduction-to-use-r.html">Introduction to Using R</a>
     </li>
     <li>
-      <a href="r-data-input-and-type.html">Importing/Exporting  Data into R</a>
+      <a href="r-data-input-and-type.html">Importing/Exporting Data into R</a>
     </li>
     <li>
-      <a href="data-wrangling.html">Data Wrangling with R</a>
+      <a href="data-wrangling.html">Data Wrangling</a>
     </li>
     <li>
-      <a href="mathematics-with-r.html">Simple Mathematics with R</a>
+      <a href="eda.html">Exploratory Data Analysis</a>
     </li>
     <li>
-      <a href="basic-statistics-with-r.html">Basic Statistics with R</a>
+      <a href="stat_test.html">Statistical Test</a>
     </li>
     <li>
-      <a href="multivariate-statistics.html">Mltivariate Statistics with R</a>
+      <a href="anova.html">Analysis of Variance (ANOVA)</a>
     </li>
     <li>
-      <a href="data-visualization.html">Data Visualization with R</a>
+      <a href="correlation.html">Correlation Analysis</a>
     </li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Curve Fitting with R
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="curve-fitting-with-r.html">Table of Content</a>
+      <a href="regression.html">Regression Analysis</a>
+    </li>
+    <li>
+      <a href="stepwise-regression.html">Stepwise Regression</a>
+    </li>
+    <li>
+      <a href="non-linear-regression.html">Nonlinear Regression</a>
     </li>
   </ul>
 </li>
@@ -435,7 +433,11 @@ page.</li>
 <li>Click “Download R for Windows” and save the executable file
 somewhere on your computer.</li>
 </ol>
-<video width='856' height='656' controls> <source src='E:/Dropbox/GitHub/chemstat-r-github.io/Vedio/download_r.mp4' type='video/mp4'> Your browser does not support the video tag;  for browser support, please see:  https://www.w3schools.com/tags/tag_video.asp </video>
+<div class="vembedr">
+<div>
+<iframe src="https://www.youtube.com/embed/bvoMiKKVf4U" width="533" height="300" frameborder="0" allowfullscreen="" data-external="1"></iframe>
+</div>
+</div>
 <div style="margin-bottom:20px;">
 
 </div>
@@ -454,7 +456,11 @@ latest version) file is exit.</li>
 <li>Double-click this <strong>exe</strong> file and follow the
 instruction as shown in the video below:</li>
 </ol>
-<video width='856' height='656' controls> <source src='E:/Dropbox/GitHub/chemstat-r-github.io/Vedio/install_r.mp4' type='video/mp4'> Your browser does not support the video tag;  for browser support, please see:  https://www.w3schools.com/tags/tag_video.asp </video>
+<div class="vembedr">
+<div>
+<iframe src="https://www.youtube.com/embed/JmQ-GAidTWk" width="533" height="300" frameborder="0" allowfullscreen="" data-external="1"></iframe>
+</div>
+</div>
 <div style="margin-bottom:20px;">
 
 </div>
@@ -475,7 +481,7 @@ href="https://itslinuxfoss.com/install-r-ubuntu-22-04/">here</a></p>
 familiar with command line. Details R installation on Ubuntu
 19.04/18.04/16.04 could be found <a
 href="https://itslinuxfoss.com/install-r-ubuntu-22-04/">here</a>.</p>
-<p><img src="Image/PNG_FILE_02/r_ubuntu.png" width="80%" style="display: block; margin: auto;" /></p>
+<img src="Image/PNG_FILE_02/r_ubuntu.png" width="90%" style="display: block; margin: auto;" />
 <div style="margin-bottom:20px;">
 
 </div>
@@ -491,7 +497,11 @@ you must create a <strong>New script</strong> from <strong>File</strong>
 menu. Any code you run in R-script output will be displayed in the
 console window. We can save all your R codes as an R script file and
 output them in the console as an R-Data file.</p>
-<video width='856' height='656' controls> <source src='E:/Dropbox/GitHub/chemstat-r-github.io/Vedio/open_r.mp4' type='video/mp4'> Your browser does not support the video tag;  for browser support, please see:  https://www.w3schools.com/tags/tag_video.asp </video>
+<div class="vembedr">
+<div>
+<iframe src="https://www.youtube.com/embed/cIubYlD5UVY" width="533" height="300" frameborder="0" allowfullscreen="" data-external="1"></iframe>
+</div>
+</div>
 <div style="margin-bottom:20px;">
 
 </div>
@@ -555,7 +565,11 @@ href="https://www.geeksforgeeks.org/how-to-install-r-studio-on-windows-and-linux
 <p>We may open RStudio just double click Rstudio icon on your Desktop or
 on the task bar. It has several components: console, terminal, editors,
 global environment etc.</p>
-<video width='856' height='656' controls> <source src='E:/Dropbox/GitHub/chemstat-r-github.io/Vedio/rStudio_01.mp4' type='video/mp4'> Your browser does not support the video tag;  for browser support, please see:  https://www.w3schools.com/tags/tag_video.asp </video>
+<div class="vembedr">
+<div>
+<iframe src="https://www.youtube.com/embed/cEykrCTWOC8" width="533" height="300" frameborder="0" allowfullscreen="" data-external="1"></iframe>
+</div>
+</div>
 <div style="margin-bottom:20px;">
 
 </div>
@@ -566,10 +580,16 @@ global environment etc.</p>
 switch the theme in the Editor Theme option. By default, you will have
 the Textmate theme activated. There is a wide in-built variety of themes
 to choose, from light to dark themes</p>
-<video width='856' height='656' controls> <source src='E:/Dropbox/GitHub/chemstat-r-github.io/Vedio/rStudio_02.mp4' type='video/mp4'> Your browser does not support the video tag;  for browser support, please see:  https://www.w3schools.com/tags/tag_video.asp </video>
+<div class="vembedr">
+<div>
+<iframe src="https://www.youtube.com/embed/dmhqWm4an6g" width="533" height="300" frameborder="0" allowfullscreen="" data-external="1"></iframe>
+</div>
+</div>
 <div style="margin-bottom:20px;">
 
 </div>
+<p><a href="https://youtu.be/dmhqWm4an6g"
+class="uri">https://youtu.be/dmhqWm4an6g</a></p>
 </div>
 </div>
 <div id="r-packages-or-libraries" class="section level2">
@@ -586,9 +606,15 @@ in a script:</p>
 
 # Multiple packages
 # install.packages(c(&quot;raster&quot;,&quot;gstat&quot;), dependencies = TRUE)</code></pre>
-<video width='856' height='656' controls> <source src='E:/Dropbox/GitHub/chemstat-r-github.io/Vedio/r_package.mp4' type='video/mp4'> Your browser does not support the video tag;  for browser support, please see:  https://www.w3schools.com/tags/tag_video.asp </video>
+<div class="vembedr">
+<div>
+<iframe src="https://www.youtube.com/embed/xBh7Ti6cvXs" width="533" height="300" frameborder="0" allowfullscreen="" data-external="1"></iframe>
+</div>
+</div>
 <div style="margin-bottom:30px;">
 
+<p><a href="https://youtu.be/xBh7Ti6cvXs"
+class="uri">https://youtu.be/xBh7Ti6cvXs</a></p>
 <div id="use-libraries-in-r" class="section level3">
 <h3><strong>Use Libraries in R</strong></h3>
 <p>To use any installed libraries, simply type the
@@ -618,14 +644,20 @@ are fully reproducible and support dozens of static and dynamic output
 formats. This 1-minute video provides a quick tour of what’s possible
 with R Markdown (source: <a
 href="https://rmarkdown.rstudio.com/index.html">R Markdown)</a></p>
-<video width='856' height='656' controls> <source src='E:/Dropbox/GitHub/chemstat-r-github.io/Vedio/r-markdown.mp4' type='video/mp4'> Your browser does not support the video tag;  for browser support, please see:  https://www.w3schools.com/tags/tag_video.asp </video>
+<div class="vembedr">
+<div>
+<iframe src="https://www.youtube.com/embed/vIcbLhC9whM" width="533" height="300" frameborder="0" allowfullscreen="" data-external="1"></iframe>
+</div>
+</div>
+<p><a href="https://youtu.be/vIcbLhC9whM"
+class="uri">https://youtu.be/vIcbLhC9whM</a></p>
 <div style="margin-bottom:15px;">
 
 <p>For a brief a brief tutorial, please visit <a
 href="https://rmarkdown.rstudio.com/lesson-2.html">here</a></p>
 <div style="margin-bottom:15px;">
 
-<p>below the cheatsheets that for RStudio IDE:</p>
+<p>Below the cheatsheets that for RStudio IDE:</p>
 <p><img src="Image/PNG_FILE_01/rarkdown_cheat_sheet_01.png" width="100%" style="display: block; margin: auto;" /></p>
 <div style="margin-bottom:15px;">
 

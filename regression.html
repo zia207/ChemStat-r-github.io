@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>regression.knit</title>
+
+<script src="site_libs/header-attrs-2.17/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="site_libs/datatables-binding-0.26/datatables.js"></script>
+<link href="site_libs/dt-core-1.12.1/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="site_libs/dt-core-1.12.1/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="site_libs/dt-core-1.12.1/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">ChemStat-R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="getting-started-with-r.html">Getting Started with R</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Essential of The R Language
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="essential-of-r-language.html">Table of Content</a>
+    </li>
+    <li>
+      <a href="intoduction-to-use-r.html">Introduction to Using R</a>
+    </li>
+    <li>
+      <a href="r-data-input-and-type.html">Importing/Exporting Data into R</a>
+    </li>
+    <li>
+      <a href="data-wrangling.html">Data Wrangling</a>
+    </li>
+    <li>
+      <a href="eda.html">Exploratory Data Analysis</a>
+    </li>
+    <li>
+      <a href="stat_test.html">Statistical Test</a>
+    </li>
+    <li>
+      <a href="anova.html">Analysis of Variance (ANOVA)</a>
+    </li>
+    <li>
+      <a href="correlation.html">Correlation Analysis</a>
+    </li>
+    <li>
+      <a href="regression.html">Regression Analysis</a>
+    </li>
+    <li>
+      <a href="stepwise-regression.html">Stepwise Regression</a>
+    </li>
+    <li>
+      <a href="non-linear-regression.html">Nonlinear Regression</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Cheminformatics with R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="cheminformatics-with-r.html">Table of Content</a>
+    </li>
+    <li>
+      <a href="getting-strated-chem.html">Getting Started</a>
+    </li>
+    <li>
+      <a href="cheminformatics-with-chemminer.html">Cheminformatics with ChemmineR</a>
+    </li>
+    <li>
+      <a href="cheminformatics-with-cdk.html">Cheminformatics with CDK</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    ICP-MS Data Processing with R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="icp-ms-data-processing-and-analysis-with-r.html">Table of Content</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="mailto:zia207@gmail.com">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+    Email
+  </a>
+</li>
+<li>
+  <a href="http://github.com/zia207">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://www.linkedin.com/in/zia-ahmed-a7653578">
+    <span class="fa fa-linkedin fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+
+</div>
+
+
+<div style="margin-bottom:20px;">
+
+</div>
+<img src="Image/PNG_FILE_02/regression.png" width="100%" style="display: block; margin: auto;" />
+<div style="margin-bottom:20px;">
+
+</div>
+<div id="table-of-content" class="section level3">
+<h3><strong>Table of Content</strong></h3>
+<ul>
+<li><p><a href="#load-library">Load Library</a></p></li>
+<li><p><a href="#import-data">Import Data</a></p></li>
+<li><p><a href="#linear-regression">Linear Regression</a></p></li>
+<li><p><a href="#simple-linear-regression">Simple Linear
+Regression</a></p>
+<ul>
+<li><p><a href="#regression-plot">Regression Plot</a></p></li>
+<li><p><a href="#residuals-plot">Residuals Plot</a></p></li>
+<li><p><a href="#regression-model-diagnostic-plots">Regression Model
+Diagnostic Plots</a></p></li>
+</ul></li>
+<li><p><a href="#multiple-linear-regression-or-mlr-model">Multiple
+Linear Regression or MLR model</a></p></li>
+<li><p><a href="#regression-model-evaluation">Regression Model
+Evaluation</a></p>
+<ul>
+<li><p><a href="#model-performance-with-an-independent-data-set">Model
+Performance with an Independent Data Set</a></p>
+<ul>
+<li><p><a href="#split-data">Split Data</a></p></li>
+<li><p><a href="#training-mlr-model">Training MLR Model</a></p></li>
+<li><p><a href="#make-prediction">Make Prediction</a></p></li>
+<li><p><a href="#model-evaluation">Model Evaluation</a></p></li>
+</ul></li>
+<li><p><a href="#cross-calidation">Cross Validation</a></p>
+<ul>
+<li><p><a href="#leave-one-out-cross-validation-or-loocv">Leave One Out
+Cross Validation or LOOCV</a></p></li>
+<li><p><a href="#k-fold-cross-validation">K-fold Cross
+Validation</a></p></li>
+<li><p><a href="#repeated-k-fold-cross-validation">Repeated k-fold Cross
+Validation</a></p></li>
+</ul></li>
+</ul></li>
+<li><p><a href="#further-reading">Further Reading</a></p></li>
+</ul>
+<div style="margin-bottom:40px;">
+
+</div>
+</div>
+<div id="load-library" class="section level3">
+<h3><strong>Load Library</strong></h3>
+<p>In this exercise We will use following R-packages:</p>
+<pre class="r"><code># load library
+library(tidyverse)
+library(dlookr)
+library(moments)
+library(car)
+library(plyr)
+library(data.table)
+library(DT)
+library(Hmisc)
+library(corrplot) 
+library(corrr)
+library(gridExtra)
+library(ggExtra)
+library(BSDA)
+library(GGally)
+library(agricolae) 
+library(multcomp)
+library(multcompView)
+library(ggfortify)
+library(report)
+library(ggstatsplot)
+library(ggfortify)
+library(caret)
+library(Metrics)</code></pre>
+<div style="margin-bottom:30px;">
+
+</div>
+</div>
+<div id="import-data" class="section level3">
+<h3><strong>Import Data</strong></h3>
+<p>In this tutorial, we will use following data set:</p>
+<p><strong>soil_crabon_data.csv</strong>: Soil carbon data from
+Colorado, Kansas, New Mexico, and Wyoming. These samples were collected
+by the United States Geological Survey (USGS) as a part of the USGS
+Geochemical Landscapes Project [Smith et al., 2011]. We need following
+python packages:</p>
+<p>These data set could be found <a
+href="https://www.dropbox.com/sh/ctjv2eiifhfh2ts/AAAVXmWxPntD-O-5AE_YH3VHa?dl=0">here</a>.</p>
+<pre class="r"><code># define working directory
+dataFolder&lt;-&quot;E:/Dropbox/GitHub/chemstat-r-github.io/Data/&quot;
+soil.df&lt;-readr::read_csv(paste0(dataFolder,&quot;soil_crabon_data.csv&quot;))</code></pre>
+<div style="margin-bottom:30px;">
+
+</div>
+</div>
+<div id="linear-regression" class="section level2">
+<h2><strong>Linear Regression</strong></h2>
+<p>Correlation provides a measure of the linear association between
+pairs of variables, but it doesn’t tell us about more complex
+relationships. Linear regression is a basic and commonly used type of
+predictive analysis. The overall idea of regression is to examine two
+things: (1) does a set of predictor variables do a good job in
+predicting an outcome (dependent) variable? (2) Which variables in
+particular are significant predictors of the outcome variable, and in
+what way do they–indicated by the magnitude and sign of the beta
+estimates–impact the outcome variable? These regression estimates are
+used to explain the relationship between one dependent variable and one
+or more independent variables. (<a
+href="https://www.statisticssolutions.com/free-resources/directory-of-statistical-analyses/what-is-linear-regression/">Source</a>.
+The variable you want to predict is called the dependent variable. The
+variable you are using to predict the other variable’s value is called
+the independent variable.</p>
+<div id="simple-linear-regression" class="section level3">
+<h3><strong>Simple Linear Regression</strong></h3>
+<p>Simple linear regression is used to model the relationship between
+two continuous variables. Often, the objective is to predict the value
+of an output variable (or response) based on the value of an input (or
+predictor) variable. (Source:<a
+href="https://www.jmp.com/en_us/statistics-knowledge-portal/what-is-regression.html"
+class="uri">https://www.jmp.com/en_us/statistics-knowledge-portal/what-is-regression.html</a>)
+)</p>
+<p>In simple linear regression, both the response and the predictor are
+continuous. In ANOVA, the response is continuous, but the predictor, or
+factor, is nominal.</p>
+<p>Linear regression analysis is based on six fundamental
+assumptions:</p>
+<ul>
+<li><p>The dependent and independent variables show a linear
+relationship between the slope and the intercept.</p></li>
+<li><p>The independent variable is not random.</p></li>
+<li><p>The value of the residual (error) is zero.</p></li>
+<li><p>The value of the residual (error) is constant across all
+observations.</p></li>
+<li><p>The value of the residual (error) is not correlated across all
+observations.</p></li>
+<li><p>The residual (error) values follow the normal
+distribution</p></li>
+</ul>
+<p>The simple linear model is expressed using the following
+equation:</p>
+<img src="Image/PNG_FILE_02/simple_regression.png" width="40%" style="display: block; margin: auto auto auto 0;" />
+<div style="margin-bottom:20px;">
+
+</div>
+<p>In this exercise we will we use soil carbon data to explore the
+relationship between soil organic carbon (SOC) and Normalized Vegetation
+Index (NDVI) using <strong>lm()</strong> function:</p>
+<pre class="r"><code>dplyr::glimpse(soil.df)</code></pre>
+<pre><code>## Rows: 570
+## Columns: 16
+## $ SiteID  &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,…
+## $ long    &lt;dbl&gt; -104.4442, -105.9272, -104.8407, -104.5049, -104.4215, -106.87…
+## $ lat     &lt;dbl&gt; 39.95648, 37.60194, 39.64298, 39.61835, 39.61246, 37.26990, 37…
+## $ x       &lt;dbl&gt; -714067.5, -866566.0, -750759.2, -722566.4, -715564.6, -953029…
+## $ y       &lt;dbl&gt; 1913846, 1663513, 1881917, 1876565, 1875277, 1635579, 1635579,…
+## $ FIPS    &lt;dbl&gt; 8001, 8003, 8005, 8005, 8005, 8007, 8007, 8009, 8009, 8009, 80…
+## $ STATE   &lt;chr&gt; &quot;Colorado&quot;, &quot;Colorado&quot;, &quot;Colorado&quot;, &quot;Colorado&quot;, &quot;Colorado&quot;, &quot;C…
+## $ COUNTY  &lt;chr&gt; &quot;Adams County&quot;, &quot;Alamosa County&quot;, &quot;Arapahoe County&quot;, &quot;Arapahoe…
+## $ SOC     &lt;dbl&gt; 2.304, 3.154, 1.309, 4.717, 2.230, 21.591, 21.591, 2.983, 2.98…
+## $ DEM     &lt;dbl&gt; 1551.13, 2308.69, 1689.93, 1822.17, 1758.68, 2517.14, 2517.14,…
+## $ Slope   &lt;dbl&gt; 1.30141, 0.85811, 2.96257, 2.71405, 1.79807, 8.61106, 8.61106,…
+## $ MAP     &lt;dbl&gt; 384.401, 194.282, 469.255, 470.238, 439.722, 631.338, 631.338,…
+## $ MAT     &lt;dbl&gt; 9.798390, 5.362740, 10.055000, 9.396210, 9.526070, 5.304550, 5…
+## $ NDVI    &lt;dbl&gt; 0.331707, 0.430466, 0.471263, 0.396961, 0.348821, 0.674517, 0.…
+## $ NLCD    &lt;chr&gt; &quot;Planted/Cultivated&quot;, &quot;Planted/Cultivated&quot;, &quot;Herbaceous&quot;, &quot;Her…
+## $ NLCD_ID &lt;dbl&gt; 7, 7, 6, 6, 6, 4, 4, 6, 6, 6, 6, 7, 7, 7, 4, 4, 5, 5, 5, 6, 6,…</code></pre>
+<pre class="r"><code>slm.soc&lt;-lm(SOC~NDVI, data=soil.df)  # regression model</code></pre>
+<p><strong>summary()</strong> is a generic function used to produce
+result summaries of the regression results</p>
+<pre class="r"><code>summary(slm.soc)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = SOC ~ NDVI, data = soil.df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -8.8393 -2.5384 -0.6738  1.4167 18.7532 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  -1.8570     0.4788  -3.879 0.000117 ***
+## NDVI         18.4014     1.0351  17.777  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 4.019 on 568 degrees of freedom
+## Multiple R-squared:  0.3575, Adjusted R-squared:  0.3564 
+## F-statistic:   316 on 1 and 568 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Following values stored in the <strong>lm</strong> object:</p>
+<pre class="r"><code>names(slm.soc)</code></pre>
+<pre><code>##  [1] &quot;coefficients&quot;  &quot;residuals&quot;     &quot;effects&quot;       &quot;rank&quot;         
+##  [5] &quot;fitted.values&quot; &quot;assign&quot;        &quot;qr&quot;            &quot;df.residual&quot;  
+##  [9] &quot;xlevels&quot;       &quot;call&quot;          &quot;terms&quot;         &quot;model&quot;</code></pre>
+<pre class="r"><code>names(slm.soc$coefficients)</code></pre>
+<pre><code>## [1] &quot;(Intercept)&quot; &quot;NDVI&quot;</code></pre>
+<p>We can extract r-squared from <strong>lm</strong>: object:</p>
+<pre class="r"><code>summary(slm.soc)$r.squared </code></pre>
+<pre><code>## [1] 0.3574835</code></pre>
+<p>slope and intercept:</p>
+<pre class="r"><code># Intercept
+slm.soc$coef[1]</code></pre>
+<pre><code>## (Intercept) 
+##   -1.856996</code></pre>
+<pre class="r"><code># Slope
+slm.soc$coef[2]</code></pre>
+<pre><code>##     NDVI 
+## 18.40145</code></pre>
+<div style="margin-bottom:20px;">
+
+</div>
+<div id="regression-plot" class="section level4">
+<h4><strong>Regression Plot</strong></h4>
+<p>We can create regression plots with fitted lines.</p>
+<pre class="r"><code># plot height vs. weight
+# and fit a linear model
+ggplot(soil.df, aes(NDVI,SOC)) +
+  geom_point() +
+  geom_smooth(method = &quot;lm&quot;)+
+   ggtitle(&quot;Figure:  Soil Organic carbon vs NDVI &quot;) +
+  xlab(&quot;NDVI&quot;) + ylab(&quot;Soil Organic Carbon (mg/kg)&quot;) +
+  # Flip the bars
+  theme(
+    panel.background = element_rect(fill = &quot;grey95&quot;,colour = &quot;gray75&quot;,size = 0.5, linetype = &quot;solid&quot;),
+    axis.line = element_line(colour = &quot;grey&quot;),
+    plot.title = element_text(size = 14, hjust = 0.5),
+    axis.title.x = element_text(size = 14),
+    axis.title.y = element_text(size = 14),
+    axis.text.x=element_text(size=13, colour=&quot;black&quot;),
+    axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour=&#39;black&#39;))</code></pre>
+<img src="regression_files/figure-html/unnamed-chunk-8-1.png" width="384" />
+<div style="margin-bottom:15px;">
+
+</div>
+</div>
+<div id="residuals-plot" class="section level4">
+<h4><strong>Residuals Plot</strong></h4>
+<p>The <strong>residuals</strong> is the difference between the observed
+data e and the fitted values. We can plot our observed values against
+the fitted values to see how well the regression model fits.</p>
+<pre class="r"><code>plot(soil.df$SOC, slm.soc$residuals, pch=19)
+abline(h = 0, lty = 2)</code></pre>
+<img src="regression_files/figure-html/Residual%20vs%20SOC-1.png" width="432" />
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="regression-model-diagnostic-plots" class="section level4">
+<h4><strong>Regression Model Diagnostic Plots</strong></h4>
+<p>he diagnostic plots show residuals in four different ways:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Residuals vs Fitted</strong>. Used to check the linear
+relationship assumptions. A horizontal line, without distinct patterns
+is an indication for a linear relationship, what is good.</p></li>
+<li><p><strong>Normal Q-Q</strong>. Used to examine whether the
+residuals are normally distributed. It’s good if residuals points follow
+the straight dashed line.</p></li>
+<li><p><strong>Scale-Location (or Spread-Location)</strong>. Used to
+check the homogeneity of variance of the residuals (homoscedasticity).
+Horizontal line with equally spread points is a good indication of
+homoscedasticity.</p></li>
+<li><p><strong>Residuals vs Leverage</strong>. Used to identify
+influential cases, that is extreme values that might influence the
+regression results when included or excluded from the analysis.</p></li>
+</ol>
+<p>Regression diagnostics plots can be created using the R base function
+plot() or the <strong>autoplot()</strong> function <strong>ggfortify
+package</strong> which creates a ggplot2-based graphics.</p>
+<pre class="r"><code>autoplot(slm.soc)</code></pre>
+<img src="regression_files/figure-html/SLM%20Diagnostic%20plots-1.png" width="576" />
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+</div>
+<div id="multiple-linear-regression-or-mlr-model"
+class="section level3">
+<h3><strong>Multiple Linear Regression or MLR model</strong></h3>
+<p>Multiple linear regression is used to model the relationship between
+a continuous response variable and multiple continuous or categorical
+explanatory variables. The mathematical representation of multiple
+linear regression:</p>
+<img src="Image/PNG_FILE_02/mlr.png" width="40%" style="display: block; margin: auto auto auto 0;" />
+<div style="margin-bottom:20px;">
+
+</div>
+<p>Multiple linear regression follows the same conditions as the simple
+linear model. However, since there are several independent variables in
+multiple linear analysis, there is another mandatory condition for the
+model:</p>
+<p><strong>Non-collinearity</strong>: Independent variables should show
+a minimum of correlation with each other. If the independent variables
+are highly correlated with each other, it will be difficult to assess
+the true relationships between the dependent and independent
+variables”.</p>
+<p>Source: <a
+href="https://corporatefinanceinstitute.com/resources/knowledge/finance/regression-analysis/"
+class="uri">https://corporatefinanceinstitute.com/resources/knowledge/finance/regression-analysis/</a></p>
+<p>We will develop MLR model with five predictors (‘DEM’, ‘Slope’,
+‘MAT’, ‘MAP’,‘NDVI’) to explain variability soil organic carbon</p>
+<pre class="r"><code># create a data-frame
+mlr.df&lt;-soil.df %&gt;% dplyr::select(SOC, DEM, Slope, MAT, MAP,NDVI, NLCD)
+# fit MLR model
+mlr.soc&lt;-lm(SOC~DEM+Slope+MAT+MAP+NDVI+NLCD, mlr.df)
+summary(mlr.soc)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = SOC ~ DEM + Slope + MAT + MAP + NDVI + NLCD, data = mlr.df)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -12.4222  -2.2927  -0.3415   1.4256  17.1977 
+## 
+## Coefficients:
+##                          Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)             3.4526702  2.2275194   1.550 0.121704    
+## DEM                    -0.0004319  0.0005707  -0.757 0.449479    
+## Slope                   0.0903112  0.0587738   1.537 0.124958    
+## MAT                    -0.2998329  0.0778701  -3.850 0.000131 ***
+## MAP                     0.0050352  0.0014826   3.396 0.000732 ***
+## NDVI                    8.8312528  2.0745771   4.257 2.43e-05 ***
+## NLCDHerbaceous         -0.9110123  0.7172202  -1.270 0.204540    
+## NLCDPlanted/Cultivated -0.4015706  0.8408307  -0.478 0.633130    
+## NLCDShrubland          -1.3238082  0.6730020  -1.967 0.049673 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 3.838 on 561 degrees of freedom
+## Multiple R-squared:  0.4213, Adjusted R-squared:  0.413 
+## F-statistic: 51.05 on 8 and 561 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div style="margin-bottom:40px;">
+
+</div>
+</div>
+</div>
+<div id="regression-model-evaluation" class="section level2">
+<h2><strong>Regression Model Evaluation</strong></h2>
+<p>The accuracy of a regression models is critical as it determines the
+quality of the interpolated values.</p>
+<p>The most commonly used statistical metrics for measuring the
+performance of a regression model in predicting the outcome of new test
+data and several cross-validation methods for assessing model
+performance.</p>
+<div id="model-performance-with-an-independent-data-set"
+class="section level3">
+<h3><strong>Model Performance with an Independent Data Set</strong></h3>
+<p>We are interested in determining the accuracy of a regression model
+on predicting the outcome for new unseen observations not used to build
+the model. Basic steps to do s:</p>
+<p>To do so, the basic strategy is to:</p>
+<ol style="list-style-type: decimal">
+<li><p>Split data - training and test data</p></li>
+<li><p>Build the model on a training data set</p></li>
+<li><p>Apply the model on a new test data set to make
+predictions</p></li>
+<li><p>Model Evaluation</p></li>
+</ol>
+<p>In this exercise we will [caret] (#<a
+href="https://topepo.github.io/caret/"
+class="uri">https://topepo.github.io/caret/</a>) package. The caret
+package (short for Classification And REgression Training) is a set of
+functions that attempt to streamline the process for creating predictive
+models. The package contains tools for:</p>
+<ul>
+<li><p>data splitting</p></li>
+<li><p>pre-processing</p></li>
+<li><p>feature selection</p></li>
+<li><p>model tuning using resampling</p></li>
+<li><p>variable importance estimation</p></li>
+</ul>
+<div style="margin-bottom:20px;">
+
+</div>
+<div id="split-data" class="section level4">
+<h4><strong>Split Data</strong></h4>
+<p>We use <strong>ddply()</strong> function from <strong>plyr</strong>
+package to split data into training and test data set with <a
+href="#https://www.investopedia.com/terms/stratified_random_sampling.asp">Stratified
+Random Sampling</a> algorithms.</p>
+<pre class="r"><code>tr_prop = 0.80
+# training data (80% data)
+train.df = plyr::ddply(mlr.df, .(NLCD),
+                 function(., seed) { set.seed(seed); .[sample(1:nrow(.), trunc(nrow(.) * tr_prop)), ] }, seed = 101)
+test.df = plyr::ddply(mlr.df,  .(NLCD), 
+            function(., seed) { set.seed(seed); .[-sample(1:nrow(.), trunc(nrow(.) * tr_prop)), ] }, seed = 101)</code></pre>
+<div style="margin-bottom:20px;">
+
+</div>
+<p>Explore training and test data set using diagnose_numeric()
+function:</p>
+<pre class="r"><code># training data
+DT::datatable(as.data.frame(dlookr::diagnose_numeric(train.df)), 
+          rownames = T, options = list(pageLength = 10, scrollX = TRUE, round)) %&gt;%
+  formatRound(columns = 2:8, digits = 3)</code></pre>
+<div id="htmlwidget-45ac21cc2bb98d09a286" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-45ac21cc2bb98d09a286">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6"],["SOC","DEM","Slope","MAT","MAP","NDVI"],[0.152,258.6489868,0.649253011,-0.849687994,194.2819977,0.153098002],[2.5945,1140.255005,1.36589998,5.834134817,358.3240051,0.3131935],[6.14189450549451,1625.93689579077,4.83647078241978,8.77014833546154,498.647997818462,0.437205352010989],[4.726,1595.719971,2.601210117,9.060819626,434.7900085,0.415683001],[8.624,2238.2999265,6.949829817,12.27085018,584.7420044,0.555844009],[30.473,3618.02002,26.10420036,17.01819992,1128.109985,0.796992004],[0,0,0,0,0,0],[0,0,0,5,0,0],[19,0,21,0,24,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>variables<\/th>\n      <th>min<\/th>\n      <th>Q1<\/th>\n      <th>mean<\/th>\n      <th>median<\/th>\n      <th>Q3<\/th>\n      <th>max<\/th>\n      <th>zero<\/th>\n      <th>minus<\/th>\n      <th>outlier<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"scrollX":true,"columnDefs":[{"targets":2,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"targets":3,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"targets":4,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"targets":5,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"targets":6,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"targets":7,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"targets":8,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"className":"dt-right","targets":[2,3,4,5,6,7,8,9,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render","options.columnDefs.2.render","options.columnDefs.3.render","options.columnDefs.4.render","options.columnDefs.5.render","options.columnDefs.6.render"],"jsHooks":[]}</script>
+<pre class="r"><code># test data
+DT::datatable(as.data.frame(dlookr::diagnose_numeric(test.df)), 
+          rownames = T, options = list(pageLength = 10, scrollX = TRUE, round)) %&gt;%
+  formatRound(columns = 2:8, digits = 3)</code></pre>
+<div id="htmlwidget-eec6a6283a3e37350b6a" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-eec6a6283a3e37350b6a">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6"],["SOC","DEM","Slope","MAT","MAP","NDVI"],[0.446,277.6629944,0.800131023,0.614234984,204.9620056,0.162070006],[2.5985,1225.11499,1.5394250155,6.669275045,346.2035065,0.270518988],[5.98528695652174,1635.0543061687,4.55886489792174,9.1479939473913,491.200234456522,0.416218148886957],[4.392,1612.130005,2.825969934,9.232780457,426.3729858,0.395435005],[8.554,2155.139893,6.4886398315,12.600200175,558.0424805,0.5323155225],[23.19,3232.159912,19.68919945,16.55870056,1090.719971,0.750724971],[0,0,0,0,0,0],[0,0,0,0,0,0],[4,0,4,0,12,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>variables<\/th>\n      <th>min<\/th>\n      <th>Q1<\/th>\n      <th>mean<\/th>\n      <th>median<\/th>\n      <th>Q3<\/th>\n      <th>max<\/th>\n      <th>zero<\/th>\n      <th>minus<\/th>\n      <th>outlier<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"scrollX":true,"columnDefs":[{"targets":2,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"targets":3,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"targets":4,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"targets":5,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"targets":6,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"targets":7,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"targets":8,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"className":"dt-right","targets":[2,3,4,5,6,7,8,9,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render","options.columnDefs.2.render","options.columnDefs.3.render","options.columnDefs.4.render","options.columnDefs.5.render","options.columnDefs.6.render"],"jsHooks":[]}</script>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="training-mlr-model" class="section level4">
+<h4><strong>Training MLR Model</strong></h4>
+<pre class="r"><code># Build the model
+model &lt;- lm(SOC ~., data = train.df)
+summary(model)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = SOC ~ ., data = train.df)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -12.7804  -2.2988  -0.3108   1.5161  17.2303 
+## 
+## Coefficients:
+##                          Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)             4.9660563  2.4718763   2.009 0.045137 *  
+## DEM                    -0.0007653  0.0006458  -1.185 0.236627    
+## Slope                   0.1269699  0.0665996   1.906 0.057232 .  
+## MAT                    -0.3280539  0.0878768  -3.733 0.000214 ***
+## MAP                     0.0057291  0.0016516   3.469 0.000573 ***
+## NDVI                    6.6829413  2.3177489   2.883 0.004125 ** 
+## NLCDHerbaceous         -1.1527615  0.8040563  -1.434 0.152364    
+## NLCDPlanted/Cultivated -0.8755335  0.9417332  -0.930 0.353027    
+## NLCDShrubland          -1.9590997  0.7588116  -2.582 0.010147 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 3.897 on 446 degrees of freedom
+## Multiple R-squared:  0.4143, Adjusted R-squared:  0.4038 
+## F-statistic: 39.44 on 8 and 446 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="make-prediction" class="section level4">
+<h4><strong>Make Prediction</strong></h4>
+<pre class="r"><code>test.df$Pred.SOC &lt;- model %&gt;% predict(test.df)</code></pre>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="model-evaluation" class="section level4">
+<h4><strong>Model Evaluation</strong></h4>
+<p>We will use <strong>Metrics</strong> package to compute several
+metrics to evaluate the mdels. All functions in the Metrics package take
+at least two arguments: <strong>actual</strong> and
+<strong>predicted</strong>. (Source:<a
+href="https://github.com/mfrasco/Metrics"
+class="uri">https://github.com/mfrasco/Metrics</a>)</p>
+<img src="Image/PNG_FILE_02/matrics.png" width="80%" style="display: block; margin: auto;" />
+<div style="margin-bottom:20px;">
+
+</div>
+<pre class="r"><code>RMSE&lt;- Metrics::rmse(test.df$SOC, test.df$Pred.SOC)
+MAE&lt;- Metrics::mae(test.df$SOC, test.df$Pred.SOC)
+MSE&lt;- Metrics::mse(test.df$SOC, test.df$Pred.SOC)
+MDAE&lt;- Metrics::mdae(test.df$SOC, test.df$Pred.SOC)
+
+# Print results
+paste0(&quot;RMSE: &quot;, round(RMSE,2))</code></pre>
+<pre><code>## [1] &quot;RMSE: 3.65&quot;</code></pre>
+<pre class="r"><code>paste0(&quot;MAE: &quot;, round(MAE,2))</code></pre>
+<pre><code>## [1] &quot;MAE: 2.6&quot;</code></pre>
+<pre class="r"><code>paste0(&quot;MSE: &quot;, round(MSE,2))</code></pre>
+<pre><code>## [1] &quot;MSE: 13.32&quot;</code></pre>
+<pre class="r"><code>paste0(&quot;MDAE: &quot;, round(MDAE,2))</code></pre>
+<pre><code>## [1] &quot;MDAE: 1.83&quot;</code></pre>
+<div style="margin-bottom:15px;">
+
+</div>
+<p>We can plot observed and predicted values with fitted regression line
+with ggplot2</p>
+<pre class="r"><code>ggplot(test.df, aes(SOC,Pred.SOC)) +
+  geom_point() +
+  geom_smooth(method = &quot;lm&quot;)+
+   ggtitle(&quot;Figure: Observed vs Predicted SOC &quot;) +
+  xlab(&quot;Observed&quot;) + ylab(&quot;Predicted&quot;) +
+  scale_x_continuous(limits=c(0,20), breaks=seq(0, 20, 5))+ 
+  scale_y_continuous(limits=c(0,20), breaks=seq(0, 20, 5)) +
+  # Flip the bars
+  theme(
+    panel.background = element_rect(fill = &quot;grey95&quot;,colour = &quot;gray75&quot;,size = 0.5, linetype = &quot;solid&quot;),
+    axis.line = element_line(colour = &quot;grey&quot;),
+    plot.title = element_text(size = 14, hjust = 0.5),
+    axis.title.x = element_text(size = 14),
+    axis.title.y = element_text(size = 14),
+    axis.text.x=element_text(size=13, colour=&quot;black&quot;),
+    axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour=&#39;black&#39;))</code></pre>
+<img src="regression_files/figure-html/Predicted%20vs%20Observed%20-%20Test%20data-1.png" width="432" />
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+</div>
+<div id="cross-validation" class="section level3">
+<h3><strong>Cross Validation</strong></h3>
+<p>Cross-validation is a re-sampling procedure used to evaluate models
+on a limited data sample. It is better than residuals evaluation. Three
+major types of cross-validation techniques are usually use for model
+evaluation:</p>
+<ul>
+<li><p><strong>Leave One Out Cross Validation</strong></p></li>
+<li><p><strong>k-fold Cross Validation</strong></p></li>
+<li><p><strong>Repeated k-fold Cross Validation</strong></p></li>
+</ul>
+<div id="leave-one-out-cross-validation-or-loocv"
+class="section level4">
+<h4><strong>Leave One Out Cross Validation or LOOCV</strong></h4>
+<p>The model is trained on all the data except for one point and a
+prediction is made for that point and repeat the process for all data
+points. Compute the overall prediction error by taking the average of
+all these test error estimates recorded at step 2.</p>
+<p>The advantage of the <strong>LOOCV</strong> method is that we make
+use all data points reducing potential bias. However, the process is
+repeated as many times as there are data points, resulting to a higher
+execution time when n is extremely large.</p>
+<p>We use caret <strong>caret</strong> package:</p>
+<pre class="r"><code># Define training control
+train.control &lt;- trainControl(method = &quot;LOOCV&quot;)
+# Train the model
+model.loocv &lt;- train(SOC ~., data = mlr.df, method = &quot;lm&quot;,
+               trControl = train.control)
+# Summarize the results
+print(model.loocv)</code></pre>
+<pre><code>## Linear Regression 
+## 
+## 570 samples
+##   6 predictor
+## 
+## No pre-processing
+## Resampling: Leave-One-Out Cross-Validation 
+## Summary of sample sizes: 569, 569, 569, 569, 569, 569, ... 
+## Resampling results:
+## 
+##   RMSE      Rsquared   MAE     
+##   3.874228  0.4012374  2.780262
+## 
+## Tuning parameter &#39;intercept&#39; was held constant at a value of TRUE</code></pre>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="k-fold-cross-validation" class="section level4">
+<h4><strong>K-fold Cross Validation</strong></h4>
+<p>The data set is randomly divided into k-subsets (or k-fold) and
+reserve one subset and train the model on all other subsets. Test the
+model on the reserved subset and record the prediction error and repeat
+this process until each of the k subsets has served as the test set.
+Then the average error across all k trials is computed.</p>
+<pre class="r"><code># Define training control
+set.seed(123) 
+train.control &lt;- trainControl(method = &quot;cv&quot;, number = 10)
+# Train the model
+model.kfcv &lt;- train(SOC ~., data = mlr.df, method = &quot;lm&quot;,
+               trControl = train.control)
+# Summarize the results
+print(model.kfcv)</code></pre>
+<pre><code>## Linear Regression 
+## 
+## 570 samples
+##   6 predictor
+## 
+## No pre-processing
+## Resampling: Cross-Validated (10 fold) 
+## Summary of sample sizes: 513, 514, 513, 512, 514, 513, ... 
+## Resampling results:
+## 
+##   RMSE      Rsquared   MAE     
+##   3.833412  0.4111179  2.772641
+## 
+## Tuning parameter &#39;intercept&#39; was held constant at a value of TRUE</code></pre>
+<div style="margin-bottom:15px;">
+
+</div>
+</div>
+<div id="repeated-k-fold-cross-validation" class="section level4">
+<h4><strong>Repeated k-fold Cross Validation</strong></h4>
+<p>The process of splitting the data into k-folds can be repeated a
+number of times, this is called repeated k-fold cross validation.</p>
+<p>The final model error is taken as the mean error from the number of
+repeats.</p>
+<p>The following example uses 10-fold cross validation with 3
+repeats:</p>
+<pre class="r"><code>set.seed(123)
+train.control &lt;- trainControl(method = &quot;repeatedcv&quot;, 
+                              number = 10, repeats = 5)
+# Train the model
+model.rkfcv &lt;- train(SOC ~., data = mlr.df, method = &quot;lm&quot;,
+               trControl = train.control)
+# Summarize the results
+print(model.rkfcv)</code></pre>
+<pre><code>## Linear Regression 
+## 
+## 570 samples
+##   6 predictor
+## 
+## No pre-processing
+## Resampling: Cross-Validated (10 fold, repeated 5 times) 
+## Summary of sample sizes: 513, 514, 513, 512, 514, 513, ... 
+## Resampling results:
+## 
+##   RMSE      Rsquared   MAE     
+##   3.851095  0.4126921  2.790684
+## 
+## Tuning parameter &#39;intercept&#39; was held constant at a value of TRUE</code></pre>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+</div>
+<div id="further-reading" class="section level3">
+<h3><strong>Further Reading</strong></h3>
+<ol style="list-style-type: decimal">
+<li><p><a href="https://github.com/mfrasco/Metrics">Metrics</a></p></li>
+<li><p><a href="https://topepo.github.io/caret/">caret</a></p></li>
+</ol>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

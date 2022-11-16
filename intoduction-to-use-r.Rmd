@@ -13,10 +13,7 @@ knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_F
 </div>
 
 
-<div style="margin-bottom:10px;">
-</div>
-
-### **Table of content**
+### **Table of Content**
 
 -	[Screen Prompt](#screen-prompt)
 
@@ -69,10 +66,12 @@ We can use R as a calculators
 
 At the prompt, we enter the expression that we want evaluated and when we hit enter, it will compute the result for us . For Example:
 
-```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="Download R"}
-library(embedr)
-embed_video("E:/Dropbox/GitHub/chemstat-r-github.io/Vedio/R_calculator.mp4", width = "856", height = "656")
+```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="R as a Calculator"}
+library(vembedr)
+embed_url("https://youtu.be/YH6W_qiyvLk")
 ```
+<div style="margin-bottom:15px;">
+</div>
 
 Use -  for subtraction.
 Use * for multiply.
@@ -88,7 +87,7 @@ The order of doing arithmetic operations is (left [done first] to right [done la
 
 There are so many built-in mathematical functions are available in base-R. Some are shown in below table.   
 
-```{r echo=FALSE, out.width='70%', fig.align="center"}
+```{r echo=FALSE, out.width='70%', fig.align="left", out.width='80%'}
 knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\Table_math_function.png")
 ```
 <div style="margin-bottom:15px;">
@@ -218,13 +217,13 @@ c
 </div>
 
 
-## **R Data Types** 
+### **R Data Types** 
 
 R has a wide variety of data types including scalars, vectors (numerical, character, logical), matrices, data frames, and lists.
 <div style="margin-bottom:15px;">
 </div>
 
-### **Vectors**
+#### **Vectors**
 
 "Vectors are variables with one or more values of the same type: logical, integer, real, complex, string (or character) or raw".  A variable with a single value (say 4.3) is often known as a scalar, but in R a scalar is a vector of length 1. 
 
@@ -250,11 +249,6 @@ x=1.2
 x
 class(x)
 ```
-
-```{r}
-
-```
-
 
 
 **Character** objects are **strings**. They could be any sequence of characters including alphabets, numbers, punctuation marks, etc. enclosed in quotes. You can see all this playing out with this code appearing here:
@@ -312,7 +306,7 @@ b
 avoiding the need for loops and subscripts". Important vector functions are listed in below Table:
 
 
-```{r echo=FALSE, out.width='80%', fig.align="center"}
+```{r echo=FALSE, out.width='60%', fig.align="center"}
 knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\vector_functions.png")
 ```
 <div style="margin-bottom:10px;">
@@ -384,7 +378,7 @@ print(divi.result)
 <div style="margin-bottom:15px;">
 </div>
 
-# **Matrix**
+#### **Matrix**
 
 Matrices are the R objects in which the elements are arranged in a two-dimensional rectangular layout. All columns in a matrix must have the same mode (numeric, character, etc.) and the same length.
 
@@ -482,7 +476,7 @@ X[,2:3] # 2nd and 3rd column
 X[2:4,1:2]     # rows 2,3,4 of columns 1 and 2
 ```
 
-####  Calculations on rows or columns of the matrix
+###  **Calculations on rows or columns of the matrix**
 
 ```{r}
 # summary statistics of each column
@@ -531,7 +525,7 @@ apply(X,1,mean)
 <div style="margin-bottom:15px;">
 </div>
 
-### **Data Frames**
+#### **Data Frames**
 
 A data frame is more general than a matrix, in that different columns can have different modes (numeric, character, factor, etc.). This is similar to SAS and SPSS datasets. The rows contain different observations from your study, or measurements from your experiment. The columns contain the values of different variables.
 
@@ -571,7 +565,7 @@ my.df[,4:5]
 <div style="margin-bottom:15px;">
 </div>
 
-### **Lists**
+#### **Lists**
 
 List is a data structure having components of mixed data types or  an ordered collection of objects (components). A vector having all elements of the same type is called atomic vector but a vector having elements of different type is called list. An ordered collection of objects (components). A list allows you to gather a variety of (possibly unrelated) objects under one name.
 
@@ -596,7 +590,7 @@ my.list["FieldData"]
 <div style="margin-bottom:15px;">
 </div>
 
-### **Factors** 
+#### **Factors** 
 
 In R, the factor stores the nominal values as a vector of integers in the range [ 1... k ] (where k is the number of unique values in the nominal variable), and an internal vector of character strings (the original values) mapped to these integers.
 
@@ -605,4 +599,14 @@ gender <- c(rep("male",20), rep("female", 30))
 gender <- factor(gender) # # 1=female, 2=male internally (alphabetically)
 summary(gender)
 ```
+<div style="margin-bottom:30px;">
+</div>
+
+### **Further Reading**
+
+1. [An Introduction to R - The Comprehensive R Archive](Networkhttps://cran.r-project.org/doc/manuals/r-release/R-intro.pdf)
+
+2. [R Introduction - W3Schools](https://www.w3schools.com/r/r_intro.asp)
+
+3. [An Introduction to R](https://intro2r.com)
 

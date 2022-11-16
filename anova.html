@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>anova.knit</title>
+
+<script src="site_libs/header-attrs-2.17/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">ChemStat-R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="getting-started-with-r.html">Getting Started with R</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Essential of The R Language
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="essential-of-r-language.html">Table of Content</a>
+    </li>
+    <li>
+      <a href="intoduction-to-use-r.html">Introduction to Using R</a>
+    </li>
+    <li>
+      <a href="r-data-input-and-type.html">Importing/Exporting Data into R</a>
+    </li>
+    <li>
+      <a href="data-wrangling.html">Data Wrangling</a>
+    </li>
+    <li>
+      <a href="eda.html">Exploratory Data Analysis</a>
+    </li>
+    <li>
+      <a href="stat_test.html">Statistical Test</a>
+    </li>
+    <li>
+      <a href="anova.html">Analysis of Variance (ANOVA)</a>
+    </li>
+    <li>
+      <a href="correlation.html">Correlation Analysis</a>
+    </li>
+    <li>
+      <a href="regression.html">Regression Analysis</a>
+    </li>
+    <li>
+      <a href="stepwise-regression.html">Stepwise Regression</a>
+    </li>
+    <li>
+      <a href="non-linear-regression.html">Nonlinear Regression</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Cheminformatics with R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="cheminformatics-with-r.html">Table of Content</a>
+    </li>
+    <li>
+      <a href="getting-strated-chem.html">Getting Started</a>
+    </li>
+    <li>
+      <a href="cheminformatics-with-chemminer.html">Cheminformatics with ChemmineR</a>
+    </li>
+    <li>
+      <a href="cheminformatics-with-cdk.html">Cheminformatics with CDK</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    ICP-MS Data Processing with R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="icp-ms-data-processing-and-analysis-with-r.html">Table of Content</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="mailto:zia207@gmail.com">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+    Email
+  </a>
+</li>
+<li>
+  <a href="http://github.com/zia207">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://www.linkedin.com/in/zia-ahmed-a7653578">
+    <span class="fa fa-linkedin fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+
+</div>
+
+
+<div style="margin-bottom:20px;">
+
+</div>
+<img src="Image/PNG_FILE_02/anova_b.png" width="100%" style="display: block; margin: auto;" />
+<div style="margin-bottom:20px;">
+
+</div>
+<div id="table-of-content" class="section level3">
+<h3><strong>Table of Content</strong></h3>
+<ul>
+<li><p><a href="#load-library">Load Library</a></p></li>
+<li><p><a href="#Import-data">Import Data</a></p></li>
+<li><p><a href="#analysis-of-variance-or-anova">Analysis of Variance or
+ANOVA</a></p>
+<ul>
+<li><p><a href="#anova-Hypotheses">ANOVA Hypotheses</a></p></li>
+<li><p><a href="#anova-assumptions">ANOVA Assumptions</a></p></li>
+<li><p><a href="#one-way-anova">One-way ANOVA</a></p></li>
+<li><p><a href="#two-way-or-factorial-anova">Two-way or Factorial
+ANOVA</a></p></li>
+<li><p><a href="#interpretations-of-anova-results">Interpretations of
+ANOVA results</a></p></li>
+</ul></li>
+<li><p><a href="#multiple-comparisons">Multiple Comparisons</a></p>
+<ul>
+<li><p><a href="#lSD-test">LSD Test</a></p></li>
+<li><p><a href="#dmrt-test">DMRT Test</a></p></li>
+<li><p><a href="#tukey-hsd">Tukey HSD</a></p></li>
+</ul></li>
+<li><p><a href="#visualization-of-anova-and-posthoc-test">Visualization
+of ANOVA and Posthoc Test</a></p>
+<ul>
+<li><p><a
+href="#box-or-violin-plots-for-between-subjects-comparisons">Box or
+Violin Plots for Between Subjects Comparisons</a></p></li>
+<li><p><a href="#barplots-of-multiple-comparison">Barplots of Multiple
+Comparison</a></p></li>
+</ul></li>
+<li><p><a href="#further-reading">Further Reading</a></p></li>
+</ul>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="load-library" class="section level3">
+<h3><strong>Load Library</strong></h3>
+<p>In this exercise We will use following R-packages:</p>
+<pre class="r"><code># load library
+library(tidyverse)
+library(dlookr)
+library(moments)
+library(car)
+library(plyr)
+library(data.table)
+library(DT)
+library(Hmisc)
+library(corrplot) 
+library(corrr)
+library(gridExtra)
+library(ggExtra)
+library(BSDA)
+library(GGally)
+library(agricolae) 
+library(multcomp)
+library(multcompView)
+library(ggfortify)
+library(report)
+library(ggstatsplot)</code></pre>
+<div style="margin-bottom:30px;">
+
+</div>
+</div>
+<div id="import-data" class="section level3">
+<h3><strong>Import Data</strong></h3>
+<p>In this tutorial, we will use following data set:</p>
+<p><strong>green_house.csv</strong>: Rice yield and As content in
+contaminated and non-contaminated soils in a greenhouse experiment.</p>
+<p>These data set could be found <a
+href="https://www.dropbox.com/sh/ctjv2eiifhfh2ts/AAAVXmWxPntD-O-5AE_YH3VHa?dl=0">here</a>.</p>
+<p>We import this data using <strong>read_csv()</strong> from
+<strong>readr</strong> package.</p>
+<pre class="r"><code># define working directory
+dataFolder&lt;-&quot;E:/Dropbox/GitHub/chemstat-r-github.io/Data/&quot;
+gh.df&lt;-readr::read_csv(paste0(dataFolder,&quot;green_house.csv&quot;))</code></pre>
+<div style="margin-bottom:30px;">
+
+</div>
+</div>
+<div id="analysis-of-variance-or-anova" class="section level2">
+<h2><strong>Analysis of Variance or ANOVA</strong></h2>
+<p>An ANOVA test is a type of statistical test used to determine if
+there is a statistically significant difference between two or more
+categorical groups by testing for differences of means using variance.
+(source: <a href="https://www.simplypsychology.org/anova.html"
+class="uri">https://www.simplypsychology.org/anova.html</a>)</p>
+<ul>
+<li><p>Groups mean differences inferred by analyzing variances</p></li>
+<li><p>ANOVA uses variance-based F test to check the group mean
+equality. Sometimes, ANOVA F test is also called omnibus test as it
+tests non-specific null hypothesis i.e. all group means are
+equal</p></li>
+<li><p>Main types: One-way (one factor) and two-way (two factors) ANOVA
+(factor is an independent variable)</p></li>
+</ul>
+<div id="anova-hypotheses" class="section level3">
+<h3><strong>ANOVA Hypotheses</strong></h3>
+<p>Null hypothesis: Groups means are equal (no variation in means of
+groups) H0: μ1=μ2=…=μp</p>
+<p><strong>Alternative hypothesis</strong>: At least, one group mean is
+different from other groups H1: All μ are not equal Learn more about
+hypothesis testing and interpretation</p>
+</div>
+<div id="anova-assumptions" class="section level3">
+<h3><strong>ANOVA Assumptions</strong></h3>
+<ul>
+<li><p>Residuals (experimental error) are normally distributed
+(Shapiro-Wilks Test)</p></li>
+<li><p>Homogeneity of variances (variances are equal between treatment
+groups) (Levene’s or Bartlett’s Test)</p></li>
+<li><p>Observations are sampled independently from each other</p></li>
+</ul>
+</div>
+<div id="one-way-anova" class="section level3">
+<h3><strong>One-way ANOVA</strong></h3>
+<p>The one-way analysis of variance (ANOVA) is used to determine whether
+there are any statistically significant differences between the means of
+two or more independent (unrelated) groups.</p>
+<p>ANOVA model can be expressed:</p>
+<img src="Image/PNG_FILE_02/anova.png" width="80%" style="display: block; margin: auto;" />
+<div style="margin-bottom:20px;">
+
+</div>
+<pre class="r"><code>model.a =aov (GAs ~Treatment, data = gh.df) # analysis variance 
+anova (model.a)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: GAs
+##           Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+## Treatment  1 7.9779  7.9779  98.913 2.26e-12 ***
+## Residuals 40 3.2262  0.0807                     
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="two-way-or-factorial-anova" class="section level3">
+<h3><strong>Two-way or Factorial ANOVA</strong></h3>
+<p>A two-way ANOVA (analysis of variance) has two or more categorical
+independent variables (also known as a factor), and a normally
+distributed continuous (i.e., interval or ratio level) dependent
+variable.</p>
+<p>Two-way ANOVA, like one-way ANOVA tests, assumes that the
+observations within each cell are normally distributed and have equal
+variances. We’ll show you how to check these assumptions after fitting
+ANOVA.</p>
+<p>Two-way ANOVA model can be expressed:</p>
+<img src="Image/PNG_FILE_02/two_way_anova.png" width="80%" style="display: block; margin: auto;" />
+<div style="margin-bottom:20px;">
+
+</div>
+<pre class="r"><code>model.b =aov (GAs ~Treatment + Variety, data = gh.df)
+anova (model.b)    </code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: GAs
+##           Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+## Treatment  1 7.9779  7.9779 266.666 &lt; 2.2e-16 ***
+## Variety    6 2.2091  0.3682  12.306 2.536e-07 ***
+## Residuals 34 1.0172  0.0299                      
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>From the ANOVA table we can conclude that both Treatment and Variety
+statistically significant.</p>
+<div style="margin-bottom:20px;">
+
+</div>
+<p><strong>Two-way ANOVA with interaction effect</strong></p>
+<pre class="r"><code>model.d =aov (GAs ~Treatment + Variety +Treatment:Variety, data = gh.df)
+anova (model.d)    </code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: GAs
+##                   Df Sum Sq Mean Sq  F value    Pr(&gt;F)    
+## Treatment          1 7.9779  7.9779 2668.990 &lt; 2.2e-16 ***
+## Variety            6 2.2091  0.3682  123.172 &lt; 2.2e-16 ***
+## Treatment:Variety  6 0.9335  0.1556   52.049 6.668e-14 ***
+## Residuals         28 0.0837  0.0030                       
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>the p-value for the interaction between Treatment:Variety is
+6.668e-142 (highly significant), which indicates that the relationships
+GAs dose and Treatment depends on the rice varieties.</p>
+</div>
+<div id="interpretations-of-anova-results" class="section level3">
+<h3><strong>Interpretations of ANOVA results</strong></h3>
+<p>A nice and easy way to report results of an ANOVA in R is with the
+<strong>report()</strong> function from the <strong>report</strong>
+packagr</p>
+<pre class="r"><code>report(model.d)</code></pre>
+<pre><code>## Warning: Could not find Sum-of-Squares for the (Intercept) in the ANOVA table.</code></pre>
+<pre><code>## The ANOVA (formula: GAs ~ Treatment + Variety + Treatment:Variety) suggests
+## that:
+## 
+##   - The main effect of Treatment is statistically significant and large (F(1, 28)
+## = 2668.99, p &lt; .001; Eta2 (partial) = 0.99, 95% CI [0.98, 1.00])
+##   - The main effect of Variety is statistically significant and large (F(6, 28) =
+## 123.17, p &lt; .001; Eta2 (partial) = 0.96, 95% CI [0.94, 1.00])
+##   - The interaction between Treatment and Variety is statistically significant
+## and large (F(6, 28) = 52.05, p &lt; .001; Eta2 (partial) = 0.92, 95% CI [0.86,
+## 1.00])
+## 
+## Effect sizes were labelled following Field&#39;s (2013) recommendations.</code></pre>
+</div>
+</div>
+<div id="multiple-comparisons" class="section level2">
+<h2><strong>Multiple Comparisons</strong></h2>
+<p>From ANOVA analysis, we know that treatment differences are
+statistically significant, but ANOVA does not tell which treatments are
+significantly different from each other. If the ANOVA test results in a
+significant difference, a follow up analysis would be needed for
+multiple comparisons of all possible pairwise means.</p>
+<div id="lsd-test" class="section level3">
+<h3><strong>LSD Test</strong></h3>
+<p>To know the pairs of significant different treatments, <strong>least
+significant difference (LSD)</strong> test is used in the context of the
+analysis of variance, when the F-ratio suggests rejection of the null
+hypothesis H0, that is, when the difference between the population means
+is significant.</p>
+<p>This test helps to identify the populations whose means are
+statistically different. The basic idea of the test is to compare the
+populations taken in pairs. It is then used to proceed in a one-way or
+two-way analysis of variance, given that the null hypothesis has already
+been rejected.</p>
+<p>(Source: <a
+href="https://link.springer.com/referenceworkentry/10.1007/978-0-387-32833-1_226#"
+class="uri">https://link.springer.com/referenceworkentry/10.1007/978-0-387-32833-1_226#</a>:~:text=The%20least%20significant%20difference%20(LSD,whose%20means%20are%20statistically%20different.)</p>
+<p>We use <strong>LSD.test()</strong> function of
+<strong>agricolae</strong> package on anova model for Multiple
+comparisons, <strong>“Least significant difference (LSD)”</strong> and
+<strong>Adjust P-values</strong></p>
+<pre class="r"><code>lsd.test.single=agricolae::LSD.test(model.a, &quot;Treatment&quot;)      # LSD test
+lsd.test.single</code></pre>
+<pre><code>## $statistics
+##      MSerror Df     Mean       CV  t.value       LSD
+##   0.08065607 40 1.381167 20.56234 2.021075 0.1771358
+## 
+## $parameters
+##         test p.ajusted    name.t ntr alpha
+##   Fisher-LSD      none Treatment   2  0.05
+## 
+## $means
+##               GAs       std  r       LCL      UCL   Min   Max   Q25   Q50   Q75
+## High As 1.8170000 0.3368185 21 1.6917461 1.942254 1.396 2.493 1.548 1.872 1.934
+## Low As  0.9453333 0.2187817 21 0.8200794 1.070587 0.605 1.359 0.832 0.946 1.020
+## 
+## $comparison
+## NULL
+## 
+## $groups
+##               GAs groups
+## High As 1.8170000      a
+## Low As  0.9453333      b
+## 
+## attr(,&quot;class&quot;)
+## [1] &quot;group&quot;</code></pre>
+<p>From test, it is clear that mean grain As significantly higher in
+high As soil.</p>
+<div style="margin-bottom:20px;">
+
+</div>
+<p>For two-way ANOVA:</p>
+<pre class="r"><code>compare.lsd &lt;-LSD.test (model.d, c(&quot;Variety&quot;, &quot;Treatment&quot;), main = &quot;GAs ~Treatment + Variety + Treatment:Variety&quot;)
+compare.lsd</code></pre>
+<pre><code>## $statistics
+##       MSerror Df     Mean       CV  t.value        LSD
+##   0.002989119 28 1.381167 3.958453 2.048407 0.09144127
+## 
+## $parameters
+##         test p.ajusted            name.t ntr alpha
+##   Fisher-LSD      none Variety:Treatment  14  0.05
+## 
+## $means
+##                         GAs        std r       LCL       UCL   Min   Max    Q25
+## BR01:High As      1.5313333 0.04346646 3 1.4666746 1.5959921 1.482 1.564 1.5150
+## BR01:Low As       0.7806667 0.06989516 3 0.7160079 0.8453254 0.722 0.858 0.7420
+## BR06:High As      1.4200000 0.02816026 3 1.3553413 1.4846587 1.396 1.451 1.4045
+## BR06:Low As       1.0646667 0.06035175 3 1.0000079 1.1293254 1.011 1.130 1.0320
+## BR28:High As      1.5906667 0.09432038 3 1.5260079 1.6553254 1.521 1.698 1.5370
+## BR28:Low As       0.9423333 0.04277071 3 0.8776746 1.0069921 0.893 0.969 0.9290
+## BR35:High As      2.4663333 0.02362908 3 2.4016746 2.5309921 2.448 2.493 2.4530
+## BR35:Low As       1.3356667 0.03955165 3 1.2710079 1.4003254 1.290 1.359 1.3240
+## BR36:High As      1.9373333 0.05807179 3 1.8726746 2.0019921 1.881 1.997 1.9075
+## BR36:Low As       0.8890000 0.05144900 3 0.8243413 0.9536587 0.832 0.932 0.8675
+## Jefferson:High As 1.9253333 0.07182154 3 1.8606746 1.9899921 1.872 2.007 1.8845
+## Jefferson:Low As  0.6146667 0.01266228 3 0.5500079 0.6793254 0.605 0.629 0.6075
+## Kaybonnet:High As 1.8480000 0.07014984 3 1.7833413 1.9126587 1.767 1.889 1.8275
+## Kaybonnet:Low As  0.9903333 0.03911948 3 0.9256746 1.0549921 0.946 1.020 0.9755
+##                     Q50    Q75
+## BR01:High As      1.548 1.5560
+## BR01:Low As       0.762 0.8100
+## BR06:High As      1.413 1.4320
+## BR06:Low As       1.053 1.0915
+## BR28:High As      1.553 1.6255
+## BR28:Low As       0.965 0.9670
+## BR35:High As      2.458 2.4755
+## BR35:Low As       1.358 1.3585
+## BR36:High As      1.934 1.9655
+## BR36:Low As       0.903 0.9175
+## Jefferson:High As 1.897 1.9520
+## Jefferson:Low As  0.610 0.6195
+## Kaybonnet:High As 1.888 1.8885
+## Kaybonnet:Low As  1.005 1.0125
+## 
+## $comparison
+## NULL
+## 
+## $groups
+##                         GAs groups
+## BR35:High As      2.4663333      a
+## BR36:High As      1.9373333      b
+## Jefferson:High As 1.9253333      b
+## Kaybonnet:High As 1.8480000      b
+## BR28:High As      1.5906667      c
+## BR01:High As      1.5313333      c
+## BR06:High As      1.4200000      d
+## BR35:Low As       1.3356667      d
+## BR06:Low As       1.0646667      e
+## Kaybonnet:Low As  0.9903333     ef
+## BR28:Low As       0.9423333     fg
+## BR36:Low As       0.8890000      g
+## BR01:Low As       0.7806667      h
+## Jefferson:Low As  0.6146667      i
+## 
+## attr(,&quot;class&quot;)
+## [1] &quot;group&quot;</code></pre>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="dmrt-test" class="section level3">
+<h3><strong>DMRT Test</strong></h3>
+<p><strong>Duncan’s Multiple Range test (DMRT)</strong> is a posthoc
+test to measure specific differences between pairs of means. MRT is more
+useful than the LSD when larger pairs of means are being compared.</p>
+<pre class="r"><code>dmrt.test.single=agricolae::duncan.test(model.a, &quot;Treatment&quot;)   # DMRT test
+dmrt.test.single</code></pre>
+<pre><code>## $statistics
+##      MSerror Df     Mean       CV
+##   0.08065607 40 1.381167 20.56234
+## 
+## $parameters
+##     test    name.t ntr alpha
+##   Duncan Treatment   2  0.05
+## 
+## $duncan
+##      Table CriticalRange
+## 2 2.858232     0.1771358
+## 
+## $means
+##               GAs       std  r   Min   Max   Q25   Q50   Q75
+## High As 1.8170000 0.3368185 21 1.396 2.493 1.548 1.872 1.934
+## Low As  0.9453333 0.2187817 21 0.605 1.359 0.832 0.946 1.020
+## 
+## $comparison
+## NULL
+## 
+## $groups
+##               GAs groups
+## High As 1.8170000      a
+## Low As  0.9453333      b
+## 
+## attr(,&quot;class&quot;)
+## [1] &quot;group&quot;</code></pre>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="tukey-hsd" class="section level3">
+<h3><strong>Tukey HSD</strong></h3>
+<p><strong>Tukey’s Honest Significant Difference (HSD)</strong> test is
+a post hoc test commonly used to assess the significance of differences
+between pairs of group means. Tukey’s HSD test accounts for multiple
+comparisons and corrects for family-wise error rate (FWER) (inflated
+type I error). We will <strong>HSD.test()</strong> function from
+<strong>agricolae</strong> package</p>
+<pre class="r"><code>compare.hsd &lt;-agricolae::HSD.test(model.d, c(&quot;Variety&quot;, &quot;Treatment&quot;), main = &quot;GAs ~Treatment + Variety + Treatment:Variety&quot;)
+compare.hsd</code></pre>
+<pre><code>## $statistics
+##       MSerror Df     Mean       CV      MSD
+##   0.002989119 28 1.381167 3.958453 0.163401
+## 
+## $parameters
+##    test            name.t ntr StudentizedRange alpha
+##   Tukey Variety:Treatment  14          5.17659  0.05
+## 
+## $means
+##                         GAs        std r   Min   Max    Q25   Q50    Q75
+## BR01:High As      1.5313333 0.04346646 3 1.482 1.564 1.5150 1.548 1.5560
+## BR01:Low As       0.7806667 0.06989516 3 0.722 0.858 0.7420 0.762 0.8100
+## BR06:High As      1.4200000 0.02816026 3 1.396 1.451 1.4045 1.413 1.4320
+## BR06:Low As       1.0646667 0.06035175 3 1.011 1.130 1.0320 1.053 1.0915
+## BR28:High As      1.5906667 0.09432038 3 1.521 1.698 1.5370 1.553 1.6255
+## BR28:Low As       0.9423333 0.04277071 3 0.893 0.969 0.9290 0.965 0.9670
+## BR35:High As      2.4663333 0.02362908 3 2.448 2.493 2.4530 2.458 2.4755
+## BR35:Low As       1.3356667 0.03955165 3 1.290 1.359 1.3240 1.358 1.3585
+## BR36:High As      1.9373333 0.05807179 3 1.881 1.997 1.9075 1.934 1.9655
+## BR36:Low As       0.8890000 0.05144900 3 0.832 0.932 0.8675 0.903 0.9175
+## Jefferson:High As 1.9253333 0.07182154 3 1.872 2.007 1.8845 1.897 1.9520
+## Jefferson:Low As  0.6146667 0.01266228 3 0.605 0.629 0.6075 0.610 0.6195
+## Kaybonnet:High As 1.8480000 0.07014984 3 1.767 1.889 1.8275 1.888 1.8885
+## Kaybonnet:Low As  0.9903333 0.03911948 3 0.946 1.020 0.9755 1.005 1.0125
+## 
+## $comparison
+## NULL
+## 
+## $groups
+##                         GAs groups
+## BR35:High As      2.4663333      a
+## BR36:High As      1.9373333      b
+## Jefferson:High As 1.9253333      b
+## Kaybonnet:High As 1.8480000      b
+## BR28:High As      1.5906667      c
+## BR01:High As      1.5313333     cd
+## BR06:High As      1.4200000     de
+## BR35:Low As       1.3356667      e
+## BR06:Low As       1.0646667      f
+## Kaybonnet:Low As  0.9903333     fg
+## BR28:Low As       0.9423333    fgh
+## BR36:Low As       0.8890000     gh
+## BR01:Low As       0.7806667      h
+## Jefferson:Low As  0.6146667      i
+## 
+## attr(,&quot;class&quot;)
+## [1] &quot;group&quot;</code></pre>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+</div>
+<div id="visualization-of-anova-and-posthoc-test"
+class="section level2">
+<h2><strong>Visualization of ANOVA and Posthoc Test</strong></h2>
+<div id="box-or-violin-plots-for-between-subjects-comparisons"
+class="section level3">
+<h3><strong>Box or Violin Plots for Between Subjects
+Comparisons</strong></h3>
+<p>We create a nice looking plots with results of ANOVA and post-hoc
+tests on the same plot (directly on the boxplots). We will use
+<strong>gbetweenstats()</strong> function of
+<strong>ggstatsplot</strong> package: , interest to you.</p>
+<pre class="r"><code>ggbetweenstats(
+  data = gh.df,
+  x = Treatment,
+  y = GAs,
+  type = &quot;parametric&quot;, # ANOVA or Kruskal-Wallis
+  var.equal = TRUE, # ANOVA or Welch ANOVA
+  plot.type = &quot;box&quot;,
+  pairwise.comparisons = TRUE,
+  pairwise.display = &quot;significant&quot;,
+  centrality.plotting = FALSE,
+  bf.message = FALSE
+)</code></pre>
+<img src="anova_files/figure-html/Plot%20ANOVA%20%20and%20Posthoc%20Tesr-1.png" width="480" />
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="barplots-of-multiple-comparison" class="section level3">
+<h3><strong>Barplots of Multiple Comparison</strong></h3>
+<p>The means comparison by Tukey’s test is resulted an extensive table
+with all pairwise comparisons and the value for each one of them.
+However, this result can be tricky to interpret. The use of letters to
+indicate significant differences in pairwise comparisons, also called
+compact letter display, and can simplify the visualization and
+discussion of significant differences among means.</p>
+<p>We are going to use the <strong>multcompLetters4()</strong> function
+from the <strong>multcompView</strong> package.</p>
+<p>source: <a href="https://statdoe.com/two-way-anova-in-r/"
+class="uri">https://statdoe.com/two-way-anova-in-r/</a></p>
+<pre class="r"><code># creating the compact letter display
+# Tukey&#39;s test
+tukey &lt;- TukeyHSD(model.d)
+# creating the compact letter display
+tukey.cld &lt;- multcompView::multcompLetters4(model.d, tukey)
+print(tukey.cld)</code></pre>
+<pre><code>## $Treatment
+## High As  Low As 
+##     &quot;a&quot;     &quot;b&quot; 
+## 
+## $Variety
+##      BR35 Kaybonnet      BR36 Jefferson      BR28      BR06      BR01 
+##       &quot;a&quot;       &quot;b&quot;       &quot;b&quot;       &quot;c&quot;       &quot;c&quot;      &quot;cd&quot;       &quot;d&quot; 
+## 
+## $`Treatment:Variety`
+##      High As:BR35      High As:BR36 High As:Jefferson High As:Kaybonnet 
+##               &quot;a&quot;               &quot;b&quot;               &quot;b&quot;               &quot;b&quot; 
+##      High As:BR28      High As:BR01      High As:BR06       Low As:BR35 
+##               &quot;c&quot;              &quot;cd&quot;              &quot;de&quot;               &quot;e&quot; 
+##       Low As:BR06  Low As:Kaybonnet       Low As:BR28       Low As:BR36 
+##               &quot;f&quot;              &quot;fg&quot;             &quot;fgh&quot;              &quot;gh&quot; 
+##       Low As:BR01  Low As:Jefferson 
+##               &quot;h&quot;               &quot;i&quot;</code></pre>
+<p>The code output shows the compact letter display for the faceplate
+glass, for the temperature, and for each treatment. This last one is the
+one we are going to use and the next code extract and adds the results
+of the compact letter display for each treatment to the table with the
+data summary.</p>
+<pre class="r"><code># table with factors, means and standard deviation
+data_summary&lt;-gh.df %&gt;% 
+  dplyr::group_by(Treatment, Variety) %&gt;%
+  dplyr::summarise(mean=mean(GAs), sd=sd(GAs)) %&gt;%
+  arrange(desc(mean))</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;Treatment&#39;.
+## You can override using the `.groups` argument.</code></pre>
+<pre class="r"><code># Add letters
+cld &lt;- as.data.frame.list(tukey.cld$&quot;Treatment:Variety&quot;)
+data_summary$Tukey &lt;- cld$Letters
+print(data_summary)</code></pre>
+<pre><code>## # A tibble: 14 × 5
+## # Groups:   Treatment [2]
+##    Treatment Variety    mean     sd Tukey
+##    &lt;chr&gt;     &lt;chr&gt;     &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;
+##  1 High As   BR35      2.47  0.0236 a    
+##  2 High As   BR36      1.94  0.0581 b    
+##  3 High As   Jefferson 1.93  0.0718 b    
+##  4 High As   Kaybonnet 1.85  0.0701 b    
+##  5 High As   BR28      1.59  0.0943 c    
+##  6 High As   BR01      1.53  0.0435 cd   
+##  7 High As   BR06      1.42  0.0282 de   
+##  8 Low As    BR35      1.34  0.0396 e    
+##  9 Low As    BR06      1.06  0.0604 f    
+## 10 Low As    Kaybonnet 0.990 0.0391 fg   
+## 11 Low As    BR28      0.942 0.0428 fgh  
+## 12 Low As    BR36      0.889 0.0514 gh   
+## 13 Low As    BR01      0.781 0.0699 h    
+## 14 Low As    Jefferson 0.615 0.0127 i</code></pre>
+<div style="margin-bottom:20px;">
+
+</div>
+<p>We can produce a nice looking barplot with all information of
+HSD-tests</p>
+<pre class="r"><code>ggplot(data_summary, aes(x = factor(Treatment), y = mean, fill = Variety, colour = Variety)) + 
+  geom_bar(stat = &quot;identity&quot;, position = &quot;dodge&quot;, alpha = 0.5)  +
+  geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), position = position_dodge(0.9), width = 0.25) +
+  labs(x=&quot;Treatment&quot;, y=&quot;Grain As (mg/kg)&quot;) +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+  theme(legend.position = c(0.6, 0.75)) +
+  geom_text(aes(label=Tukey), position = position_dodge(0.90), size = 3, 
+            vjust=-0.8, hjust=-0.5, colour = &quot;gray25&quot;)</code></pre>
+<p><img src="anova_files/figure-html/BarPlots%20Multiple%20Comaprison-1.png" width="576" /></p>
+<pre class="r"><code># Save figure
+ggsave(&quot;barplot.png&quot;, width = 6, height = 43, dpi = 1000)</code></pre>
+<div style="margin-bottom:30px;">
+
+</div>
+</div>
+<div id="further-reading" class="section level3">
+<h3><strong>Further Reading</strong></h3>
+<ol style="list-style-type: decimal">
+<li><p><a href="https://www.scribbr.com/statistics/anova-in-r/">ANOVA in
+R</a></p></li>
+<li><p><a
+href="https://statsandr.com/blog/anova-in-r/#visualization-of-anova-and-post-hoc-tests-on-the-same-plot">ANOVA
+in R</a></p></li>
+<li><p><a
+href="https://myaseen208.com/agricolae/articles/MultipleComparisons.html">Multiple
+Comparisons with agricolae</a></p></li>
+<li><p><a
+href="#https://mran.microsoft.com/snapshot/2018-07-20/web/packages/ggstatsplot/readme/README.html#:~:text=ggstatsplot%20is%20an%20extension%20of,to%20produce%20information%2Drich%20plots.">ggstatsplot:
+ggplot2 Based Plots with Statistical Details</a></p></li>
+<li><p><a href="https://statdoe.com/two-way-anova-in-r/">TWO-WAY ANOVA
+IN R – STEP-BY-STEP TUTORIAL</a></p></li>
+</ol>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

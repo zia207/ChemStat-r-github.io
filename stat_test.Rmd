@@ -1,0 +1,236 @@
+---
+title: ''
+---
+
+<div style="margin-bottom:20px;">
+</div>
+
+```{r echo=FALSE, out.width='100%', fig.align="center"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\stat_test.png")
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+
+### **Table of Content**
+
+* [Load Library](#load-library)
+
+* [Load Data](#load-data)
+
+### **Load Library**
+
+In this exercise We will use following R-packages: 
+
+```{r Load Library, message=FALSE, warning=FALSE}
+# load library
+library(tidyverse)
+library(dlookr)
+library(moments)
+library(car)
+library(plyr)
+library(data.table)
+library(DT)
+library(Hmisc)
+library(corrplot) 
+library(corrr)
+library(gridExtra)
+library(ggExtra)
+library(BSDA)
+library(GGally)
+library(agricolae) 
+library(multcomp)
+library(multcompView)
+library(ggfortify)
+# install.packages("Metrics")
+library(caret)
+library(Metrics)
+```
+<div style="margin-bottom:30px;">
+</div>
+
+### **Import Data** 
+
+In this excersise, we use following data set:
+
+
+ **water_soil_rice_arsenic_data.csv**: Arsenic (As) data in irrigation water, paddy soil and and rice grain  in a contaminated cites from Bangladesh 
+
+2. **green_house.csv**:  Rice yield and  As content in contaminated and non-contaminated soils in a greenhouse experiment.
+
+
+These data set could be found [here](https://www.dropbox.com/sh/ctjv2eiifhfh2ts/AAAVXmWxPntD-O-5AE_YH3VHa?dl=0).
+
+We import this data using **read_csv()** from **readr** package. 
+
+
+```{r Import Data, message=FALSE, warning=FALSE}
+# define working directory
+dataFolder<-"E:/Dropbox/GitHub/chemstat-r-github.io/Data/"
+df<-readr::read_csv(paste0(dataFolder,"water_soil_rice_arsenic_data.csv"))
+gh.df<-readr::read_csv(paste0(dataFolder,"green_house.csv"))
+```
+
+<div style="margin-bottom:30px;">
+</div>
+
+### **Statistical Test**
+
+#### **Z-Test** 
+
+Z-test is the statistical test used to analyze whether two population means are different or not when the variances are known, and the sample size is large. The z-test is based on the normal distribution.
+
+The assumptions for Z-test are:
+
+* All observations are independent.
+
+* The size of the sample should be more than 30.
+
+* The Z distribution is normal when the mean is 0, and the variance is 1.
+
+(Source: https://www.simplilearn.com/tutorials/statistics-tutorial/z-test-vs-t-test#hypothesis_testing)
+
+
+A **z-score**, or **z-statistic**, is a number representing how many standard deviations above or below the mean population the score derived from a z-test.  It is a numerical measurement that describes a value's relationship to the mean of a group of values. If a z-score is 0, it indicates that the data point's score is identical to the mean score. A z-score of 1.0 would indicate a value that is one standard deviation from the mean. Z-scores may be positive or negative, with a positive value indicating the score is above the mean and a negative score indicating it is below the mean.
+
+##### **One sample Z-test**
+
+The test statistic is defined by:
+
+```{r echo=FALSE, out.width='40%', fig.align="left"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\z_test.png")
+```
+<div style="margin-bottom:20px;">
+</div>
+
+Where, Xbar is the sample mean, σ is the population standard deviation, n is the sample size and μ is the population mean.
+
+
+The following code shows how to perform a **one sample z-test** in R to determine if the Irrigation Water As causes a significant difference in mmean Soil As levels. We will **BSDA** package for this analysis. The Null hypothesis is the mean SAs is 17.887 and the Alternative hypothesis is mean As is greater or less than 17.887 or not equal to 17.887. 
+
+```{r Z-test}
+z.test(df$SAs, mu=mean(df$SAs), sigma.x= sd(df$SAs))
+```
+
+The test statistic for the one sample z-test is 0 and the corresponding p-value is 1. Since this p-value is not less than .05, we do not have sufficient evidence to reject the null hypothesis.
+
+
+##### **Two sample Z-test**
+
+
+The two sample Z-test statistic is defined by:
+
+```{r echo=FALSE, out.width='50%', fig.align="left"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\two_sample_z_test.png")
+```
+<div style="margin-bottom:20px;">
+</div>
+
+Lets perform the two sample z-test in R to determine if the mean As level is different between HL and MHL  with 5% level of significance.
+
+```{r wo sample Z-tes, message=FALSE, warning=FALSE}
+# Create dataframes
+df.HL <- df %>% dplyr::select(SAs, Land_type) %>%
+         filter(Land_type == "HL")
+
+df.MHL <- df %>% dplyr::select(SAs, Land_type) %>%
+         filter(Land_type == "MHL")
+
+# z-test - two tails
+z.test(x=df.HL$SAs, 
+       y=df.MHL$SAs, 
+       mu=mean(df$SAs), # population mean
+       sigma.x=sd(df.HL$SAs), # standard deviation for HL 
+       sigma.y=sd(df.MHL$SAs), # standard deviation for MHL 
+       alternative = "two.sided")
+
+```
+
+
+Since the p-value < 2.2e-16 is lower than the level of significance (α) = 0.05, we reject the null hypothesis. This means we have sufficient evidence to say mean As in HL and MHL are not equal.  
+
+<div style="margin-bottom:20px;">
+</div>
+
+#### **Two-Sample T-test**
+
+A T-test is a parametric test applied to identify how the average of two data sets differs when variance is not given. When the population standard deviation is unknown, the T-test is used in conjunction with the t-distribution. The degree of freedom significantly impacts the shape of a t-distribution. The number of independent observations in a given set of observations is the degree of freedom.
+
+**Paired t-test** is used when we have the two related samples which. This test is used to check whether there is a significant difference between two population means when their data is in the form of matched pairs
+
+Assumptions for Paired t-test are as follows:
+
+* The parent population from which the sample is drawn should be normal.
+
+* The samples should be independent of each other.
+
+* The sample size should be equal for both the samples, i.e. n1 = n2.
+
+* The dependent variable should be continuous.
+
+
+```{r echo=FALSE, out.width='40%', fig.align="left"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\two_sample_t_test.png")
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+source: https://www.simplilearn.com/tutorials/statistics-tutorial/z-test-vs-t-test#hypothesis_testing 
+
+In this exercise we will use rice arsenic data in a greenhouse experiemnt which could be found [here](https://www.dropbox.com/s/en7c6ypu5fsgbox/green_house.csv?dl=0)
+
+We will perform two-sample t-test with the hypothesis that the rice grain As is higher when it grow in soil with high soil As  at a 5% level of significance.
+
+
+```{r}
+glimpse(gh.df)
+```
+
+```{r Two-Sample T-test}
+# Create dataframes
+low <- gh.df %>% dplyr::select(GAs, Treatment) %>%
+         filter(Treatment == "Low As")
+
+high <- gh.df %>% dplyr::select(GAs, Treatment) %>%
+         filter(Treatment == "High As")
+
+# Two-Sample T-test
+t.test(x=high$GAs,
+       y=low$GAs, 
+       paired = TRUE,
+       alternative = "greater")
+```
+
+Since the p-value [2.052e-11] is less than the level of significance (α) = 0.05, we may to reject the null hypothesis and  means rice grain As in contaminated and non-contaminated soil are not equal.
+
+<div style="margin-bottom:20px;">
+</div>
+
+
+#### **Chi-Squared Test**
+
+
+The chi-square test of independence is used to analyze the frequency table (i.e. contengency table) formed by two categorical variables. The chi-square test evaluates whether there is a significant association between the categories of the two variables. This article describes the basics of chi-square test and provides practical examples using R software.
+
+```{r echo=FALSE, out.width='40%', fig.align="left"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\chi_test.png")
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+Source: http://www.sthda.com/english/wiki/chi-square-test-of-independence-in-r/
+
+```{r Chi-Squared Test, message=FALSE, warning=FALSE}
+cat.df = df %>% dplyr::select(Land_type, Soil_As_Class)
+table(cat.df$Land_type, cat.df$Soil_As_Class)
+# Chi-Squared Test
+chisq.test(cat.df$Land_type, cat.df$Soil_As_Class, correct=FALSE)
+```
+
+We have a chi-squared value of 48.255. Since we get a p-Value less than the significance level of 0.05, we reject the null hypothesis and conclude that the two variables are in fact dependent. The row and the column variables are statistically significantly associate
+
+<div style="margin-bottom:20px;">
+</div>

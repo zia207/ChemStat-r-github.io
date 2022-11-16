@@ -1,0 +1,493 @@
+---
+title: ''
+---
+
+
+<div style="margin-bottom:20px;">
+</div>
+
+```{r echo=FALSE, out.width='100%', fig.align="center"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\regression.png")
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+
+### **Table of Content**
+
+* [Load Library](#load-library)
+
+* [Import Data](#import-data)
+
+* [Linear Regression](#linear-regression)
+
+* [Simple Linear Regression](#simple-linear-regression)
+  
+  - [Regression Plot](#regression-plot)
+  
+  - [Residuals Plot](#residuals-plot)
+  
+  - [Regression Model Diagnostic Plots](#regression-model-diagnostic-plots)
+
+* [Multiple Linear Regression or MLR model](#multiple-linear-regression-or-mlr-model) 
+
+* [Regression Model Evaluation](#regression-model-evaluation)
+
+  - [Model Performance with an Independent Data Set](#model-performance-with-an-independent-data-set)
+
+    - [Split Data](#split-data)
+
+    - [Training MLR Model](#training-mlr-model)
+  
+    - [Make Prediction](#make-prediction)
+  
+    - [Model Evaluation](#model-evaluation)
+  
+  - [Cross Validation](#cross-calidation)
+  
+    - [Leave One Out Cross Validation or LOOCV](#leave-one-out-cross-validation-or-loocv)
+  
+    - [K-fold Cross Validation](#k-fold-cross-validation)
+  
+    - [Repeated k-fold Cross Validation](#repeated-k-fold-cross-validation)
+    
+* [Further Reading](#further-reading)
+    
+
+<div style="margin-bottom:40px;">
+</div>
+
+### **Load Library**
+
+In this exercise We will use following R-packages: 
+
+```{r Load Library, message=FALSE, warning=FALSE}
+# load library
+library(tidyverse)
+library(dlookr)
+library(moments)
+library(car)
+library(plyr)
+library(data.table)
+library(DT)
+library(Hmisc)
+library(corrplot) 
+library(corrr)
+library(gridExtra)
+library(ggExtra)
+library(BSDA)
+library(GGally)
+library(agricolae) 
+library(multcomp)
+library(multcompView)
+library(ggfortify)
+library(report)
+library(ggstatsplot)
+library(ggfortify)
+library(caret)
+library(Metrics)
+```
+<div style="margin-bottom:30px;">
+</div>
+
+### **Import Data** 
+
+In this tutorial, we will use following data set:
+
+**soil_crabon_data.csv**: Soil carbon data from Colorado, Kansas, New Mexico, and Wyoming. These samples were collected by the United States Geological Survey (USGS) as a part of the USGS Geochemical Landscapes Project [Smith et al., 2011]. We need following python packages:
+
+These data set could be found [here](https://www.dropbox.com/sh/ctjv2eiifhfh2ts/AAAVXmWxPntD-O-5AE_YH3VHa?dl=0).
+
+
+```{r Import Data, message=FALSE, warning=FALSE}
+# define working directory
+dataFolder<-"E:/Dropbox/GitHub/chemstat-r-github.io/Data/"
+soil.df<-readr::read_csv(paste0(dataFolder,"soil_crabon_data.csv"))
+```
+<div style="margin-bottom:30px;">
+</div>
+
+## **Linear Regression**
+
+Correlation provides a measure of the linear association between pairs of variables, but it doesn’t tell us about more complex relationships. Linear regression is a basic and commonly used type of predictive analysis.  The overall idea of regression is to examine two things: (1) does a set of predictor variables do a good job in predicting an outcome (dependent) variable?  (2) Which variables in particular are significant predictors of the outcome variable, and in what way do they–indicated by the magnitude and sign of the beta estimates–impact the outcome variable?  These regression estimates are used to explain the relationship between one dependent variable and one or more independent variables. ([Source](https://www.statisticssolutions.com/free-resources/directory-of-statistical-analyses/what-is-linear-regression/). The variable you want to predict is called the dependent variable. The variable you are using to predict the other variable's value is called the independent variable.
+
+
+### **Simple Linear Regression**
+
+Simple linear regression is used to model the relationship between two continuous variables. Often, the objective is to predict the value of an output variable (or response) based on the value of an input (or predictor) variable. (Source:https://www.jmp.com/en_us/statistics-knowledge-portal/what-is-regression.html) )
+
+In simple linear regression, both the response and the predictor are continuous. In ANOVA, the response is continuous, but the predictor, or factor, is nominal.
+
+
+Linear regression analysis is based on six fundamental assumptions:
+
+* The dependent and independent variables show a linear relationship between the slope and the intercept.
+
+* The independent variable is not random.
+
+* The value of the residual (error) is zero.
+
+* The value of the residual (error) is constant across all observations.
+
+* The value of the residual (error) is not correlated across all observations.
+
+* The residual (error) values follow the normal distribution
+
+The simple linear model is expressed using the following equation: 
+
+```{r echo=FALSE, out.width='40%', fig.align="left"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\simple_regression.png")
+```
+<div style="margin-bottom:20px;">
+</div>
+ 
+In this exercise we will we use  soil carbon data to explore the relationship between soil organic carbon (SOC) and Normalized Vegetation Index (NDVI) using **lm()** function: 
+ 
+```{r}
+dplyr::glimpse(soil.df)
+```
+
+```{r Simple Linear Regression}
+slm.soc<-lm(SOC~NDVI, data=soil.df)  # regression model
+```
+ 
+
+**summary()** is a generic function used to produce result summaries of the regression results 
+
+```{r Summary SLM, message=FALSE, warning=FALSE}
+summary(slm.soc)
+```
+
+Following values stored in the **lm** object:
+
+```{r}
+names(slm.soc)
+```
+
+```{r}
+names(slm.soc$coefficients)
+```
+
+We can extract  r-squared from **lm**: object:
+
+```{r}
+summary(slm.soc)$r.squared 
+```
+
+slope and intercept:
+
+```{r}
+# Intercept
+slm.soc$coef[1]
+# Slope
+slm.soc$coef[2]
+```
+<div style="margin-bottom:20px;">
+</div>
+
+#### **Regression Plot**
+
+We can create regression plots with fitted lines. 
+
+```{r fig.height=4, fig.width=4, message=FALSE, warning=FALSE}
+# plot height vs. weight
+# and fit a linear model
+ggplot(soil.df, aes(NDVI,SOC)) +
+  geom_point() +
+  geom_smooth(method = "lm")+
+   ggtitle("Figure:  Soil Organic carbon vs NDVI ") +
+  xlab("NDVI") + ylab("Soil Organic Carbon (mg/kg)") +
+  # Flip the bars
+  theme(
+    panel.background = element_rect(fill = "grey95",colour = "gray75",size = 0.5, linetype = "solid"),
+    axis.line = element_line(colour = "grey"),
+    plot.title = element_text(size = 14, hjust = 0.5),
+    axis.title.x = element_text(size = 14),
+    axis.title.y = element_text(size = 14),
+    axis.text.x=element_text(size=13, colour="black"),
+    axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour='black'))
+```
+<div style="margin-bottom:15px;">
+</div>
+
+#### **Residuals Plot**
+
+The **residuals**  is the difference between the observed data e and the fitted values. We can plot our observed values against the fitted values to see how well the regression model fits.
+
+```{r Residual vs SOC, fig.height=4, fig.width=4.5}
+plot(soil.df$SOC, slm.soc$residuals, pch=19)
+abline(h = 0, lty = 2)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+#### **Regression Model Diagnostic Plots**
+
+he diagnostic plots show residuals in four different ways:
+
+1. **Residuals vs Fitted**. Used to check the linear relationship assumptions. A horizontal line, without distinct patterns is an indication for a linear relationship, what is good.
+
+2. **Normal Q-Q**. Used to examine whether the residuals are normally distributed. It’s good if residuals points follow the straight dashed line.
+
+3. **Scale-Location (or Spread-Location)**. Used to check the homogeneity of variance of the residuals (homoscedasticity). Horizontal line with equally spread points is a good indication of homoscedasticity. 
+
+4. **Residuals vs Leverage**. Used to identify influential cases, that is extreme values that might influence the regression results when included or excluded from the analysis. 
+
+
+Regression diagnostics plots can be created using the R base function plot() or the **autoplot()** function **ggfortify package** which creates a ggplot2-based graphics.
+
+
+```{r SLM Diagnostic plots, fig.height=5.5, fig.width=6}
+autoplot(slm.soc)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+### **Multiple Linear Regression or MLR model**
+
+Multiple linear regression is used to model the relationship between a continuous response variable and  multiple continuous or categorical explanatory variables. The mathematical representation of multiple linear regression:
+
+
+```{r echo=FALSE, out.width='40%', fig.align="left"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\mlr.png")
+```
+<div style="margin-bottom:20px;">
+</div>
+
+Multiple linear regression follows the same conditions as the simple linear model. However, since there are several independent variables in multiple linear analysis, there is another mandatory condition for the model:
+
+**Non-collinearity**: Independent variables should show a minimum of correlation with each other. If the independent variables are highly correlated with each other, it will be difficult to assess the true relationships between the dependent and independent variables".
+
+Source: https://corporatefinanceinstitute.com/resources/knowledge/finance/regression-analysis/
+
+We will develop MLR model with five predictors ('DEM', 'Slope', 'MAT', 'MAP','NDVI') to explain variability soil organic carbon
+
+```{r Fitt MLR model}
+# create a data-frame
+mlr.df<-soil.df %>% dplyr::select(SOC, DEM, Slope, MAT, MAP,NDVI, NLCD)
+# fit MLR model
+mlr.soc<-lm(SOC~DEM+Slope+MAT+MAP+NDVI+NLCD, mlr.df)
+summary(mlr.soc)
+```
+<div style="margin-bottom:40px;">
+</div>
+
+## **Regression Model Evaluation**
+
+The accuracy of a regression  models is critical as it determines the quality of the interpolated values. 
+
+The most commonly used statistical metrics for measuring the performance of a regression model in predicting the outcome of new test data and  several cross-validation methods for assessing model performance. 
+
+### **Model Performance with an Independent Data Set**
+
+We are interested in determining the accuracy of a regression model on predicting the outcome for new unseen observations not used to build the model.  Basic steps to do s:
+
+To do so, the basic strategy is to:
+
+1. Split data - training and test data
+
+2. Build the model on a training data set
+
+3. Apply the model on a new test data set to make predictions
+
+3. Model Evaluation
+
+
+In this exercise we will [caret] (#https://topepo.github.io/caret/) package. The caret package (short for Classification And REgression Training) is a set of functions that attempt to streamline the process for creating predictive models. The package contains tools for:
+
+* data splitting
+
+* pre-processing
+
+* feature selection
+
+* model tuning using resampling
+
+* variable importance estimation
+
+<div style="margin-bottom:20px;">
+</div>
+
+#### **Split Data**
+
+We use **ddply()** function from  **plyr** package to split data into training and test data set with [Stratified Random Sampling](#https://www.investopedia.com/terms/stratified_random_sampling.asp) algorithms.
+
+```{r Split Data}
+tr_prop = 0.80
+# training data (80% data)
+train.df = plyr::ddply(mlr.df, .(NLCD),
+                 function(., seed) { set.seed(seed); .[sample(1:nrow(.), trunc(nrow(.) * tr_prop)), ] }, seed = 101)
+test.df = plyr::ddply(mlr.df,  .(NLCD), 
+            function(., seed) { set.seed(seed); .[-sample(1:nrow(.), trunc(nrow(.) * tr_prop)), ] }, seed = 101)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+Explore training and test data set  using diagnose_numeric() function: 
+
+```{r}
+# training data
+DT::datatable(as.data.frame(dlookr::diagnose_numeric(train.df)), 
+          rownames = T, options = list(pageLength = 10, scrollX = TRUE, round)) %>%
+  formatRound(columns = 2:8, digits = 3)
+```
+
+
+```{r}
+# test data
+DT::datatable(as.data.frame(dlookr::diagnose_numeric(test.df)), 
+          rownames = T, options = list(pageLength = 10, scrollX = TRUE, round)) %>%
+  formatRound(columns = 2:8, digits = 3)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+#### **Training MLR Model**
+
+```{r Train the Model}
+# Build the model
+model <- lm(SOC ~., data = train.df)
+summary(model)
+```
+
+<div style="margin-bottom:20px;">
+</div>
+
+
+#### **Make Prediction**
+
+```{r Prediction on Test data}
+test.df$Pred.SOC <- model %>% predict(test.df)
+```
+
+<div style="margin-bottom:20px;">
+</div>
+
+#### **Model Evaluation**
+
+We will use  **Metrics** package to compute several metrics to evaluate the mdels. All functions in the Metrics package take at least two arguments: **actual** and **predicted**. (Source:https://github.com/mfrasco/Metrics)
+
+```{r echo=FALSE, out.width='80%', fig.align="center"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\matrics.png")
+```
+<div style="margin-bottom:20px;">
+</div>
+
+```{r Evalution Metrics with test data}
+
+RMSE<- Metrics::rmse(test.df$SOC, test.df$Pred.SOC)
+MAE<- Metrics::mae(test.df$SOC, test.df$Pred.SOC)
+MSE<- Metrics::mse(test.df$SOC, test.df$Pred.SOC)
+MDAE<- Metrics::mdae(test.df$SOC, test.df$Pred.SOC)
+
+# Print results
+paste0("RMSE: ", round(RMSE,2))
+paste0("MAE: ", round(MAE,2))
+paste0("MSE: ", round(MSE,2))
+paste0("MDAE: ", round(MDAE,2))
+```
+<div style="margin-bottom:15px;">
+</div>
+
+We  can plot observed and predicted values with fitted regression line with ggplot2
+
+```{r Predicted vs Observed - Test data, fig.height=4, fig.width=4.5, message=FALSE, warning=FALSE}
+
+ggplot(test.df, aes(SOC,Pred.SOC)) +
+  geom_point() +
+  geom_smooth(method = "lm")+
+   ggtitle("Figure: Observed vs Predicted SOC ") +
+  xlab("Observed") + ylab("Predicted") +
+  scale_x_continuous(limits=c(0,20), breaks=seq(0, 20, 5))+ 
+  scale_y_continuous(limits=c(0,20), breaks=seq(0, 20, 5)) +
+  # Flip the bars
+  theme(
+    panel.background = element_rect(fill = "grey95",colour = "gray75",size = 0.5, linetype = "solid"),
+    axis.line = element_line(colour = "grey"),
+    plot.title = element_text(size = 14, hjust = 0.5),
+    axis.title.x = element_text(size = 14),
+    axis.title.y = element_text(size = 14),
+    axis.text.x=element_text(size=13, colour="black"),
+    axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour='black'))
+```
+<div style="margin-bottom:20px;">
+</div>
+
+### **Cross Validation**
+
+Cross-validation is a re-sampling procedure used to evaluate models on a limited data sample. It is better than residuals evaluation. Three major types of cross-validation techniques are usually use for model evaluation:
+
+* **Leave One Out Cross Validation**
+
+* **k-fold Cross Validation**
+
+* **Repeated k-fold Cross Validation**
+
+
+#### **Leave One Out Cross Validation or LOOCV**
+
+The model is trained on all the data except for one point and a prediction is made for that point and repeat the process for all data points. Compute the overall prediction error by taking the average of all these test error estimates recorded at step 2.
+
+The advantage of the **LOOCV** method is that we make use all data points reducing potential bias. However, the process is repeated as many times as there are data points, resulting to a higher execution time when n is extremely large.
+
+We use caret **caret** package:
+
+```{r LOOCV, message=FALSE, warning=FALSE}
+# Define training control
+train.control <- trainControl(method = "LOOCV")
+# Train the model
+model.loocv <- train(SOC ~., data = mlr.df, method = "lm",
+               trControl = train.control)
+# Summarize the results
+print(model.loocv)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+#### **K-fold Cross Validation**
+
+The data set is randomly divided into k-subsets (or k-fold) and reserve one subset and train the model on all other subsets. Test the model on the reserved subset and record the prediction error and repeat this process until each of the k subsets has served as the test set. Then the average error across all k trials is computed.  
+
+
+```{r K-fold cross-validation, message=FALSE, warning=FALSE}
+# Define training control
+set.seed(123) 
+train.control <- trainControl(method = "cv", number = 10)
+# Train the model
+model.kfcv <- train(SOC ~., data = mlr.df, method = "lm",
+               trControl = train.control)
+# Summarize the results
+print(model.kfcv)
+```
+<div style="margin-bottom:15px;">
+</div>
+
+####  **Repeated k-fold Cross Validation**
+
+The process of splitting the data into k-folds can be repeated a number of times, this is called repeated k-fold cross validation.
+
+The final model error is taken as the mean error from the number of repeats.
+
+The following example uses 10-fold cross validation with 3 repeats:
+
+```{r Repeated k-fold Cross Validation, message=FALSE, warning=FALSE}
+set.seed(123)
+train.control <- trainControl(method = "repeatedcv", 
+                              number = 10, repeats = 5)
+# Train the model
+model.rkfcv <- train(SOC ~., data = mlr.df, method = "lm",
+               trControl = train.control)
+# Summarize the results
+print(model.rkfcv)
+```
+
+<div style="margin-bottom:20px;">
+</div>
+
+### **Further Reading**
+
+1. [Metrics](https://github.com/mfrasco/Metrics)
+
+2. [caret](https://topepo.github.io/caret/)

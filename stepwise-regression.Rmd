@@ -1,0 +1,322 @@
+---
+title: ''
+---
+
+
+<div style="margin-bottom:20px;">
+</div>
+
+```{r echo=FALSE, out.width='100%', fig.align="center"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\stepwise_regression.png")
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+
+### **Table of Content**
+
+* [Load Library](#load-library)
+
+* [Import Data](#import-data)
+
+* [Data Preparation](#data-preparation)
+
+* [Stepwise Regression](#stepwise-regression)
+
+* [Types of Stepwise Regression](#types-of-stepwise-regression)
+
+* [Stepwise Regression with MASS Package](#stepwise-regression-with-mass-package)
+
+* [Stepwise Regression with leap Package](#stepwise-regression-with-leap-package)
+
+* [Stepwise Regression with caret Package](#stepwise-regression-with-leap-package)
+
+* [Compare the Models](#compare-the-models)
+
+* [Further Reading](#further-reading)
+    
+
+<div style="margin-bottom:40px;">
+</div>
+
+### **Load Library**
+
+In this exercise We will use following R-packages: 
+
+```{r Load Library, message=FALSE, warning=FALSE}
+# load library
+library(tidyverse)
+library(dlookr)
+library(moments)
+library(car)
+library(plyr)
+library(data.table)
+library(DT)
+library(Hmisc)
+library(corrplot) 
+library(corrr)
+library(gridExtra)
+library(ggExtra)
+library(BSDA)
+library(GGally)
+library(agricolae) 
+library(multcomp)
+library(multcompView)
+library(ggfortify)
+library(report)
+library(ggstatsplot)
+library(ggfortify)
+library(caret)
+library(Metrics)
+library(MASS)
+library(leaps)
+library(AICcmodavg)
+```
+<div style="margin-bottom:30px;">
+</div>
+
+### **Import Data** 
+
+In this tutorial, we will use following data set:
+
+**soil_crabon_data.csv**: Soil carbon data from Colorado, Kansas, New Mexico, and Wyoming. These samples were collected by the United States Geological Survey (USGS) as a part of the USGS Geochemical Landscapes Project [Smith et al., 2011]. We need following python packages:
+
+These data set could be found [here](https://www.dropbox.com/sh/ctjv2eiifhfh2ts/AAAVXmWxPntD-O-5AE_YH3VHa?dl=0).
+
+
+```{r Import Data, message=FALSE, warning=FALSE}
+# define working directory
+dataFolder<-"E:/Dropbox/GitHub/chemstat-r-github.io/Data/"
+soil.df<-readr::read_csv(paste0(dataFolder,"soil_crabon_data.csv"))
+```
+<div style="margin-bottom:30px;">
+</div>
+
+### **Data Preparation**
+
+First, we create a dataframe  with five predictors ('DEM', 'Slope', 'MAT', 'MAP','NDVI') and create a training and test data set.  
+
+```{r Fitt MLR model}
+# create a data-frame
+mlr.df<-soil.df %>% dplyr::select(SOC, DEM, Slope, MAT, MAP,NDVI, NLCD)
+# data split
+tr_prop = 0.80
+# training data (80% data)
+train.df = plyr::ddply(mlr.df, .(NLCD),
+                 function(., seed) { set.seed(seed); .[sample(1:nrow(.), trunc(nrow(.) * tr_prop)), ] }, seed = 101)
+test.df = plyr::ddply(mlr.df,  .(NLCD), 
+            function(., seed) { set.seed(seed); .[-sample(1:nrow(.), trunc(nrow(.) * tr_prop)), ] }, seed = 101)
+```
+<div style="margin-bottom:40px;">
+</div>
+
+## **Stepwise Regression**
+
+In a multiple regression model, we use the p-value in the ANOVA table to determine whether the model is significant or not. Using the individual p-values for selecting a sub-set of significant predictors is challenging, since the p-values are adjusted for the other terms in the model. 
+The task of selecting the best subset of predictors among all possible subsets is called stepwise variable selection, where a step-by-step iterative construction of a regression model is performed and involves selecting independent variables by addition to or subtraction from the set of explanatory variables. 
+
+### **Types of Stepwise Regression**
+
+The method is further divided into the following subtypes.
+
+1. **Forward Stepwise Regression**
+
+    In forward selection, regression model start with a model containing only the intercept and then we slowly add         terms to the model, one at a time, starting with the predictor with the lowest p-value. This continues until all       the remaining terms that are not included in the model are above a specified p-value threshold.
+
+2. **Backward Stepwise Regression**
+
+    Backward selection approach is to fit a full model and slowly remove terms one at a time, starting with the term       with the highest p-value. This is referred to as backward selection.
+
+3. **Bidirectional Stepwise Regression**
+
+    This is a combination of forward selection (for adding significant terms) and backward selection (for removing         nonsignificant terms). As in forward selection, we start with only the intercept and add the most significant term     to the model. We continue to add the most significant variables, one at a time. We use a p-value threshold to          determine when to stop adding terms to the model.
+
+
+There are many functions and R packages for computing stepwise regression. These include:
+
+
+### **Stepwise Regression with MASS Package**
+
+**stepAIC()** function in  **MASS package**, which choose the best model by **Akaike Information Criterion (AIC)**. It has an option named **direction**, which can take the following values: 
+
+**both** - for stepwise regression, both forward and backward selection 
+
+**backward**- for backward selection  
+
+**forward**  - for forward selection)
+
+```{r Full Model}
+model.full <- lm(SOC ~., data = train.df)
+anova(model.full)
+```
+
+
+```{r MASS forward and backward selection}
+# Stepwise regression model both forward and backward selection 
+model.MASS <- MASS::stepAIC(model.full, direction = "both", 
+                      trace = FALSE)
+summary(model.MASS)
+```
+
+<div style="margin-bottom:20px;">
+</div>
+
+
+### **Stepwise Regression with leap Package**
+
+
+**regsubsets()** from **leaps** package, which has the tuning parameter **nvmax** specifying the maximal number of predictors to incorporate in the model. It returns multiple models with different size up to **nvmax**. We need to compare the performance of the different models for choosing the best one. **regsubsets()** has the option method, which can take the values **backward**, **forward** and **seqrep** (seqrep = sequential replacement, combination of forward and backward selections).
+
+
+```{r leaps forward and backward selection, message=FALSE, warning=FALSE}
+# Stepwise regression model both forward and backward selection
+model.leaps <- regsubsets(SOC~., data = train.df, nvmax = 5,
+                     method = "seqrep")
+summary(model.leaps)
+```
+
+
+```{r leaps Models Coeficents, message=FALSE, warning=FALSE}
+coef(model.leaps, 1:5)
+```
+
+```{r}
+vcov(model.leaps, 5)
+```
+
+<div style="margin-bottom:20px;">
+</div>
+
+
+Now, we fit our final model with with **lm()**
+
+```{r}
+model.leaps.final <- lm(SOC ~Slope+ MAT+ MAP+ NDVI + NLCD, data = train.df)
+summary(model.leaps.final)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+### **Stepwise Regression with caret Package**
+
+
+The **train()* function **caret** package provides an easy workflow to perform stepwise selections using the **leaps** and the **MASS** packages. It has an option named method, which can take the following values:
+
+**leapBackward**, to fit linear regression with backward selection
+
+**leapForward**, to fit linear regression with forward selection
+
+**leapSeq**, to fit linear regression with stepwise selection 
+
+
+```{r Cerat-leaps forward and backward selection, message=FALSE, warning=FALSE}
+# Set seed for reproducibility
+set.seed(123)
+# Set up repeated k-fold cross-validation
+train.control <- trainControl(method = "cv", number = 10)
+# Train the model
+model.caret.leaps <- train(SOC ~., data = train.df,
+                    method = "leapBackward", 
+                    tuneGrid = data.frame(nvmax = 1:8),
+                    trControl = train.control
+                    )
+model.caret.leaps$results
+```
+
+
+The function **summary()** reports the best set of variables for each model size, up to the best 4-variables model.
+
+```{r Caret-leaps Final Model Summary}
+summary(model.caret.leaps$finalModel)
+```
+
+An asterisk specifies that a given variable is included in the corresponding model.
+For example, it can be seen that the best 5-variables model contains Slope, MAT, MAP, NDVI and  NLCDShrubland.
+
+```{r Caret-leaps Best Model Coefficents}
+coef(model.caret.leaps$finalModel, 5)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+Additionally, the caret package has method to compute stepwise regression using the MASS package **(method = "lmStepAIC")**: 
+
+```{r Cerat-MASS forward and backward selection, message=FALSE, warning=FALSE}
+# Train the model
+model.caret.leap <- train(SOC ~., data = train.df,
+                    method = "lmStepAIC", 
+                    trControl = train.control,
+                    trace = FALSE
+                    )
+```
+
+
+```{r}
+# Model accuracy
+model.caret.leap$results
+```
+
+
+```{r}
+# Final model coefficients
+model.caret.leap$finalModel
+```
+
+
+```{r}
+# Summary of the model
+summary(model.caret.leap$finalModel)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+### **Compare the Models**
+
+To compare these models and find which one is the best fit for the data, you can put them together into a list and use the aictab() command to compare all of them at once. To use **aictab()**, first load the library **AICcmodavg**.
+
+First we will create model list (‘models’) and name (label) each of them so the AIC table is easier to read (‘model.names’).
+
+```{r Creat a Model List}
+models<-list(model.full, model.MASS, model.leaps.final)
+model.names<-c("Full", "Step-MASS", "Step-leaps")
+```
+
+
+Then run **aictab()** to do the  model comparison.
+
+
+```{r Create Model Selection Tables}
+aictab(cand.set = models, modnames = model.names)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+The best-fit model is always listed first. The model selection table includes information on:
+
+**K**: The number of parameters in the model. The default K is 2, so a model with one parameter will have a K of 2 + 1 = 3.
+
+**AICc**: The information score of the model (the lower-case ‘c’ indicates that the value has been calculated from the AIC test corrected for small sample sizes). The smaller the AIC value, the better the model fit.
+
+**Delta_AICc**: The difference in AIC score between the best model and the model being compared. 
+
+**AICcWt**: AICc weight, which is the proportion of the total amount of predictive power provided by the full set of models contained in the model being assessed. 
+
+**Cum.Wt**: The sum of the AICc weights. 
+
+**LL**: Log-likelihood. This is the value describing how likely the model is, given the data. The AIC score is calculated from the LL and K
+
+
+<div style="margin-bottom:40px;">
+</div>
+
+### **Further Reading**
+
+1. [Model Selection Essentials in R](http://www.sthda.com/english/articles/37-model-selection-essentials-in-r/154-stepwise-regression-essentials-in-r/)
+
+2. [Variable Selection in Multiple Regression](https://www.jmp.com/en_us/statistics-knowledge-portal/what-is-multiple-regression/variable-selection.html)
+
+3. [Akaike Information Criterion](https://www.scribbr.com/statistics/akaike-information-criterion/)

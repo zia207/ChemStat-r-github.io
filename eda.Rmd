@@ -1,0 +1,1078 @@
+---
+title: ''
+---
+
+
+<div style="margin-bottom:20px;">
+</div>
+
+```{r echo=FALSE, out.width='100%', fig.align="center"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\eda.png")
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+
+### **Table of Content**
+
+* [Load Library](#load-library)
+
+* [Load Data](#load-data)
+
+* [Exploratory Data Analysis](#exploratory-data-analysis)
+
+* [Data Quality Diagnosis](#data-quality-diagnosis)
+
+  - [Diagnosis of Numeric Variables](#diagnosis-of-numeric-variables)
+  
+  - [Diagnosis of Categorical Variables](#diagnosis-of-categorical-variables)
+  
+  - [Diagnosing Outliers](#diagnosing-outliers) 
+  
+  - [Visualization of Outliers](#visualization-of-outliers)
+
+* [Data Distribution](#data-distribution)
+
+  - [Probability Distribution](#probabilitya-distribution)
+
+  - [Normal Distribution](#normal-distribution)
+  
+  - [Visual Inspection of Normal Distribution](#visual-inspection-of-normal-distribution)
+    
+    - [Histogram](#histogram)
+      
+    - [Kernel Density Plots](#kernel-density-plots)
+      
+    - [Quantile-Quantile Plots](#quantile-quantile-plots)
+      
+    - [Visualization of Normality using dlookr Package](#visualization-ofnormality-using-dlookr-Package)
+      
+  - [Normality Test](#normality-test)
+    
+  - [Test of Normality using dlookr Package](#test-of-normality-using-dlookr-package)
+    
+  - [Measures of Skewness and Kurtosis](#measures-of-skewness-and-kurtosis)
+    
+  - [Test of Normality using dlookr Package](#test-of-normality-using-dlookr-package)
+    
+* [Data Transformation for Normality](#data-transforamtion-fornormality)
+  
+  - [Data Transformation Methods](#data-transformation-methods) 
+    
+  - [Power Transformation](#power-transformation)
+  
+* [Descriptive Statistics](#descriptive-statistics)
+  
+* [Boxplots](#boxplots)
+    
+  - [Grouped Boxplots](#grouped-boxplots)
+    
+  - [Boxplots with Jitter](#boxplots-with-Jitters)]
+
+* [Barplot](#(barplot)
+
+  - [Barplot with Error Bars](barplot-with-error-bars)
+  
+  - [Grouped Barplot with Error Bars](#grouped-barplot-with-error-bars)
+
+  - [Stacked Barplot](#stacked-barplot)
+  
+* [Grouped Density Plot](#grouped-density-plot)
+
+<div style="margin-bottom:30px;">
+</div>
+
+### **Load Library**
+
+In this exercise We will use following R-packages: 
+
+```{r Load Library, message=FALSE, warning=FALSE}
+# load library
+library(tidyverse)
+library(dlookr)
+library(moments)
+library(car)
+library(plyr)
+library(data.table)
+library(DT)
+library(Hmisc)
+library(corrplot) 
+library(corrr)
+library(gridExtra)
+library(ggExtra)
+library(BSDA)
+library(GGally)
+library(agricolae) 
+library(multcomp)
+library(multcompView)
+library(ggfortify)
+```
+<div style="margin-bottom:30px;">
+</div>
+
+### **Import Data** 
+
+In this excersise, we use following data set:
+
+
+ **water_soil_rice_arsenic_data.csv**: Arsenic (As) data in irrigation water, paddy soil and and rice grain  in a contaminated cites from Bangladesh 
+
+We import this data using **read_csv()** from **readr** package. 
+
+
+```{r Import Data, message=FALSE, warning=FALSE}
+# define working directory
+dataFolder<-"E:/Dropbox/GitHub/chemstat-r-github.io/Data/"
+df<-readr::read_csv(paste0(dataFolder,"water_soil_rice_arsenic_data.csv"))
+```
+
+<div style="margin-bottom:30px;">
+</div>
+
+## **Exploratory Data Analysis**
+
+**Exploratory data analysis (EDA)** involves using graphics and visualizations to explore and analyze a data set. The goal is to explore, investigate and learn, as opposed to confirming statistical hypotheses.
+
+<div style="margin-bottom:15px;">
+</div>
+
+### **Data Quality Diagnosis**
+
+In this exercise we will use arsenic data  in  irrigation water, soil and rice which could be found [here](https://www.dropbox.com/s/1gojx95huzgnibc/water_soil_rice_arsenic_data.csv?dl=0)
+
+Data Quality Diagnosis is the first step before any statistical analysis. We use **diagnose()** function of **dlookr** package to use  to  explore following:
+
+* variables : variable names
+
+* types : the data type of the variables
+
+* missing_count : number of missing values
+
+* missing_percent : percentage of missing values
+
+* unique_count : number of unique values
+
+* unique_rate : rate of unique value. unique_count / number of observation
+
+
+```{r Data-Diagnose, message=FALSE, warning=FALSE}
+dlookr::diagnose(df, SAs, WAs, Grain_As) # Only soil,  water and rice grain AS
+```
+<div style="margin-bottom:15px;">
+</div>
+
+#### **Diagnosis of Numeric Variables**
+
+
+We may use **diagnose_numeric()**, diagnoses numeric(continuous and discrete) variables in a data frame returns more diagnostic information such as:
+
+* min : minimum value
+
+* Q1 : 1/4 quartile, 25th percentile
+
+* mean : arithmetic mean
+
+* median : median, 50th percentile
+
+* Q3 : 3/4 quartile, 75th percentile
+
+* max : maximum value
+
+* zero : number of observations with a value of 0
+
+* minus : number of observations with negative numbers
+
+* outlier : number of outliers
+
+
+```{r Diagnosis of Numeric Variables, message=FALSE, warning=FALSE}
+# diagnose_numeric(df) # all data
+dlookr::diagnose_numeric(df, SAs, WAs, Grain_As) # only three variables
+```
+<div style="margin-bottom:15px;">
+</div>
+
+#### **Diagnosis of Categorical Variables**
+
+**diagnose_category()** diagnoses the categorical(factor, ordered, character) variables of a data frame. The usage is similar to diagnose() but returns more diagnostic information such as: 
+
+* variables : variable names
+
+* levels: level names
+
+* N : number of observation
+
+* freq : number of observation at the levels
+
+* ratio : percentage of observation at the levels
+
+* rank : rank of occupancy ratio of levels
+
+
+```{r Diagnosis of Categorical Variables, message=FALSE, warning=FALSE}
+dlookr::diagnose_category(df, Variety, Land_type)
+```
+<div style="margin-bottom:15px;">
+</div>
+
+
+#### **Diagnosing Outliers**
+
+diagnose_outlier() diagnoses the outliers of the numeric (continuous and discrete) variables of the data frame. 
+
+* outliers_cnt : number of outliers
+
+* outliers_ratio : percent of outliers
+
+* outliers_mean : arithmetic average of outliers
+
+* with_mean : arithmetic average of with outliers
+
+* without_mean : arithmetic average of without outliers
+
+```{r Diagnosing Outlier, message=FALSE, warning=FALSE}
+dlookr::diagnose_outlier(df, SAs, WAs, Grain_As )
+```
+
+#### **Visualization of Outliers**
+
+**plot_outlier()** visualizes outliers of numerical variables(continuous and discrete) of data.frame. Usage is the same diagnose().
+
+The plot derived from the numerical data diagnosis is as follows.
+
+* With outliers box plot
+
+* Without outliers box plot
+
+* With outliers histogram
+
+* Without outliers histogram
+
+The following example uses diagnose_outlier(), plot_outlier(), and dplyr packages to visualize all numerical variables with an outlier ratio of 0.5% or higher.
+
+
+```{r Visualization of Outliers, message=FALSE, warning=FALSE}
+df %>%
+  dlookr::plot_outlier(dlookr::diagnose_outlier(df, SAs) %>% 
+                 dplyr::filter(outliers_ratio >= 0.5) %>% 
+                 dplyr::select(variables) %>% 
+                 unlist())
+```
+
+
+
+### **Data Distribution**
+
+#### **Probability Distribution**
+
+A statistical distribution, or probability distribution, describes all the possible values and likelihoods that a random variable (a random variable is a variable whose value is unknown or a function that assigns values to each of an experiment's outcomes) can take within a given range.  This range will be bounded between the minimum and maximum possible values, but precisely where the possible value is likely to be plotted on the probability distribution depends on a number of factors. These factors include the distribution's **mean (average)**, **standard deviation**, **skewness**, and **kurtosis** [(Source)](https://www.investopedia.com/terms/p/probabilitydistribution.asp)..
+
+In probability theory and statistics, a probability distribution is the mathematical function that gives the probabilities of occurrence of different possible outcomes for an experiment.It is a mathematical description of a random phenomenon in terms of its sample space and the probabilities of events (subsets of the sample space).[(Wikipedia)](https://en.wikipedia.org/wiki/Probability_distribution). 
+
+**Probability Density function (PDF)** is a statistical expression that defines a probability distribution (the likelihood of an outcome) for a discrete random variable (e.g., a stock or ETF) as opposed to a continuous random variable. 
+
+The **normal distribution** is a common example of a PDF, forming the well-known **bell curve** shape. It is also known as the **Gaussian distribution**, is a probability distribution that is symmetric about the mean, showing that data near the mean are more frequent in occurrence than data far from the mean.
+
+The mean and standard deviation can be related to the Gaussian distribution - that gives the probability of observing a particular value of x. For a finite number of measurements, the Gaussian distribution can be approximated as:
+
+https://rpubs.com/dgosser/802164 
+
+
+```{r echo=FALSE, out.width='40%', fig.align="left"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\gussian_distrubution.png")
+```
+
+
+Suppose, a non-contaminates sites,  the average (mean) soil As is 15 mg/kg with a standard deviation of 2. Substituting this into the Gaussian distribution formula:
+
+
+```{r}
+s <- 2 # standard deviation
+xmean <-  15 #  mean
+xval <- seq(5, 25,by=0.5) # data
+xval
+```
+
+
+ No we can calculate Gaussian or normal distribution using above formula.
+
+```{r Gaussian or normal distributio, message=FALSE, warning=FALSE}
+#  here we calculate a Gaussian distribution
+
+yp <- (1/(s*sqrt(2*pi)))*exp(1)^((-(xval-xmean)^2)/(2*s^2))
+
+yp
+```
+
+
+```{r Plot Distribution, fig.height=5, fig.width=6}
+plot(xval,yp) 
+```
+
+We can also get probability distribution using the command **dnorm()** distribution
+
+
+```{r Probability Distribution, fig.height=5, fig.width=6}
+dp  <- dnorm(xval,xmean,s)    
+plot(dp)
+```
+
+The distance from the mean of a particular measurement can be discussed in terms of **“deviations from the mean”** as multiples of the standard deviation. For instance:
+
+* 68.3% of measurements lie within plus or minus one standard deviation
+
+* 95.5% within plus or minus two standard deviations
+
+* 99.7% within plus or minus three standard deviations.
+
+The R command for the cumulative distribution, which approaches 1, is **pnorm()**:
+
+```{r Cumulative Distribution, fig.height=5, fig.width=6, message=FALSE, warning=FALSE}
+cdp <-  pnorm(xval,xmean, s)
+plot(cdp)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+#### **Normal Distribution**
+
+Many of parametric statistical tests including correlation, regression, t-test, and analysis of variance (ANOVA) require the data to follow a **normal distribution or Gaussian distribution**. The validity of these kind of tests depends on the distribution of the data.
+
+Before using a parametric test, some preliminary tests need to be done to make sure that the test assumptions of **"normal distribution"** of data are met. We’ll show how to check the normality of the data by **visual inspection** and by **significance tests**.
+
+In this data frame, **SAs**, column represents the soil total As (mg/kg) in paddy soils irrigated with As contaminated groundwater from shallow depth. Let check the distribution of soil As:
+
+<div style="margin-bottom:15px;">
+</div>
+
+#### **Visual Inspection of Normal Distribution**
+
+Here, we’ll describe how to check the normality of the data by visual inspection by: 
+
+* Histogram
+
+* Kernel density Plots
+
+* Quantile-Quantile Plots
+
+
+
+
+##### **Histogram** 
+
+You can create histograms with the function **hist(x)**  to visualize the distribution of a numeric vector (x).  The option freq=FALSE plots probability densities instead of frequencies. The option breaks= controls the number of bins.
+
+```{r Histogram, fig.height=4, fig.width=5, message=FALSE, warning=FALSE}
+hist(df$SAs, breaks = 20)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+We can create a nice looking Barplot with **ggplot2**, which install with **tidyverse**
+
+```{r Histogram ggplot2, fig.height=4, fig.width=5, message=FALSE, warning=FALSE}
+# Basic histogram
+ggplot(df, aes(x=SAs)) + geom_histogram()
+```
+
+<div style="margin-bottom:20px;">
+</div>
+
+We can create a publication quality figure with ggplot2: 
+
+```{r Costom Histogram with ggplot2, fig.height=4, fig.width=5, message=FALSE, warning=FALSE}
+
+p1<-ggplot(df, aes(x=SAs)) + 
+  # Change the width of bins and color
+  geom_histogram(binwidth=1, color="black", fill="grey") +
+  #Change the Plot title and axis labels 
+  ggtitle("Figure #a. Histogram of Soil As")  +  
+  xlab("Soil As (mg/kg)") + ylab("Frequency") +
+  #  customized background and front size
+  theme(
+        panel.background = element_rect(fill = "grey95",colour = "gray75",size = 0.5, linetype = "solid"),
+        axis.line = element_line(colour = "grey"),
+        plot.title = element_text(size = 16, hjust = 0.5),
+        axis.title.x = element_text(size = 16),
+        axis.title.y = element_text(size = 16),
+        axis.text.x=element_text(size=13, colour="black"),
+        axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour='black'))
+  
+print(p1)
+  
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+##### **Kernel Density Plots**
+
+**Kernel density** plots are usually a much more effective way to view the distribution of a variable.
+
+
+```{r Kernel Density, fig.height=4, fig.width=5, message=FALSE, warning=FALSE}
+# Kernel Density Plot
+d <- density(df$SAs) # returns the density data
+plot(d) # plots the results
+```
+
+```{r}
+summary(df$SAs)
+```
+
+With ggpplot2: 
+
+
+```{r Kernel density with ggplot2, fig.height=4, fig.width=5, warning=FALSE}
+
+p2<- df %>%
+  ggplot(aes(x=SAs)) + 
+  geom_density()+
+  # Add median values of Soil As
+  geom_vline(aes(xintercept=median(SAs)),
+            color="blue", linetype="dashed", size=1)+
+  # set x and y data range
+  scale_x_continuous(limits=c(0,60), breaks=seq(0, 60, 10))+ 
+  #Change the Plot title and axis labels 
+  ggtitle("Figure #b: Density plot of Soil As)") +
+  xlab("Soil As (mg/kg)") + ylab("Density") +
+  theme(
+    panel.background = element_rect(fill = "grey95",colour = "gray75",size = 0.5, linetype = "solid"),
+    axis.line = element_line(colour = "grey"),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    axis.title.x = element_text(size = 16),
+    axis.title.y = element_text(size = 16),
+    axis.text.x=element_text(size=13, colour="black"),
+    axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour='black'))
+print(p2)
+```
+
+
+
+
+
+##### **Quantile-Quantile Plots**
+
+**qqnorm()** is a generic function the default method of which produces a normal QQ plot of the values in y.
+
+**qqline()** adds a line to a “theoretical”, by default normal, quantile-quantile plot which passes through the probs quantiles, by default the first and third quartiles.
+
+
+```{r Quantile-Quantile Plots, fig.height=4, fig.width=5, message=FALSE, warning=FALSE}
+#create Q-Q plot to compare this dataset to a theoretical normal distribution
+qqnorm(df$SAs)
+qqline(df$SAs)
+```
+
+With ggplot2: 
+
+
+```{r Quantile-Quantile Plots withh ggplot2, fig.height=4, fig.width=5, message=FALSE, warning=FALSE}
+
+p3 <- df %>%
+  ggplot(aes(sample = SAs)) +
+  stat_qq() + 
+  stat_qq_line() +
+  #Change the Plot title and axis labels 
+  ggtitle("Figure #c: QQ-plot of Soil As)") +
+  xlab("Theoretical Quantiles)") + ylab("Sample Quantiles") +
+  theme(
+    panel.background = element_rect(fill = "grey95",colour = "gray75",size = 0.5, linetype = "solid"),
+    axis.line = element_line(colour = "grey"),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    axis.title.x = element_text(size = 16),
+    axis.title.y = element_text(size = 16),
+    axis.text.x=element_text(size=13, colour="black"),
+    axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour='black'))
+print (p3)
+```
+
+We can plot multiple  figures in a panel using **gridExtra** package
+
+
+```{r fig.height=4, fig.width=12, message=FALSE, warning=FALSE}
+grid.arrange(p1,p2,p3, ncol=3)
+```
+
+<div style="margin-bottom:20px;">
+</div>
+
+##### **Visualization of Normality using dlookr Package**
+
+We may also use **plot_normality()** function of **dlookr** package to visualizes the normality of numeric data. The information that plot_normality() visualizes is as follows.
+
+* Histogram of original data
+
+* Q-Q plot of original data
+
+* histogram of log transformed data
+
+* Histogram of square root transformed data
+
+
+<div style="margin-bottom:20px;">
+</div>
+
+
+```{r Plot Normality, message=FALSE, warning=FALSE}
+dlookr::plot_normality(df, SAs)
+```
+
+<div style="margin-bottom:20px;">
+</div>
+
+### **Normality Test**
+
+The R-base function **shapiro.test()** from r-base **stats** package can be used to perform the Shapiro-Wilk test of normality for one variable (univariate):
+
+```{r Normality Test, message=FALSE, warning=FALSE}
+shapiro.test(df$SAs)
+```
+
+From the above output, the p-value < 0.05 implying that the distribution of the Soil As are significantly different from normal distribution. In other words, we can assume that Soil As is not-normally distributed.
+
+<div style="margin-bottom:20px;">
+</div>
+
+#### **Test of Normality using dlookr Package**
+
+
+**normality()**  function of **dlookr** performs a normality test on multiple numerical data. Shapiro-Wilk normality test is performed. When the number of observations is greater than 5000, it is tested after extracting 5000 samples by random simple sampling.
+
+The variables of tbl_df object returned by normality() are as follows.
+
+* statistic : Statistics of the Shapiro-Wilk test
+
+* p_value : p-value of the Shapiro-Wilk test
+
+* sample : Number of sample observations performed Shapiro-Wilk test
+
+```{r Test of Normality}
+dlookr::normality(df, SAs, WAs, Grain_As)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+#### **Measures of Skewness and Kurtosis**
+
+**Skewness** measures the symmetry of the distribution and  this value can be positive or negative.
+
+
+* A **negative** value indicates more values are concentrated on the left side (tail) of the distribution. 
+the most frequent values are high; tail is toward low values (on the left-hand side). 
+Generally, Mode > Median > Mean.
+
+* A **positive** value indicates that the tail is on the right side of the distribution. The most frequent values are low; tail is toward the high values (on the right-hand side).
+Generally, Mode < Median < Mean.
+
+* A value of **zero** indicates that there is no skewness in the distribution at all, meaning the distribution is perfectly symmetrical or normally distributed.
+
+
+To calculate the skewness and kurtosis of Soil As, we can use **skewness()** and **kurtosis()** functions from the **moments** library in R:
+
+```{r Skewness, message=FALSE, warning=FALSE}
+moments::skewness(df$SAs)
+```
+
+Positive values indicates, this indicates that the distribution is right-skewed. This confirms what we have seen saw in the histogram and density plots. 
+
+
+**Kurtosis** is a measure of whether or not a distribution is heavy-tailed or light-tailed relative to a normal distribution. The kurtosis of a normal distribution is 3.
+
+
+```{r Kurtosis}
+moments::kurtosis(df$SAs)
+```
+
+Since the kurtosis is > 3, which indicates that the distribution of Soil As has more values in the tails compared to a normal distribution as we have seen in the QQ plots
+
+The moments library also offers the **jarque.test()** function, which performs a goodness-of-fit test that determines whether or not sample data have skewness and kurtosis that matches a normal distribution. The null and alternative hypotheses of this test are as follows:
+
+**Null Hypothesis**: The dataset has a skewness and kurtosis that matches a normal distribution.
+
+**Alternative Hypothesis**: The dataset has a skewness and kurtosis that does not match a normal distribution.
+
+```{r Jarque Test, warning=TRUE}
+moments::jarque.test(df$SAs)
+```
+
+The p-value is found to be < 0.05. We **reject the null hypothesis**. We have sufficient evidence to say that this Soil As has a skewness and kurtosis that is different from the normal distribution
+
+<div style="margin-bottom:20px;">
+</div>
+
+
+**find_skewness()**  of **dlookr** package  searches for variables with skewed data. This function finds data skewed by search conditions and calculates skewness.
+
+```{r Find Skewness}
+## Calculation of skewness
+df %>% dplyr::select(SAs, WAs, Grain_As) %>% 
+ dlookr::find_skewness(value = TRUE)
+```
+
+We van also compute the skewness & filtering with threshold
+
+```{r Skewness & Filtering}
+df %>% dplyr::select(SAs, WAs, Grain_As) %>% 
+ dlookr::find_skewness(value = TRUE, thres =1)
+```
+<div style="margin-bottom:15px;">
+</div>
+
+
+### **Data Transformation for Normality**
+
+In statistical data analysis, transformation is the replacement of one variable by one function of that variable: for example, replacing one variable x by the square root or by the logarithm of x. The transformation is a replacement that changes the shape of a distribution or relationship.
+
+There are many reasons for transformation (source: http://fmwww.bc.edu/repec/bocode/t/transint.html)
+
+    1. Reducing skewness or transforming Data for Normality
+    2. Equal spreads
+    3. Linear relationships
+    4. Additive relationships
+    
+
+#### **Data Transformation Methods**
+
+
+In this section, you will get a brief overview of these three transformation techniques and when to use them.
+
+**Square Root Transformation** 
+
+The square root method is typically used when your data is moderately skewed. Now using the square root (e.g., sqrt(x)) is a transformation that has a moderate effect on distribution shape. It is generally used to reduce right skewed data. Finally, the square root can be applied on zero values and is most commonly used on counted data.
+
+* sqrt(x) for positively skewed data,
+
+* sqrt(max(x+1) - x) for negatively skewed data
+
+**Power Transformation**
+
+a power transform is a family of functions that are applied to create a monotonic transformation of data using power functions.
+
+**Log Transformation** is a strong transformation that has a major effect on distribution shape. This technique is, as the square root method, oftenly used for reducing right skewness. Worth noting, however, is that it can not be applied to zero or negative values.
+
+* log10(x) for positively skewed data,
+
+* log10(max(x+1) - x) for negatively skewed data
+
+The **Box-Cox transformation**  use  a suitable exponent (Lambda = l)  to transform skewed data.
+
+
+**transform()** function of *dlookr** performs data both **Standardization** and  transform data for normalization (resolve skewness). 
+
+
+* **Standardization**
+
+  - “zscore” : z-score transformation. (x - mu) / sigma
+
+  - “minmax” : minmax transformation. (x - min) / (max - min)
+  
+* **Resolving Skewness**
+
+  - “log” : log transformation. log(x)
+  
+  - “log+1” : log transformation. log(x + 1). Used for values that contain 0.
+  
+  - “sqrt” : square root transformation.
+  
+  - “1/x” : 1 / x transformation
+  
+  - “x^3” : x^3 square transformation
+  
+  
+```{r Log Transformation, message=FALSE, warning=FALSE}
+df$logSAs = dlookr::transform(df$SAs, method = "log")
+```
+  
+```{r}
+# summary of transformation
+summary(df$logSAs)
+```
+
+```{r Plot}
+plot(df$logSAs)
+```
+<div style="margin-bottom:15px;">
+</div>
+
+#### **Power Transformation**
+
+Power Transform uses the maximum likelihood-like approach of Box and Cox (1964) to select a transformation of a univariate or multivariate response for normality. 
+
+The following expression gives the Box-Cox functions transformations for various values of lambda:
+
+```{r echo=FALSE, out.width='40%', fig.align="left"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\boxcox.png")
+```
+<div style="margin-bottom:20px;">
+</div>
+
+First we have to calculate appropriate transformation parameters using **powerTransform()** function of **car** package and then use this parameter to transform the data using **bcPower()** function.
+
+
+```{r Power Transformation, message=FALSE, warning=FALSE}
+car::powerTransform(df$SAs)
+df$SAs.bc<-car::bcPower(df$SAs, 0.2605306)
+```
+
+```{r Histogram of ransformed Data, fig.height=4, fig.width=5, message=FALSE, warning=FALSE}
+p4<-ggplot(df, aes(x=SAs.bc)) + 
+  # Change the width of bins and color
+  geom_histogram(binwidth=0.5, color="black", fill="grey") +
+  #Change the Plot title and axis labels 
+  ggtitle("Figure #b. Histogram of Box-Cox Transformed Soil As")  +  
+  xlab("Transformed Soil As") + ylab("Frequency") +
+  #  customized background and front size
+  theme(
+        panel.background = element_rect(fill = "grey95",colour = "gray75",size = 0.5, linetype = "solid"),
+        axis.line = element_line(colour = "grey"),
+        plot.title = element_text(size = 16, hjust = 0.5),
+        axis.title.x = element_text(size = 16),
+        axis.title.y = element_text(size = 16),
+        axis.text.x=element_text(size=13, colour="black"),
+        axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour='black'))
+  
+print(p4)
+```
+
+
+```{r fig.height=4, fig.width=10, message=FALSE, warning=FALSE}
+grid.arrange(p1, p4, ncol=2)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+### **Descriptive Statistics** 
+
+Descriptive statistics are used to describe the basic features of the data in a study. They provide simple summaries about the sample and the measures. Together with simple graphics analysis, they form the basis of virtually every quantitative analysis of data.
+
+We use **describe()** function from **dloookr** package to computes descriptive statistics for numerical data. The descriptive statistics help determine the distribution of numerical variables. L
+
+The variables of the tbl_df object returned by describe() are as follows.
+
+* n : number of observations excluding missing values
+
+* na : number of missing values
+
+* mean : arithmetic average
+
+* sd : standard deviation
+
+* se_mean : standard error mean. sd/sqrt(n)
+
+* IQR : interquartile range (Q3-Q1)
+
+* skewness : skewness
+
+* kurtosis : kurtosis
+
+* p25 : Q1. 25% percentile
+
+* p50 : median. 50% percentile
+
+* p75 : Q3. 75% percentile
+
+* p01, p05, p10, p20, p30 : 1%, 5%, 20%, 30% percentiles
+
+* p40, p60, p70, p80 : 40%, 60%, 70%, 80% percentiles
+
+* p90, p95, p99, p100 : 90%, 95%, 99%, 100% percentiles
+
+
+
+```{r}
+des.stat<-dlookr::describe(df, SAs, WAs, Grain_As)
+datatable(as.data.frame(des.stat), 
+          rownames = T, options = list(pageLength = 10, scrollX = TRUE, round)) %>%
+  formatRound(columns = 2:23, digits = 3)
+```
+
+
+The **describe()** function supports the **group_by()** function syntax of the **dplyr** package.
+Following function calculate descriptive testatrices of Soil, Water and Grain As of diffrent landtypes
+
+```{r}
+stat.landtype<-df %>%
+            group_by(Land_type) %>% 
+            dlookr::describe(SAs, WAs, Grain_As)
+
+datatable(as.data.frame(stat.landtype), 
+          rownames = T, options = list(pageLength = 10, scrollX = TRUE, round)) %>%
+  formatRound(columns = 3:19, digits = 3)
+```
+<div style="margin-bottom:15px;">
+</div>
+
+
+### **Boxplots**
+
+In descriptive statistics, a box plot or boxplot is a method for graphically depicting groups of numerical data through their quartiles. Box plots may also have lines extending from the boxes indicating variability outside the upper and lower quartiles, hence the terms box-and-whisker plot and box-and-whisker diagram (Wikepedia)
+
+
+```{r echo=FALSE, out.width='80%', fig.align="center"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\boxplot.png")
+```
+<div style="margin-bottom:20px;">
+</div>
+
+* median (Q2/50th Percentile): the middle value of the dataset.
+
+* first quartile (Q1/25th Percentile): the middle number between the smallest number (not the “minimum”) and the median of the dataset.
+
+* third quartile (Q3/75th Percentile): the middle value between the median and the highest value (not the “maximum”) of the dataset.
+
+* interquartile range (IQR): 25th to the 75th percentile.
+
+* whiskers (shown in blue)
+
+* outliers (shown as green circles)
+
+* maximum: Q3 + 1.5*IQR
+
+* minimum: Q1 -1.5*IQR
+
+source: https://towardsdatascience.com/understanding-boxplots-5e2df7bcbd51
+
+
+```{r Boxplots, fig.height=4, fig.width=5, message=FALSE, warning=FALSE}
+
+# add mean to ggplot2 boxplot
+p5<-ggplot(df, aes(x = Land_type, y = SAs, fill = Land_type)) + 
+  geom_boxplot() +
+  # Show mean values  
+  stat_summary(fun = "mean", geom = "point", shape = 8,
+               size = 2, color = "white") +
+  #Change the Plot title and axis labels 
+  ggtitle("Figure #: Boxplot of  Soil As") +
+  xlab("Landtype") + ylab("Soil As (mg/kg)") +
+  theme(
+    panel.background = element_rect(fill = "grey95",colour = "gray75",size = 0.5, linetype = "solid"),
+    axis.line = element_line(colour = "grey"),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    axis.title.x = element_text(size = 16),
+    axis.title.y = element_text(size = 16),
+    axis.text.x=element_text(size=13, colour="black"),
+    axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour='black'),
+    legend.position = "none")
+print (p5)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+#### **Grouped Boxplots**
+
+A grouped boxplot is a boxplot where categories are organized in groups and subgroups. Here we visualize the distribution of of As in six rice varieties and 2 landtyes
+
+```{r Grouped Boxplots, fig.height=4.5, fig.width=6}
+# grouped boxplot
+ggplot(df, aes(x=Variety, y=Grain_As, fill=Land_type)) + 
+    geom_boxplot()+
+   #Change the Plot title and axis labels 
+  ggtitle("Figure #: Boxplot of  Rice Grain As") +
+  xlab("Rice Variety") + ylab("Grain As (mg/kg)") +
+  theme(
+    panel.background = element_rect(fill = "grey95",colour = "gray75",size = 0.5, linetype = "solid"),
+    axis.line = element_line(colour = "grey"),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    axis.title.x = element_text(size = 16),
+    axis.title.y = element_text(size = 16),
+    axis.text.x=element_text(size=13, colour="black"),
+    axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour='black')) +
+   # add legend tittle
+  guides(fill = guide_legend(title = "Landtypes"))
+```
+<div style="margin-bottom:20px;">
+</div>
+
+#### **Boxplots with Jitter**
+
+gplot2 can add another variables (Water As) on top of boxplots (Soil As) using **geom_jitter()** function. This function shifts all dots by a random value ranging from 0 to size, avoiding overlaps. We can 
+
+
+
+```{r Boxplots with Jitter, fig.height=4, fig.width=5, message=FALSE, warning=FALSE}
+
+rgb.palette <- colorRampPalette(c("red", "yellow", "green", "blue","sky blue")) 
+
+ggplot(df, aes(y=SAs, x=Land_type))+
+         geom_point(aes(colour=WAs),size = I(1.5),
+            position=position_jitter(width=0.05, height=0.05)) +
+        geom_boxplot(fill=NA, outlier.colour=NA)+
+        scale_y_continuous(limits=c(0,60), breaks=seq(0, 60, 10)) +
+        ggtitle("Figure #: Box and Jitter plot of Soil As with Water As") +
+        xlab("") + ylab("Soil As (mg/kg)") +
+        coord_flip()+
+        theme_light() +
+        theme(
+              plot.title = element_text(color="black", size=14,hjust = 0.5),
+              panel.background = element_rect(fill = "gray95",
+                                          colour = "gray75",
+                                          size = 0.5, linetype = "solid"),
+              axis.line = element_line(colour = "grey"),
+              panel.grid.major = element_blank(),
+              axis.text.y=element_text(size=10,angle = 0,vjust = 0, hjust=0.5),
+              axis.text.x = element_text(size=14),
+              axis.title.x = element_text(size=14),
+              axis.title.y = element_text(size=14),
+              legend.text = element_text(size = 10),legend.title = element_text(size = 14),
+              legend.background = element_rect(fill="transparent", 
+                                        size=0.5, linetype="solid"))+
+              scale_colour_gradientn(name="Water As(mg/kg)", colours =rgb.palette(14))
+
+
+```
+<div style="margin-bottom:20px;">
+</div>
+
+### **Barplot**
+
+#### **Barplot with Error Bars**
+
+```{r Barplots with Error Bars, fig.height=4, fig.width=5, message=FALSE, warning=FALSE}
+df %>%
+  # Calculate descriptive statistic group by Landtype
+  group_by(Land_type) %>% 
+  dlookr::describe(SAs) %>% 
+  # Create bar plot mean Soil As
+  ggplot(aes(x=Land_type, y=mean,fill= Land_type)) +
+  geom_bar(stat="identity", position=position_dodge(),width=0.3) +
+  # add standard error of mean as error bars 
+  geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width=.2,  position=position_dodge(.9)) +
+  #Change the Plot title and axis labels 
+  ggtitle("Figure #: Barplot  of Mean ± SD of Soil As") +
+  xlab("Landtype") + ylab("Soil As (mg/kg)") +
+  theme(
+    panel.background = element_rect(fill = "grey95",colour = "gray75",size = 0.5, linetype = "solid"),
+    axis.line = element_line(colour = "grey"),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    axis.title.x = element_text(size = 16),
+    axis.title.y = element_text(size = 16),
+    axis.text.x=element_text(size=13, colour="black"),
+    axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour='black'),
+    legend.position = "none")
+```
+<div style="margin-bottom:20px;">
+</div>
+
+#### **Grouped Barplot with Error Bars**
+
+First, check descriptive statistics of grain  As of six rice varieties in two landtypes:
+
+```{r Grouped Summary Stat}
+stat.variety<-df %>%
+            group_by(Variety, Land_type) %>% 
+            dlookr::describe(Grain_As) 
+
+datatable(as.data.frame(stat.variety), 
+          rownames = T, options = list(pageLength = 12, scrollX = TRUE, round)) %>%
+  formatRound(columns = 4:19, digits = 3)
+```
+
+
+<div style="margin-bottom:20px;">
+</div>
+
+```{r Grouped Barplots with Error Bars, fig.height=5, fig.width=5}
+df %>%
+  # Calculate descriptive statistic group by rice variety
+  group_by(Variety, Land_type) %>% 
+  dlookr::describe(Grain_As) %>% 
+  # Create bar plot mean Soil As
+  ggplot(aes(x=Variety, y=mean,fill= Land_type)) +
+  geom_bar(stat="identity", position=position_dodge(),width=0.3) +
+  # add standard error of mean as error bars 
+  geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width=.2, colour = "gray75", position=position_dodge(.4)) +
+  #Change the Plot title and axis labels 
+  ggtitle("Barplot of Mean ± SD of Rice Grain As in two Landtypes ") +
+  xlab("Rice variety") + ylab("Rice Grain  As (mg/kg)") +
+  # Flip the bars
+  coord_flip()+
+  theme(
+    panel.background = element_rect(fill = "grey95",colour = "gray75",size = 0.5, linetype = "solid"),
+    axis.line = element_line(colour = "grey"),
+    plot.title = element_text(size = 14, hjust = 0.5),
+    axis.title.x = element_text(size = 14),
+    axis.title.y = element_text(size = 14),
+    axis.text.x=element_text(size=13, colour="black"),
+    axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour='black'))+
+    # add legend tittle
+    guides(fill = guide_legend(title = "Landtypes"))
+```
+<div style="margin-bottom:20px;">
+</div>
+
+####  **Stacked Barplot**
+
+A stacked barplot is very similar to the grouped barplot. The subgroups are just displayed on top of each other, not beside. The only thing to change to get this figure is to switch the **position** argument to **stack**.
+
+
+```{r Stacked Barplot, fig.height=5, fig.width=5}
+df %>%
+  # Calculate descriptive statistic group by rice variety
+  group_by(Variety) %>% 
+  dlookr::describe(Grain_As, Straw_As) %>% 
+   # Create bar plot mean Soil As
+  ggplot(aes(x=Variety, y=mean,fill= described_variables)) +
+  geom_bar(stat="identity", position="stack")+
+  #Change the Plot title and axis labels 
+  ggtitle("Barplot of Mean As in Rice Grain and Straw") +
+  xlab("Rice variety") + ylab("Rice As (mg/kg)") +
+  # Flip the bars
+  coord_flip()+
+  theme(
+    panel.background = element_rect(fill = "grey95",colour = "gray75",size = 0.5, linetype = "solid"),
+    axis.line = element_line(colour = "grey"),
+    plot.title = element_text(size = 14, hjust = 0.5),
+    axis.title.x = element_text(size = 14),
+    axis.title.y = element_text(size = 14),
+    axis.text.x=element_text(size=13, colour="black"),
+    axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour='black'))+
+    # add legend tittle
+    guides(fill = guide_legend(title = ""))
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+### **Grouped Density Plot**
+
+```{r fig.height=4, fig.width=5.5, message=FALSE, warning=FALSE}
+
+df %>%
+  ggplot(aes(x=SAs, color=Land_type)) + 
+  geom_density(alpha = 0.5) +
+  # set x and y data range
+  scale_x_continuous(limits=c(0,60), breaks=seq(0, 60, 10))+ 
+  #Change the Plot title and axis labels 
+  ggtitle("Figure #b: Density Plot of Soil As group by Landtypes") +
+  xlab("Soil As (mg/kg)") + ylab("Density") +
+  theme(
+    panel.background = element_rect(fill = "grey95",colour = "gray75",size = 0.5, linetype = "solid"),
+    axis.line = element_line(colour = "grey"),
+    plot.title = element_text(size = 16, hjust = 0.5),
+    axis.title.x = element_text(size = 16),
+    axis.title.y = element_text(size = 16),
+    axis.text.x=element_text(size=13, colour="black"),
+    axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour='black'))+
+  # add legend tittle
+  guides(color = guide_legend(title = "Landtypes"))
+```
+
+<div style="margin-bottom:20px;">
+</div>
+
+
+
+### **Further Reading**
+
+1. [dlook](https://github.com/choonghyunryu/dlookr)
+
+
+
+
+
+

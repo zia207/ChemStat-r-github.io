@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>stepwise-regression.knit</title>
+
+<script src="site_libs/header-attrs-2.17/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">ChemStat-R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="getting-started-with-r.html">Getting Started with R</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Essential of The R Language
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="essential-of-r-language.html">Table of Content</a>
+    </li>
+    <li>
+      <a href="intoduction-to-use-r.html">Introduction to Using R</a>
+    </li>
+    <li>
+      <a href="r-data-input-and-type.html">Importing/Exporting Data into R</a>
+    </li>
+    <li>
+      <a href="data-wrangling.html">Data Wrangling</a>
+    </li>
+    <li>
+      <a href="eda.html">Exploratory Data Analysis</a>
+    </li>
+    <li>
+      <a href="stat_test.html">Statistical Test</a>
+    </li>
+    <li>
+      <a href="anova.html">Analysis of Variance (ANOVA)</a>
+    </li>
+    <li>
+      <a href="correlation.html">Correlation Analysis</a>
+    </li>
+    <li>
+      <a href="regression.html">Regression Analysis</a>
+    </li>
+    <li>
+      <a href="stepwise-regression.html">Stepwise Regression</a>
+    </li>
+    <li>
+      <a href="non-linear-regression.html">Nonlinear Regression</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Cheminformatics with R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="cheminformatics-with-r.html">Table of Content</a>
+    </li>
+    <li>
+      <a href="getting-strated-chem.html">Getting Started</a>
+    </li>
+    <li>
+      <a href="cheminformatics-with-chemminer.html">Cheminformatics with ChemmineR</a>
+    </li>
+    <li>
+      <a href="cheminformatics-with-cdk.html">Cheminformatics with CDK</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    ICP-MS Data Processing with R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="icp-ms-data-processing-and-analysis-with-r.html">Table of Content</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="mailto:zia207@gmail.com">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+    Email
+  </a>
+</li>
+<li>
+  <a href="http://github.com/zia207">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://www.linkedin.com/in/zia-ahmed-a7653578">
+    <span class="fa fa-linkedin fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+
+</div>
+
+
+<div style="margin-bottom:20px;">
+
+</div>
+<img src="Image/PNG_FILE_02/stepwise_regression.png" width="100%" style="display: block; margin: auto;" />
+<div style="margin-bottom:20px;">
+
+</div>
+<div id="table-of-content" class="section level3">
+<h3><strong>Table of Content</strong></h3>
+<ul>
+<li><p><a href="#load-library">Load Library</a></p></li>
+<li><p><a href="#import-data">Import Data</a></p></li>
+<li><p><a href="#data-preparation">Data Preparation</a></p></li>
+<li><p><a href="#stepwise-regression">Stepwise Regression</a></p></li>
+<li><p><a href="#types-of-stepwise-regression">Types of Stepwise
+Regression</a></p></li>
+<li><p><a href="#stepwise-regression-with-mass-package">Stepwise
+Regression with MASS Package</a></p></li>
+<li><p><a href="#stepwise-regression-with-leap-package">Stepwise
+Regression with leap Package</a></p></li>
+<li><p><a href="#stepwise-regression-with-leap-package">Stepwise
+Regression with caret Package</a></p></li>
+<li><p><a href="#compare-the-models">Compare the Models</a></p></li>
+<li><p><a href="#further-reading">Further Reading</a></p></li>
+</ul>
+<div style="margin-bottom:40px;">
+
+</div>
+</div>
+<div id="load-library" class="section level3">
+<h3><strong>Load Library</strong></h3>
+<p>In this exercise We will use following R-packages:</p>
+<pre class="r"><code># load library
+library(tidyverse)
+library(dlookr)
+library(moments)
+library(car)
+library(plyr)
+library(data.table)
+library(DT)
+library(Hmisc)
+library(corrplot) 
+library(corrr)
+library(gridExtra)
+library(ggExtra)
+library(BSDA)
+library(GGally)
+library(agricolae) 
+library(multcomp)
+library(multcompView)
+library(ggfortify)
+library(report)
+library(ggstatsplot)
+library(ggfortify)
+library(caret)
+library(Metrics)
+library(MASS)
+library(leaps)
+library(AICcmodavg)</code></pre>
+<div style="margin-bottom:30px;">
+
+</div>
+</div>
+<div id="import-data" class="section level3">
+<h3><strong>Import Data</strong></h3>
+<p>In this tutorial, we will use following data set:</p>
+<p><strong>soil_crabon_data.csv</strong>: Soil carbon data from
+Colorado, Kansas, New Mexico, and Wyoming. These samples were collected
+by the United States Geological Survey (USGS) as a part of the USGS
+Geochemical Landscapes Project [Smith et al., 2011]. We need following
+python packages:</p>
+<p>These data set could be found <a
+href="https://www.dropbox.com/sh/ctjv2eiifhfh2ts/AAAVXmWxPntD-O-5AE_YH3VHa?dl=0">here</a>.</p>
+<pre class="r"><code># define working directory
+dataFolder&lt;-&quot;E:/Dropbox/GitHub/chemstat-r-github.io/Data/&quot;
+soil.df&lt;-readr::read_csv(paste0(dataFolder,&quot;soil_crabon_data.csv&quot;))</code></pre>
+<div style="margin-bottom:30px;">
+
+</div>
+</div>
+<div id="data-preparation" class="section level3">
+<h3><strong>Data Preparation</strong></h3>
+<p>First, we create a dataframe with five predictors (‘DEM’, ‘Slope’,
+‘MAT’, ‘MAP’,‘NDVI’) and create a training and test data set.</p>
+<pre class="r"><code># create a data-frame
+mlr.df&lt;-soil.df %&gt;% dplyr::select(SOC, DEM, Slope, MAT, MAP,NDVI, NLCD)
+# data split
+tr_prop = 0.80
+# training data (80% data)
+train.df = plyr::ddply(mlr.df, .(NLCD),
+                 function(., seed) { set.seed(seed); .[sample(1:nrow(.), trunc(nrow(.) * tr_prop)), ] }, seed = 101)
+test.df = plyr::ddply(mlr.df,  .(NLCD), 
+            function(., seed) { set.seed(seed); .[-sample(1:nrow(.), trunc(nrow(.) * tr_prop)), ] }, seed = 101)</code></pre>
+<div style="margin-bottom:40px;">
+
+</div>
+</div>
+<div id="stepwise-regression" class="section level2">
+<h2><strong>Stepwise Regression</strong></h2>
+<p>In a multiple regression model, we use the p-value in the ANOVA table
+to determine whether the model is significant or not. Using the
+individual p-values for selecting a sub-set of significant predictors is
+challenging, since the p-values are adjusted for the other terms in the
+model. The task of selecting the best subset of predictors among all
+possible subsets is called stepwise variable selection, where a
+step-by-step iterative construction of a regression model is performed
+and involves selecting independent variables by addition to or
+subtraction from the set of explanatory variables.</p>
+<div id="types-of-stepwise-regression" class="section level3">
+<h3><strong>Types of Stepwise Regression</strong></h3>
+<p>The method is further divided into the following subtypes.</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Forward Stepwise Regression</strong></p>
+<p>In forward selection, regression model start with a model containing
+only the intercept and then we slowly add terms to the model, one at a
+time, starting with the predictor with the lowest p-value. This
+continues until all the remaining terms that are not included in the
+model are above a specified p-value threshold.</p></li>
+<li><p><strong>Backward Stepwise Regression</strong></p>
+<p>Backward selection approach is to fit a full model and slowly remove
+terms one at a time, starting with the term with the highest p-value.
+This is referred to as backward selection.</p></li>
+<li><p><strong>Bidirectional Stepwise Regression</strong></p>
+<p>This is a combination of forward selection (for adding significant
+terms) and backward selection (for removing nonsignificant terms). As in
+forward selection, we start with only the intercept and add the most
+significant term to the model. We continue to add the most significant
+variables, one at a time. We use a p-value threshold to determine when
+to stop adding terms to the model.</p></li>
+</ol>
+<p>There are many functions and R packages for computing stepwise
+regression. These include:</p>
+</div>
+<div id="stepwise-regression-with-mass-package" class="section level3">
+<h3><strong>Stepwise Regression with MASS Package</strong></h3>
+<p><strong>stepAIC()</strong> function in <strong>MASS package</strong>,
+which choose the best model by <strong>Akaike Information Criterion
+(AIC)</strong>. It has an option named <strong>direction</strong>, which
+can take the following values:</p>
+<p><strong>both</strong> - for stepwise regression, both forward and
+backward selection</p>
+<p><strong>backward</strong>- for backward selection</p>
+<p><strong>forward</strong> - for forward selection)</p>
+<pre class="r"><code>model.full &lt;- lm(SOC ~., data = train.df)
+anova(model.full)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: SOC
+##            Df Sum Sq Mean Sq  F value    Pr(&gt;F)    
+## DEM         1  223.8  223.79  14.7386 0.0001413 ***
+## Slope       1 1672.8 1672.84 110.1714 &lt; 2.2e-16 ***
+## MAT         1  970.7  970.71  63.9301 1.117e-14 ***
+## MAP         1 1514.9 1514.88  99.7687 &lt; 2.2e-16 ***
+## NDVI        1  292.5  292.47  19.2621 1.424e-05 ***
+## NLCD        3  115.6   38.53   2.5376 0.0561112 .  
+## Residuals 446 6772.0   15.18                       
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code># Stepwise regression model both forward and backward selection 
+model.MASS &lt;- MASS::stepAIC(model.full, direction = &quot;both&quot;, 
+                      trace = FALSE)
+summary(model.MASS)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = SOC ~ Slope + MAT + MAP + NDVI + NLCD, data = train.df)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -12.9842  -2.3209  -0.3262   1.4293  16.9005 
+## 
+## Coefficients:
+##                         Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)             2.419508   1.222210   1.980  0.04836 *  
+## Slope                   0.098207   0.062047   1.583  0.11418    
+## MAT                    -0.254679   0.062387  -4.082 5.28e-05 ***
+## MAP                     0.006284   0.001585   3.966 8.52e-05 ***
+## NDVI                    7.152796   2.284618   3.131  0.00186 ** 
+## NLCDHerbaceous         -0.734185   0.722647  -1.016  0.31020    
+## NLCDPlanted/Cultivated -0.391376   0.848880  -0.461  0.64499    
+## NLCDShrubland          -1.653728   0.714040  -2.316  0.02101 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 3.898 on 447 degrees of freedom
+## Multiple R-squared:  0.4125, Adjusted R-squared:  0.4033 
+## F-statistic: 44.83 on 7 and 447 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="stepwise-regression-with-leap-package" class="section level3">
+<h3><strong>Stepwise Regression with leap Package</strong></h3>
+<p><strong>regsubsets()</strong> from <strong>leaps</strong> package,
+which has the tuning parameter <strong>nvmax</strong> specifying the
+maximal number of predictors to incorporate in the model. It returns
+multiple models with different size up to <strong>nvmax</strong>. We
+need to compare the performance of the different models for choosing the
+best one. <strong>regsubsets()</strong> has the option method, which can
+take the values <strong>backward</strong>, <strong>forward</strong> and
+<strong>seqrep</strong> (seqrep = sequential replacement, combination of
+forward and backward selections).</p>
+<pre class="r"><code># Stepwise regression model both forward and backward selection
+model.leaps &lt;- regsubsets(SOC~., data = train.df, nvmax = 5,
+                     method = &quot;seqrep&quot;)
+summary(model.leaps)</code></pre>
+<pre><code>## Subset selection object
+## Call: regsubsets.formula(SOC ~ ., data = train.df, nvmax = 5, method = &quot;seqrep&quot;)
+## 8 Variables  (and intercept)
+##                        Forced in Forced out
+## DEM                        FALSE      FALSE
+## Slope                      FALSE      FALSE
+## MAT                        FALSE      FALSE
+## MAP                        FALSE      FALSE
+## NDVI                       FALSE      FALSE
+## NLCDHerbaceous             FALSE      FALSE
+## NLCDPlanted/Cultivated     FALSE      FALSE
+## NLCDShrubland              FALSE      FALSE
+## 1 subsets of each size up to 5
+## Selection Algorithm: &#39;sequential replacement&#39;
+##          DEM Slope MAT MAP NDVI NLCDHerbaceous NLCDPlanted/Cultivated
+## 1  ( 1 ) &quot; &quot; &quot; &quot;   &quot; &quot; &quot; &quot; &quot;*&quot;  &quot; &quot;            &quot; &quot;                   
+## 2  ( 1 ) &quot; &quot; &quot; &quot;   &quot;*&quot; &quot; &quot; &quot;*&quot;  &quot; &quot;            &quot; &quot;                   
+## 3  ( 1 ) &quot; &quot; &quot; &quot;   &quot;*&quot; &quot;*&quot; &quot;*&quot;  &quot; &quot;            &quot; &quot;                   
+## 4  ( 1 ) &quot; &quot; &quot;*&quot;   &quot;*&quot; &quot;*&quot; &quot;*&quot;  &quot; &quot;            &quot; &quot;                   
+## 5  ( 1 ) &quot; &quot; &quot;*&quot;   &quot;*&quot; &quot;*&quot; &quot;*&quot;  &quot; &quot;            &quot; &quot;                   
+##          NLCDShrubland
+## 1  ( 1 ) &quot; &quot;          
+## 2  ( 1 ) &quot; &quot;          
+## 3  ( 1 ) &quot; &quot;          
+## 4  ( 1 ) &quot; &quot;          
+## 5  ( 1 ) &quot;*&quot;</code></pre>
+<pre class="r"><code>coef(model.leaps, 1:5)</code></pre>
+<pre><code>## [[1]]
+## (Intercept)        NDVI 
+##    -1.78059    18.12074 
+## 
+## [[2]]
+## (Intercept)         MAT        NDVI 
+##   0.9430114  -0.2501233  16.9085343 
+## 
+## [[3]]
+##  (Intercept)          MAT          MAP         NDVI 
+##  1.389244156 -0.319220142  0.006620478  9.723052100 
+## 
+## [[4]]
+##  (Intercept)        Slope          MAT          MAP         NDVI 
+##  0.406691579  0.116860321 -0.235390138  0.006252192  9.416112603 
+## 
+## [[5]]
+##   (Intercept)         Slope           MAT           MAP          NDVI 
+##   1.654671846   0.124732088  -0.255861818   0.006221345   7.653707602 
+## NLCDShrubland 
+##  -1.139623087</code></pre>
+<pre class="r"><code>vcov(model.leaps, 5)</code></pre>
+<pre><code>##                 (Intercept)         Slope           MAT           MAP
+## (Intercept)    0.9961154750 -1.913319e-02 -4.387115e-02  2.256975e-04
+## Slope         -0.0191331927  2.499998e-03  1.755883e-03 -7.887421e-06
+## MAT           -0.0438711459  1.755883e-03  3.689324e-03 -3.133518e-05
+## MAP            0.0002256975 -7.887421e-06 -3.133518e-05  2.499210e-06
+## NDVI          -1.2009377847 -9.066767e-03  3.991543e-02 -2.654967e-03
+## NLCDShrubland -0.2593732001 -1.636024e-03  4.254719e-03  6.411154e-06
+##                       NDVI NLCDShrubland
+## (Intercept)   -1.200937785 -2.593732e-01
+## Slope         -0.009066767 -1.636024e-03
+## MAT            0.039915426  4.254719e-03
+## MAP           -0.002654967  6.411154e-06
+## NDVI           4.838858241  3.662883e-01
+## NLCDShrubland  0.366288344  2.368529e-01</code></pre>
+<div style="margin-bottom:20px;">
+
+</div>
+<p>Now, we fit our final model with with <strong>lm()</strong></p>
+<pre class="r"><code>model.leaps.final &lt;- lm(SOC ~Slope+ MAT+ MAP+ NDVI + NLCD, data = train.df)
+summary(model.leaps.final)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = SOC ~ Slope + MAT + MAP + NDVI + NLCD, data = train.df)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -12.9842  -2.3209  -0.3262   1.4293  16.9005 
+## 
+## Coefficients:
+##                         Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)             2.419508   1.222210   1.980  0.04836 *  
+## Slope                   0.098207   0.062047   1.583  0.11418    
+## MAT                    -0.254679   0.062387  -4.082 5.28e-05 ***
+## MAP                     0.006284   0.001585   3.966 8.52e-05 ***
+## NDVI                    7.152796   2.284618   3.131  0.00186 ** 
+## NLCDHerbaceous         -0.734185   0.722647  -1.016  0.31020    
+## NLCDPlanted/Cultivated -0.391376   0.848880  -0.461  0.64499    
+## NLCDShrubland          -1.653728   0.714040  -2.316  0.02101 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 3.898 on 447 degrees of freedom
+## Multiple R-squared:  0.4125, Adjusted R-squared:  0.4033 
+## F-statistic: 44.83 on 7 and 447 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="stepwise-regression-with-caret-package" class="section level3">
+<h3><strong>Stepwise Regression with caret Package</strong></h3>
+<p>The <strong>train()* function </strong>caret** package provides an
+easy workflow to perform stepwise selections using the
+<strong>leaps</strong> and the <strong>MASS</strong> packages. It has an
+option named method, which can take the following values:</p>
+<p><strong>leapBackward</strong>, to fit linear regression with backward
+selection</p>
+<p><strong>leapForward</strong>, to fit linear regression with forward
+selection</p>
+<p><strong>leapSeq</strong>, to fit linear regression with stepwise
+selection</p>
+<pre class="r"><code># Set seed for reproducibility
+set.seed(123)
+# Set up repeated k-fold cross-validation
+train.control &lt;- trainControl(method = &quot;cv&quot;, number = 10)
+# Train the model
+model.caret.leaps &lt;- train(SOC ~., data = train.df,
+                    method = &quot;leapBackward&quot;, 
+                    tuneGrid = data.frame(nvmax = 1:8),
+                    trControl = train.control
+                    )
+model.caret.leaps$results</code></pre>
+<pre><code>##   nvmax     RMSE  Rsquared      MAE    RMSESD RsquaredSD     MAESD
+## 1     1 4.191651 0.3124666 3.033619 0.6893746 0.07579391 0.4335041
+## 2     2 4.035028 0.3566821 2.958717 0.6093978 0.06068813 0.4220396
+## 3     3 3.896458 0.4034182 2.837352 0.6527861 0.08052027 0.4250751
+## 4     4 3.918922 0.3972452 2.867234 0.6377606 0.07463666 0.4305184
+## 5     5 3.877180 0.4097865 2.848284 0.6483602 0.07795083 0.4395369
+## 6     6 3.892513 0.4051730 2.857612 0.6532723 0.07647613 0.4481518
+## 7     7 3.898437 0.4035904 2.863506 0.6595952 0.07666126 0.4491668
+## 8     8 3.886382 0.4071044 2.858693 0.6575318 0.07676424 0.4613934</code></pre>
+<p>The function <strong>summary()</strong> reports the best set of
+variables for each model size, up to the best 4-variables model.</p>
+<pre class="r"><code>summary(model.caret.leaps$finalModel)</code></pre>
+<pre><code>## Subset selection object
+## 8 Variables  (and intercept)
+##                        Forced in Forced out
+## DEM                        FALSE      FALSE
+## Slope                      FALSE      FALSE
+## MAT                        FALSE      FALSE
+## MAP                        FALSE      FALSE
+## NDVI                       FALSE      FALSE
+## NLCDHerbaceous             FALSE      FALSE
+## NLCDPlanted/Cultivated     FALSE      FALSE
+## NLCDShrubland              FALSE      FALSE
+## 1 subsets of each size up to 5
+## Selection Algorithm: backward
+##          DEM Slope MAT MAP NDVI NLCDHerbaceous NLCDPlanted/Cultivated
+## 1  ( 1 ) &quot; &quot; &quot; &quot;   &quot; &quot; &quot; &quot; &quot;*&quot;  &quot; &quot;            &quot; &quot;                   
+## 2  ( 1 ) &quot; &quot; &quot; &quot;   &quot;*&quot; &quot; &quot; &quot;*&quot;  &quot; &quot;            &quot; &quot;                   
+## 3  ( 1 ) &quot; &quot; &quot; &quot;   &quot;*&quot; &quot;*&quot; &quot;*&quot;  &quot; &quot;            &quot; &quot;                   
+## 4  ( 1 ) &quot; &quot; &quot;*&quot;   &quot;*&quot; &quot;*&quot; &quot;*&quot;  &quot; &quot;            &quot; &quot;                   
+## 5  ( 1 ) &quot; &quot; &quot;*&quot;   &quot;*&quot; &quot;*&quot; &quot;*&quot;  &quot; &quot;            &quot; &quot;                   
+##          NLCDShrubland
+## 1  ( 1 ) &quot; &quot;          
+## 2  ( 1 ) &quot; &quot;          
+## 3  ( 1 ) &quot; &quot;          
+## 4  ( 1 ) &quot; &quot;          
+## 5  ( 1 ) &quot;*&quot;</code></pre>
+<p>An asterisk specifies that a given variable is included in the
+corresponding model. For example, it can be seen that the best
+5-variables model contains Slope, MAT, MAP, NDVI and NLCDShrubland.</p>
+<pre class="r"><code>coef(model.caret.leaps$finalModel, 5)</code></pre>
+<pre><code>##   (Intercept)         Slope           MAT           MAP          NDVI 
+##   1.654671846   0.124732088  -0.255861818   0.006221345   7.653707602 
+## NLCDShrubland 
+##  -1.139623087</code></pre>
+<div style="margin-bottom:20px;">
+
+</div>
+<p>Additionally, the caret package has method to compute stepwise
+regression using the MASS package <strong>(method =
+“lmStepAIC”)</strong>:</p>
+<pre class="r"><code># Train the model
+model.caret.leap &lt;- train(SOC ~., data = train.df,
+                    method = &quot;lmStepAIC&quot;, 
+                    trControl = train.control,
+                    trace = FALSE
+                    )</code></pre>
+<pre class="r"><code># Model accuracy
+model.caret.leap$results</code></pre>
+<pre><code>##   parameter     RMSE  Rsquared      MAE    RMSESD RsquaredSD     MAESD
+## 1      none 3.843647 0.4128246 2.836942 0.7903781  0.1036475 0.5948622</code></pre>
+<pre class="r"><code># Final model coefficients
+model.caret.leap$finalModel</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = .outcome ~ Slope + MAT + MAP + NDVI + NLCDShrubland, 
+##     data = dat)
+## 
+## Coefficients:
+##   (Intercept)          Slope            MAT            MAP           NDVI  
+##      1.654672       0.124732      -0.255862       0.006221       7.653708  
+## NLCDShrubland  
+##     -1.139623</code></pre>
+<pre class="r"><code># Summary of the model
+summary(model.caret.leap$finalModel)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = .outcome ~ Slope + MAT + MAP + NDVI + NLCDShrubland, 
+##     data = dat)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -12.9565  -2.3524  -0.3645   1.3779  16.9032 
+## 
+## Coefficients:
+##                Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)    1.654672   0.998056   1.658 0.098037 .  
+## Slope          0.124732   0.050000   2.495 0.012967 *  
+## MAT           -0.255862   0.060740  -4.212 3.05e-05 ***
+## MAP            0.006221   0.001581   3.935 9.62e-05 ***
+## NDVI           7.653708   2.199740   3.479 0.000552 ***
+## NLCDShrubland -1.139623   0.486675  -2.342 0.019635 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 3.895 on 449 degrees of freedom
+## Multiple R-squared:  0.4109, Adjusted R-squared:  0.4043 
+## F-statistic: 62.63 on 5 and 449 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="compare-the-models" class="section level3">
+<h3><strong>Compare the Models</strong></h3>
+<p>To compare these models and find which one is the best fit for the
+data, you can put them together into a list and use the aictab() command
+to compare all of them at once. To use <strong>aictab()</strong>, first
+load the library <strong>AICcmodavg</strong>.</p>
+<p>First we will create model list (‘models’) and name (label) each of
+them so the AIC table is easier to read (‘model.names’).</p>
+<pre class="r"><code>models&lt;-list(model.full, model.MASS, model.leaps.final)
+model.names&lt;-c(&quot;Full&quot;, &quot;Step-MASS&quot;, &quot;Step-leaps&quot;)</code></pre>
+<p>Then run <strong>aictab()</strong> to do the model comparison.</p>
+<pre class="r"><code>aictab(cand.set = models, modnames = model.names)</code></pre>
+<pre><code>## Warning in aictab.AIClm(cand.set = models, modnames = model.names): 
+## Check model structure carefully as some models may be redundant</code></pre>
+<pre><code>## 
+## Model selection based on AICc:
+## 
+##             K    AICc Delta_AICc AICcWt Cum.Wt       LL
+## Step-MASS   9 2539.69       0.00   0.37   0.37 -1260.64
+## Step-leaps  9 2539.69       0.00   0.37   0.74 -1260.64
+## Full       10 2540.35       0.66   0.26   1.00 -1259.93</code></pre>
+<div style="margin-bottom:20px;">
+
+</div>
+<p>The best-fit model is always listed first. The model selection table
+includes information on:</p>
+<p><strong>K</strong>: The number of parameters in the model. The
+default K is 2, so a model with one parameter will have a K of 2 + 1 =
+3.</p>
+<p><strong>AICc</strong>: The information score of the model (the
+lower-case ‘c’ indicates that the value has been calculated from the AIC
+test corrected for small sample sizes). The smaller the AIC value, the
+better the model fit.</p>
+<p><strong>Delta_AICc</strong>: The difference in AIC score between the
+best model and the model being compared.</p>
+<p><strong>AICcWt</strong>: AICc weight, which is the proportion of the
+total amount of predictive power provided by the full set of models
+contained in the model being assessed.</p>
+<p><strong>Cum.Wt</strong>: The sum of the AICc weights.</p>
+<p><strong>LL</strong>: Log-likelihood. This is the value describing how
+likely the model is, given the data. The AIC score is calculated from
+the LL and K</p>
+<div style="margin-bottom:40px;">
+
+</div>
+</div>
+<div id="further-reading" class="section level3">
+<h3><strong>Further Reading</strong></h3>
+<ol style="list-style-type: decimal">
+<li><p><a
+href="http://www.sthda.com/english/articles/37-model-selection-essentials-in-r/154-stepwise-regression-essentials-in-r/">Model
+Selection Essentials in R</a></p></li>
+<li><p><a
+href="https://www.jmp.com/en_us/statistics-knowledge-portal/what-is-multiple-regression/variable-selection.html">Variable
+Selection in Multiple Regression</a></p></li>
+<li><p><a
+href="https://www.scribbr.com/statistics/akaike-information-criterion/">Akaike
+Information Criterion</a></p></li>
+</ol>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

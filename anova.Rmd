@@ -1,0 +1,346 @@
+---
+title: ''
+---
+
+
+<div style="margin-bottom:20px;">
+</div>
+
+```{r echo=FALSE, out.width='100%', fig.align="center"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\anova_b.png")
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+
+### **Table of Content**
+
+* [Load Library](#load-library)
+
+* [Import Data](#Import-data)
+
+* [Analysis of Variance or ANOVA](#analysis-of-variance-or-anova)
+
+  - [ANOVA Hypotheses](#anova-Hypotheses)
+
+  - [ANOVA Assumptions](#anova-assumptions)
+
+  - [One-way ANOVA](#one-way-anova)
+
+  - [Two-way or Factorial ANOVA](#two-way-or-factorial-anova)
+  
+  - [Interpretations of ANOVA results](#interpretations-of-anova-results)
+
+* [Multiple Comparisons](#multiple-comparisons)
+
+  - [LSD Test](#lSD-test)
+
+  - [DMRT Test](#dmrt-test)
+  
+  - [Tukey HSD](#tukey-hsd)
+  
+* [Visualization of ANOVA and Posthoc Test](#visualization-of-anova-and-posthoc-test)
+
+  - [Box or Violin Plots for Between Subjects Comparisons](#box-or-violin-plots-for-between-subjects-comparisons) 
+  
+  - [Barplots of Multiple Comparison](#barplots-of-multiple-comparison)
+  
+* [Further Reading](#further-reading)
+  
+<div style="margin-bottom:20px;">
+</div>
+  
+
+### **Load Library**
+
+In this exercise We will use following R-packages: 
+
+```{r Load Library, message=FALSE, warning=FALSE}
+# load library
+library(tidyverse)
+library(dlookr)
+library(moments)
+library(car)
+library(plyr)
+library(data.table)
+library(DT)
+library(Hmisc)
+library(corrplot) 
+library(corrr)
+library(gridExtra)
+library(ggExtra)
+library(BSDA)
+library(GGally)
+library(agricolae) 
+library(multcomp)
+library(multcompView)
+library(ggfortify)
+library(report)
+library(ggstatsplot)
+```
+<div style="margin-bottom:30px;">
+</div>
+
+### **Import Data** 
+
+In this tutorial, we will use following data set:
+
+
+**green_house.csv**:  Rice yield and  As content in contaminated and non-contaminated soils in a greenhouse experiment.
+
+
+These data set could be found [here](https://www.dropbox.com/sh/ctjv2eiifhfh2ts/AAAVXmWxPntD-O-5AE_YH3VHa?dl=0).
+
+We import this data using **read_csv()** from **readr** package. 
+
+
+```{r Import Data, message=FALSE, warning=FALSE}
+# define working directory
+dataFolder<-"E:/Dropbox/GitHub/chemstat-r-github.io/Data/"
+gh.df<-readr::read_csv(paste0(dataFolder,"green_house.csv"))
+```
+
+<div style="margin-bottom:30px;">
+</div>
+
+## **Analysis of Variance or ANOVA**
+
+An ANOVA test is a type of statistical test used to determine if there is a statistically significant difference between two or more categorical groups by testing for differences of means using variance. (source: https://www.simplypsychology.org/anova.html) 
+
+* Groups mean differences inferred by analyzing variances
+
+* ANOVA uses variance-based F test to check the group mean equality. Sometimes, ANOVA F test is also called omnibus test as it tests non-specific null hypothesis i.e. all group means are equal
+
+* Main types: One-way (one factor) and two-way (two factors) ANOVA (factor is an independent variable)
+
+### **ANOVA Hypotheses**
+
+Null hypothesis: Groups means are equal (no variation in means of groups) H0: μ1=μ2=…=μp
+
+**Alternative hypothesis**: At least, one group mean is different from other groups H1: All μ are not equal Learn more about hypothesis testing and interpretation
+
+### **ANOVA Assumptions**
+
+* Residuals (experimental error) are normally distributed (Shapiro-Wilks Test)
+
+* Homogeneity of variances (variances are equal between treatment groups) (Levene’s or Bartlett’s Test)
+
+* Observations are sampled independently from each other
+
+
+
+### **One-way ANOVA**
+
+The one-way analysis of variance (ANOVA) is used to determine whether there are any statistically significant differences between the means of two or more independent (unrelated) groups.
+
+ANOVA model can be expressed: 
+
+```{r echo=FALSE, out.width='80%', fig.align="center"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\anova.png")
+```
+<div style="margin-bottom:20px;">
+</div>
+
+```{r One-way ANOVA, message=FALSE, warning=FALSE}
+model.a =aov (GAs ~Treatment, data = gh.df) # analysis variance 
+anova (model.a)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+### **Two-way or Factorial ANOVA**
+
+A two-way ANOVA (analysis of variance) has two or more categorical independent variables (also known as a factor), and a normally distributed continuous (i.e., interval or ratio level) dependent variable. 
+
+Two-way ANOVA, like one-way ANOVA tests, assumes that the observations within each cell are normally distributed and have equal variances. We’ll show you how to check these assumptions after fitting ANOVA.
+
+Two-way ANOVA model can be expressed: 
+
+```{r echo=FALSE, out.width='80%', fig.align="center"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\two_way_anova.png")
+```
+<div style="margin-bottom:20px;">
+</div>
+
+```{r Two-way  ANOVA}
+model.b =aov (GAs ~Treatment + Variety, data = gh.df)
+anova (model.b)    
+```
+
+From the ANOVA table we can conclude that both Treatment and  Variety statistically significant. 
+
+<div style="margin-bottom:20px;">
+</div>
+
+**Two-way ANOVA with interaction effect**
+
+```{r Two-way ANOVA with interaction effect}
+model.d =aov (GAs ~Treatment + Variety +Treatment:Variety, data = gh.df)
+anova (model.d)    
+
+```
+
+the p-value for the interaction between Treatment:Variety is 6.668e-142 (highly significant), which indicates that the relationships GAs dose and Treatment depends on the rice varieties.
+
+
+### **Interpretations of ANOVA results**
+
+A nice and easy way to report results of an ANOVA in R is with the **report()** function from the **report** packagr
+
+```{r Report and }
+report(model.d)
+```
+
+
+
+## **Multiple Comparisons**
+
+From ANOVA analysis, we know that treatment differences are statistically significant, but ANOVA does not tell which treatments are significantly different from each other. If the ANOVA test results in a significant difference, a follow up analysis would be needed for multiple comparisons of all possible pairwise means.
+
+### **LSD Test**
+
+To know the pairs of significant different treatments, **least significant difference (LSD)** test is used in the context of the analysis of variance, when the F-ratio suggests rejection of the null hypothesis H0, that is, when the difference between the population means is significant.
+
+This test helps to identify the populations whose means are statistically different. The basic idea of the test is to compare the populations taken in pairs. It is then used to proceed in a one-way or two-way analysis of variance, given that the null hypothesis has already been rejected. 
+
+(Source: https://link.springer.com/referenceworkentry/10.1007/978-0-387-32833-1_226#:~:text=The%20least%20significant%20difference%20(LSD,whose%20means%20are%20statistically%20different.)
+
+We use **LSD.test()** function of **agricolae**  package on anova model for Multiple comparisons, **"Least significant difference (LSD)"** and **Adjust P-values**
+
+```{r LSD test, message=FALSE, warning=FALSE}
+lsd.test.single=agricolae::LSD.test(model.a, "Treatment")      # LSD test
+lsd.test.single
+```
+
+
+From test, it is clear that mean grain As significantly higher in high As soil. 
+
+<div style="margin-bottom:20px;">
+</div>
+
+For two-way ANOVA: 
+
+```{r LSD-Test  Interaction}
+compare.lsd <-LSD.test (model.d, c("Variety", "Treatment"), main = "GAs ~Treatment + Variety + Treatment:Variety")
+compare.lsd
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+### **DMRT Test**
+
+**Duncan’s Multiple Range test (DMRT)** is a posthoc test to measure specific differences between pairs of means. MRT is more useful than the LSD when larger pairs of means are being compared. 
+
+```{r DMRT Test}
+dmrt.test.single=agricolae::duncan.test(model.a, "Treatment")   # DMRT test
+dmrt.test.single
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+### **Tukey HSD**
+
+**Tukey’s Honest Significant Difference (HSD)** test is a post hoc test commonly used to assess the significance of differences between pairs of group means. Tukey’s HSD test accounts for multiple comparisons and corrects for family-wise error rate (FWER) (inflated type I error). We will **HSD.test()** function from **agricolae** package
+
+
+```{r TUKEY’S W or HSD-Test}
+compare.hsd <-agricolae::HSD.test(model.d, c("Variety", "Treatment"), main = "GAs ~Treatment + Variety + Treatment:Variety")
+compare.hsd
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+## **Visualization of ANOVA and Posthoc Test**
+
+### **Box or Violin Plots for Between Subjects Comparisons**
+
+We create a nice looking plots with results of ANOVA and post-hoc tests on the same plot (directly on the boxplots). We will use **gbetweenstats()** function of **ggstatsplot** package:  , interest to you.
+
+
+```{r Plot ANOVA  and Posthoc Tesr, fig.height=4, fig.width=5, paged.print=FALSE}
+ggbetweenstats(
+  data = gh.df,
+  x = Treatment,
+  y = GAs,
+  type = "parametric", # ANOVA or Kruskal-Wallis
+  var.equal = TRUE, # ANOVA or Welch ANOVA
+  plot.type = "box",
+  pairwise.comparisons = TRUE,
+  pairwise.display = "significant",
+  centrality.plotting = FALSE,
+  bf.message = FALSE
+)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+### **Barplots of Multiple Comparison**
+
+The means comparison by Tukey’s test is resulted an extensive table with all pairwise comparisons and the value for each one of them. However, this result can be tricky to interpret. The use of letters to indicate significant differences in pairwise comparisons, also called compact letter display, and can simplify the visualization and discussion of significant differences among means. 
+
+We are going to use the **multcompLetters4()** function from the **multcompView** package.
+
+source: https://statdoe.com/two-way-anova-in-r/ 
+
+```{r Multiple Comparison}
+# creating the compact letter display
+# Tukey's test
+tukey <- TukeyHSD(model.d)
+# creating the compact letter display
+tukey.cld <- multcompView::multcompLetters4(model.d, tukey)
+print(tukey.cld)
+```
+
+
+The code output shows the compact letter display for the faceplate glass, for the temperature, and for each treatment. This last one is the one we are going to use and the next code extract and adds the results of the compact letter display for each treatment to the table with the data summary.
+
+
+```{r Table-Multiple Comparison, warning=TRUE}
+# table with factors, means and standard deviation
+data_summary<-gh.df %>% 
+  dplyr::group_by(Treatment, Variety) %>%
+  dplyr::summarise(mean=mean(GAs), sd=sd(GAs)) %>%
+  arrange(desc(mean))
+# Add letters
+cld <- as.data.frame.list(tukey.cld$"Treatment:Variety")
+data_summary$Tukey <- cld$Letters
+print(data_summary)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+We can produce a nice looking barplot with all information of HSD-tests
+
+```{r BarPlots Multiple Comaprison, fig.height=4, fig.width=6}
+ggplot(data_summary, aes(x = factor(Treatment), y = mean, fill = Variety, colour = Variety)) + 
+  geom_bar(stat = "identity", position = "dodge", alpha = 0.5)  +
+  geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), position = position_dodge(0.9), width = 0.25) +
+  labs(x="Treatment", y="Grain As (mg/kg)") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+  theme(legend.position = c(0.6, 0.75)) +
+  geom_text(aes(label=Tukey), position = position_dodge(0.90), size = 3, 
+            vjust=-0.8, hjust=-0.5, colour = "gray25")
+# Save figure
+ggsave("barplot.png", width = 6, height = 43, dpi = 1000)
+```
+<div style="margin-bottom:30px;">
+</div>
+
+
+### **Further Reading**
+
+1. [ANOVA in R](https://www.scribbr.com/statistics/anova-in-r/)
+
+2. [ANOVA in R](https://statsandr.com/blog/anova-in-r/#visualization-of-anova-and-post-hoc-tests-on-the-same-plot)
+
+3. [Multiple Comparisons with agricolae](https://myaseen208.com/agricolae/articles/MultipleComparisons.html)
+
+4. [ggstatsplot: ggplot2 Based Plots with Statistical Details](#https://mran.microsoft.com/snapshot/2018-07-20/web/packages/ggstatsplot/readme/README.html#:~:text=ggstatsplot%20is%20an%20extension%20of,to%20produce%20information%2Drich%20plots.)
+
+5. [TWO-WAY ANOVA IN R – STEP-BY-STEP TUTORIAL](https://statdoe.com/two-way-anova-in-r/)

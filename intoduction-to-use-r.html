@@ -32,6 +32,7 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/vembedr-0.1.5/css/vembedr.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
@@ -269,34 +270,31 @@ $(document).ready(function () {
       <a href="intoduction-to-use-r.html">Introduction to Using R</a>
     </li>
     <li>
-      <a href="r-data-input-and-type.html">Importing/Exporting  Data into R</a>
+      <a href="r-data-input-and-type.html">Importing/Exporting Data into R</a>
     </li>
     <li>
-      <a href="data-wrangling.html">Data Wrangling with R</a>
+      <a href="data-wrangling.html">Data Wrangling</a>
     </li>
     <li>
-      <a href="mathematics-with-r.html">Simple Mathematics with R</a>
+      <a href="eda.html">Exploratory Data Analysis</a>
     </li>
     <li>
-      <a href="basic-statistics-with-r.html">Basic Statistics with R</a>
+      <a href="stat_test.html">Statistical Test</a>
     </li>
     <li>
-      <a href="multivariate-statistics.html">Mltivariate Statistics with R</a>
+      <a href="anova.html">Analysis of Variance (ANOVA)</a>
     </li>
     <li>
-      <a href="data-visualization.html">Data Visualization with R</a>
+      <a href="correlation.html">Correlation Analysis</a>
     </li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Curve Fitting with R
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="curve-fitting-with-r.html">Table of Content</a>
+      <a href="regression.html">Regression Analysis</a>
+    </li>
+    <li>
+      <a href="stepwise-regression.html">Stepwise Regression</a>
+    </li>
+    <li>
+      <a href="non-linear-regression.html">Nonlinear Regression</a>
     </li>
   </ul>
 </li>
@@ -374,11 +372,8 @@ $(document).ready(function () {
 <div style="margin-bottom:20px;">
 
 </div>
-<div style="margin-bottom:10px;">
-
-</div>
 <div id="table-of-content" class="section level3">
-<h3><strong>Table of content</strong></h3>
+<h3><strong>Table of Content</strong></h3>
 <ul>
 <li><p><a href="#screen-prompt">Screen Prompt</a></p></li>
 <li><p><a href="#r-as-a-calculator">R as a Calculator</a></p></li>
@@ -418,7 +413,14 @@ The screen will now be refreshed and the console should be cleared.</p>
 <p>We can use R as a calculators</p>
 <p>At the prompt, we enter the expression that we want evaluated and
 when we hit enter, it will compute the result for us . For Example:</p>
-<video width='856' height='656' controls> <source src='E:/Dropbox/GitHub/chemstat-r-github.io/Vedio/R_calculator.mp4' type='video/mp4'> Your browser does not support the video tag;  for browser support, please see:  https://www.w3schools.com/tags/tag_video.asp </video>
+<div class="vembedr">
+<div>
+<iframe src="https://www.youtube.com/embed/YH6W_qiyvLk" width="533" height="300" frameborder="0" allowfullscreen="" data-external="1"></iframe>
+</div>
+</div>
+<div style="margin-bottom:15px;">
+
+</div>
 <p>Use - for subtraction. Use * for multiply. Use ^ for raised to the
 power of. Use parentheses to ensure that it understands what you are
 trying to compute. The order of doing arithmetic operations is (left
@@ -431,7 +433,7 @@ trying to compute. The order of doing arithmetic operations is (left
 <h3><strong>Built in Function</strong></h3>
 <p>There are so many built-in mathematical functions are available in
 base-R. Some are shown in below table.</p>
-<img src="Image/PNG_FILE_02/Table_math_function.png" width="70%" style="display: block; margin: auto;" />
+<img src="Image/PNG_FILE_02/Table_math_function.png" width="80%" style="display: block; margin: auto auto auto 0;" />
 <div style="margin-bottom:15px;">
 
 </div>
@@ -545,15 +547,15 @@ grain.yield</p></li>
 
 </div>
 </div>
-<div id="r-data-types" class="section level2">
-<h2><strong>R Data Types</strong></h2>
+<div id="r-data-types" class="section level3">
+<h3><strong>R Data Types</strong></h3>
 R has a wide variety of data types including scalars, vectors
 (numerical, character, logical), matrices, data frames, and lists.
 <div style="margin-bottom:15px;">
 
 </div>
-<div id="vectors" class="section level3">
-<h3><strong>Vectors</strong></h3>
+<div id="vectors" class="section level4">
+<h4><strong>Vectors</strong></h4>
 <p>“Vectors are variables with one or more values of the same type:
 logical, integer, real, complex, string (or character) or raw”. A
 variable with a single value (say 4.3) is often known as a scalar, but
@@ -632,7 +634,7 @@ b</code></pre>
 <p>“One of R’s great strengths is its ability to evaluate functions over
 entire vectors, thereby avoiding the need for loops and subscripts”.
 Important vector functions are listed in below Table:</p>
-<img src="Image/PNG_FILE_02/vector_functions.png" width="80%" style="display: block; margin: auto;" />
+<img src="Image/PNG_FILE_02/vector_functions.png" width="60%" style="display: block; margin: auto;" />
 <div style="margin-bottom:10px;">
 
 </div>
@@ -687,9 +689,8 @@ print(divi.result)</code></pre>
 
 </div>
 </div>
-</div>
-<div id="matrix" class="section level1">
-<h1><strong>Matrix</strong></h1>
+<div id="matrix" class="section level4">
+<h4><strong>Matrix</strong></h4>
 <p>Matrices are the R objects in which the elements are arranged in a
 two-dimensional rectangular layout. All columns in a matrix must have
 the same mode (numeric, character, etc.) and the same length.</p>
@@ -803,9 +804,11 @@ and columns are vectors.</p>
 ## Trial.2       4             5
 ## Trial.3       7             8
 ## Trial.4       1             2</code></pre>
+</div>
+</div>
 <div id="calculations-on-rows-or-columns-of-the-matrix"
-class="section level4">
-<h4>Calculations on rows or columns of the matrix</h4>
+class="section level3">
+<h3><strong>Calculations on rows or columns of the matrix</strong></h3>
 <pre class="r"><code># summary statistics of each column
 summary(X)</code></pre>
 <pre><code>##     Aspirin     Acetaminophen    Ibuprofen   
@@ -856,9 +859,8 @@ and column means. Here columns are margin no. 2 (rows are margin no.
 <div style="margin-bottom:15px;">
 
 </div>
-</div>
-<div id="data-frames" class="section level3">
-<h3><strong>Data Frames</strong></h3>
+<div id="data-frames" class="section level4">
+<h4><strong>Data Frames</strong></h4>
 <p>A data frame is more general than a matrix, in that different columns
 can have different modes (numeric, character, factor, etc.). This is
 similar to SAS and SPSS datasets. The rows contain different
@@ -923,8 +925,8 @@ matrix.</p>
 
 </div>
 </div>
-<div id="lists" class="section level3">
-<h3><strong>Lists</strong></h3>
+<div id="lists" class="section level4">
+<h4><strong>Lists</strong></h4>
 <p>List is a data structure having components of mixed data types or an
 ordered collection of objects (components). A vector having all elements
 of the same type is called atomic vector but a vector having elements of
@@ -976,8 +978,8 @@ or data frame:</p>
 
 </div>
 </div>
-<div id="factors" class="section level3">
-<h3><strong>Factors</strong></h3>
+<div id="factors" class="section level4">
+<h4><strong>Factors</strong></h4>
 <p>In R, the factor stores the nominal values as a vector of integers in
 the range [ 1… k ] (where k is the number of unique values in the
 nominal variable), and an internal vector of character strings (the
@@ -987,7 +989,21 @@ gender &lt;- factor(gender) # # 1=female, 2=male internally (alphabetically)
 summary(gender)</code></pre>
 <pre><code>## female   male 
 ##     30     20</code></pre>
+<div style="margin-bottom:30px;">
+
 </div>
+</div>
+</div>
+<div id="further-reading" class="section level3">
+<h3><strong>Further Reading</strong></h3>
+<ol style="list-style-type: decimal">
+<li><p><a
+href="Networkhttps://cran.r-project.org/doc/manuals/r-release/R-intro.pdf">An
+Introduction to R - The Comprehensive R Archive</a></p></li>
+<li><p><a href="https://www.w3schools.com/r/r_intro.asp">R Introduction
+- W3Schools</a></p></li>
+<li><p><a href="https://intro2r.com">An Introduction to R</a></p></li>
+</ol>
 </div>
 
 

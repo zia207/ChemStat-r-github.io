@@ -269,34 +269,31 @@ $(document).ready(function () {
       <a href="intoduction-to-use-r.html">Introduction to Using R</a>
     </li>
     <li>
-      <a href="r-data-input-and-type.html">Importing/Exporting  Data into R</a>
+      <a href="r-data-input-and-type.html">Importing/Exporting Data into R</a>
     </li>
     <li>
-      <a href="data-wrangling.html">Data Wrangling with R</a>
+      <a href="data-wrangling.html">Data Wrangling</a>
     </li>
     <li>
-      <a href="mathematics-with-r.html">Simple Mathematics with R</a>
+      <a href="eda.html">Exploratory Data Analysis</a>
     </li>
     <li>
-      <a href="basic-statistics-with-r.html">Basic Statistics with R</a>
+      <a href="stat_test.html">Statistical Test</a>
     </li>
     <li>
-      <a href="multivariate-statistics.html">Mltivariate Statistics with R</a>
+      <a href="anova.html">Analysis of Variance (ANOVA)</a>
     </li>
     <li>
-      <a href="data-visualization.html">Data Visualization with R</a>
+      <a href="correlation.html">Correlation Analysis</a>
     </li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Curve Fitting with R
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="curve-fitting-with-r.html">Table of Content</a>
+      <a href="regression.html">Regression Analysis</a>
+    </li>
+    <li>
+      <a href="stepwise-regression.html">Stepwise Regression</a>
+    </li>
+    <li>
+      <a href="non-linear-regression.html">Nonlinear Regression</a>
     </li>
   </ul>
 </li>
@@ -370,9 +367,138 @@ $(document).ready(function () {
 <div style="margin-bottom:20px;">
 
 </div>
-<p><img src="Image/PNG_FILE_03/curve_fitting.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="Image/PNG_FILE_02/non_linear.png" width="100%" style="display: block; margin: auto;" /></p>
 <div style="margin-bottom:20px;">
 
+</div>
+<div id="table-of-content" class="section level3">
+<h3><strong>Table of Content</strong></h3>
+<ul>
+<li><p><a href="#load-library">Load Library</a></p></li>
+<li><p><a href="#import-data">Import Data</a></p></li>
+<li><p><a href="#linear-regression">Linear Regression</a></p></li>
+<li><p><a href="#simple-linear-regression">Simple Linear
+Regression</a></p>
+<ul>
+<li><p><a href="#regression-plot">Regression Plot</a></p></li>
+<li><p><a href="#residuals-plot">Residuals Plot</a></p></li>
+<li><p><a href="#regression-model-diagnostic-plots">Regression Model
+Diagnostic Plots</a></p></li>
+</ul></li>
+<li><p><a href="#multiple-linear-regression-or-mlr-model">Multiple
+Linear Regression or MLR model</a></p></li>
+<li><p><a href="#regression-model-evaluation">Regression Model
+Evaluation</a></p>
+<ul>
+<li><p><a href="#model-performance-with-an-independent-data-set">Model
+Performance with an Independent Data Set</a></p>
+<ul>
+<li><p><a href="#split-data">Split Data</a></p></li>
+<li><p><a href="#training-mlr-model">Training MLR Model</a></p></li>
+<li><p><a href="#make-prediction">Make Prediction</a></p></li>
+<li><p><a href="#model-evaluation">Model Evaluation</a></p></li>
+</ul></li>
+<li><p><a href="#cross-calidation">Cross Validation</a></p>
+<ul>
+<li><p><a href="#leave-one-out-cross-validation-or-loocv">Leave One Out
+Cross Validation or LOOCV</a></p></li>
+<li><p><a href="#k-fold-cross-validation">K-fold Cross
+Validation</a></p></li>
+<li><p><a href="#repeated-k-fold-cross-validation">Repeated k-fold Cross
+Validation</a></p></li>
+</ul></li>
+</ul></li>
+<li><p><a href="#further-reading">Further Reading</a></p></li>
+</ul>
+<div style="margin-bottom:40px;">
+
+</div>
+</div>
+<div id="load-library" class="section level3">
+<h3><strong>Load Library</strong></h3>
+<p>In this exercise We will use following R-packages:</p>
+<pre class="r"><code># load library
+library(tidyverse)
+library(dlookr)
+library(moments)
+library(car)
+library(plyr)
+library(data.table)
+library(DT)
+library(Hmisc)
+library(corrplot) 
+library(corrr)
+library(gridExtra)
+library(ggExtra)
+library(BSDA)
+library(GGally)
+library(agricolae) 
+library(multcomp)
+library(multcompView)
+library(ggfortify)
+library(report)
+library(ggstatsplot)
+library(ggfortify)
+library(caret)
+library(Metrics)</code></pre>
+<div style="margin-bottom:30px;">
+
+</div>
+</div>
+<div id="import-data" class="section level3">
+<h3><strong>Import Data</strong></h3>
+<p>n this exercise, we use following data set:</p>
+<p><strong>water_soil_rice_arsenic_data.csv</strong>: Arsenic (As) data
+in irrigation water, paddy soil and and rice grain in a contaminated
+cites from Bangladesh</p>
+<p>This data set could be found <a
+href="https://www.dropbox.com/sh/ctjv2eiifhfh2ts/AAAVXmWxPntD-O-5AE_YH3VHa?dl=0">here</a>.</p>
+<p>We import this data using <strong>read_csv()</strong> from
+<strong>readr</strong> package.</p>
+<pre class="r"><code># define working directory
+dataFolder&lt;-&quot;E:/Dropbox/GitHub/chemstat-r-github.io/Data/&quot;
+df&lt;-readr::read_csv(paste0(dataFolder,&quot;water_soil_rice_arsenic_data.csv&quot;))</code></pre>
+<div style="margin-bottom:30px;">
+
+</div>
+</div>
+<div id="data-preparation" class="section level3">
+<h3><strong>Data Preparation</strong></h3>
+<p>First, we create a dataframe with rice straw As and transfer factor
+(TF, ratio grain and straw As):</p>
+<pre class="r"><code># create a data-frame
+mf&lt;-df %&gt;% dplyr::select(Straw_As, TF, Variety)</code></pre>
+<div style="margin-bottom:20px;">
+
+</div>
+<p>First, visualize the scatter plot of the Straw As vs TF variables as
+follow:</p>
+<pre class="r"><code>ggplot(mf, aes(Straw_As, TF) ) +
+  geom_point() +
+  stat_smooth()+
+    ggtitle(&quot;Straw As vs Transfer Factors&quot;)  +  
+  xlab(&quot;Straw As (mg/kg)&quot;) + ylab(&quot;Transfer Factors)&quot;) +
+  #  customized background and front size
+  theme(
+        panel.background = element_rect(fill = &quot;grey95&quot;,colour = &quot;gray75&quot;,size = 0.5, linetype = &quot;solid&quot;),
+        axis.line = element_line(colour = &quot;grey&quot;),
+        plot.title = element_text(size = 16, hjust = 0.5),
+        axis.title.x = element_text(size = 16),
+        axis.title.y = element_text(size = 16),
+        axis.text.x=element_text(size=13, colour=&quot;black&quot;),
+        axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour=&#39;black&#39;))</code></pre>
+<img src="curve-fitting-with-r_files/figure-html/Transfer%20Factor%20vs%20Straw%20As-1.png" width="432" />
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="further-reading" class="section level3">
+<h3><strong>Further Reading</strong></h3>
+<ol style="list-style-type: decimal">
+<li><a
+href="http://www.sthda.com/english/articles/40-regression-analysis/162-nonlinear-regression-essentials-in-r-polynomial-and-spline-regression-models/"
+class="uri">http://www.sthda.com/english/articles/40-regression-analysis/162-nonlinear-regression-essentials-in-r-polynomial-and-spline-regression-models/</a></li>
+</ol>
 </div>
 
 

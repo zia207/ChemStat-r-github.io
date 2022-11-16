@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>non-linear-regression.knit</title>
+
+<script src="site_libs/header-attrs-2.17/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">ChemStat-R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="getting-started-with-r.html">Getting Started with R</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Essential of The R Language
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="essential-of-r-language.html">Table of Content</a>
+    </li>
+    <li>
+      <a href="intoduction-to-use-r.html">Introduction to Using R</a>
+    </li>
+    <li>
+      <a href="r-data-input-and-type.html">Importing/Exporting Data into R</a>
+    </li>
+    <li>
+      <a href="data-wrangling.html">Data Wrangling</a>
+    </li>
+    <li>
+      <a href="eda.html">Exploratory Data Analysis</a>
+    </li>
+    <li>
+      <a href="stat_test.html">Statistical Test</a>
+    </li>
+    <li>
+      <a href="anova.html">Analysis of Variance (ANOVA)</a>
+    </li>
+    <li>
+      <a href="correlation.html">Correlation Analysis</a>
+    </li>
+    <li>
+      <a href="regression.html">Regression Analysis</a>
+    </li>
+    <li>
+      <a href="stepwise-regression.html">Stepwise Regression</a>
+    </li>
+    <li>
+      <a href="non-linear-regression.html">Nonlinear Regression</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Cheminformatics with R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="cheminformatics-with-r.html">Table of Content</a>
+    </li>
+    <li>
+      <a href="getting-strated-chem.html">Getting Started</a>
+    </li>
+    <li>
+      <a href="cheminformatics-with-chemminer.html">Cheminformatics with ChemmineR</a>
+    </li>
+    <li>
+      <a href="cheminformatics-with-cdk.html">Cheminformatics with CDK</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    ICP-MS Data Processing with R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="icp-ms-data-processing-and-analysis-with-r.html">Table of Content</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="mailto:zia207@gmail.com">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+    Email
+  </a>
+</li>
+<li>
+  <a href="http://github.com/zia207">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://www.linkedin.com/in/zia-ahmed-a7653578">
+    <span class="fa fa-linkedin fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+
+</div>
+
+
+<div style="margin-bottom:20px;">
+
+</div>
+<p><img src="Image/PNG_FILE_02/non_linear.png" width="100%" style="display: block; margin: auto;" /></p>
+<div style="margin-bottom:20px;">
+
+</div>
+<div id="table-of-content" class="section level3">
+<h3><strong>Table of Content</strong></h3>
+<ul>
+<li><p><a href="#load-library">Load Library</a></p></li>
+<li><p><a href="#import-data">Import Data</a></p></li>
+<li><p><a href="#linear-regression-model">Linear Regression
+Model</a></p></li>
+<li><p><a href="#polynomial-regression-model">Polynomial Regression
+Model</a></p></li>
+<li><p><a href="#log-transformed-model">Log Transformed
+Model</a></p></li>
+<li><p><a href="#spline-regression-model">Spline Regression
+Model</a></p></li>
+<li><p><a href="#generalized-additive-model">Generalized Additive
+Model</a></p></li>
+<li><p><a href="#three-parameter-exponential-model">Three Parameter
+Exponential Model</a></p></li>
+<li><p><a href="#further-reading">Further Reading</a></p></li>
+</ul>
+<div style="margin-bottom:40px;">
+
+</div>
+</div>
+<div id="load-library" class="section level3">
+<h3><strong>Load Library</strong></h3>
+<p>In this exercise We will use following R-packages:</p>
+<pre class="r"><code># load library
+library(tidyverse)
+library(dlookr)
+library(moments)
+library(car)
+library(plyr)
+library(data.table)
+library(DT)
+library(Hmisc)
+library(corrplot) 
+library(corrr)
+library(gridExtra)
+library(ggExtra)
+library(BSDA)
+library(GGally)
+library(agricolae) 
+library(multcomp)
+library(multcompView)
+library(ggfortify)
+library(report)
+library(ggstatsplot)
+library(ggfortify)
+library(caret)
+library(Metrics)
+library(splines2)
+library(AICcmodavg)
+library(mgcv)</code></pre>
+<div style="margin-bottom:30px;">
+
+</div>
+</div>
+<div id="import-data" class="section level3">
+<h3><strong>Import Data</strong></h3>
+<p>n this exercise, we use following data set:</p>
+<p><strong>water_soil_rice_arsenic_data.csv</strong>: Arsenic (As) data
+in irrigation water, paddy soil and and rice grain in a contaminated
+cites from Bangladesh</p>
+<p>This data set could be found <a
+href="https://www.dropbox.com/sh/ctjv2eiifhfh2ts/AAAVXmWxPntD-O-5AE_YH3VHa?dl=0">here</a>.</p>
+<p>We import this data using <strong>read_csv()</strong> from
+<strong>readr</strong> package.</p>
+<pre class="r"><code># define working directory
+dataFolder&lt;-&quot;E:/Dropbox/GitHub/chemstat-r-github.io/Data/&quot;
+df&lt;-readr::read_csv(paste0(dataFolder,&quot;water_soil_rice_arsenic_data.csv&quot;))</code></pre>
+<div style="margin-bottom:30px;">
+
+</div>
+</div>
+<div id="data-preparation" class="section level3">
+<h3><strong>Data Preparation</strong></h3>
+<p>First, we create a dataframe with rice straw As and transfer factor
+(TF, ratio grain and straw As). We will model TF with rice straw As with
+different types of nonlinear models.</p>
+<pre class="r"><code># create a data-frame
+mf&lt;-df %&gt;% dplyr::select(Straw_As, TF, Variety)
+# Split data
+tr_prop = 0.80
+# training data (80% data)
+train.df = plyr::ddply(mf, .(Variety),
+                 function(., seed) { set.seed(seed); .[sample(1:nrow(.), trunc(nrow(.) * tr_prop)), ] }, seed = 101)
+test.df = plyr::ddply(mf,  .(Variety), 
+            function(., seed) { set.seed(seed); .[-sample(1:nrow(.), trunc(nrow(.) * tr_prop)), ] }, seed = 101)</code></pre>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="linear-regression-model" class="section level3">
+<h3><strong>Linear Regression Model</strong></h3>
+<p>Fist we we develop a standard linear regression model equation that
+can be written as TF = b0 + b1*Straw_As.</p>
+<pre class="r"><code># Build the model
+model.ln &lt;- lm(TF~ Straw_As, data = train.df)
+# Make predictions
+pred.ln &lt;- model.ln %&gt;% predict(test.df)
+# Model performance
+data.frame(
+  RMSE = RMSE(pred.ln, test.df$TF),
+  R2 = R2(pred.ln, test.df$TF)
+)</code></pre>
+<pre><code>##         RMSE        R2
+## 1 0.01193911 0.4810897</code></pre>
+<p>Visualize the data:</p>
+<pre class="r"><code>ggplot(train.df, aes(Straw_As, TF)) +
+  geom_point() +
+  stat_smooth(method = lm, formula = y ~ x)+
+  ggtitle(&quot;Linear Model: Straw As vs Transfer Factors&quot;)  +  
+  xlab(&quot;Straw As (mg/kg)&quot;) + ylab(&quot;Transfer Factors)&quot;) +
+  #  customized background and front size
+  theme(
+        panel.background = element_rect(fill = &quot;grey95&quot;,colour = &quot;gray75&quot;,size = 0.5, linetype = &quot;solid&quot;),
+        axis.line = element_line(colour = &quot;grey&quot;),
+        plot.title = element_text(size = 16, hjust = 0.5),
+        axis.title.x = element_text(size = 16),
+        axis.title.y = element_text(size = 16),
+        axis.text.x=element_text(size=13, colour=&quot;black&quot;),
+        axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour=&#39;black&#39;))</code></pre>
+<p><img src="non-linear-regression_files/figure-html/Linear%20Pot-1.png" width="432" /></p>
+<p>From above plot, it looks like the relationship between TF and Straw
+As is a non-linear. We can visualize this relationship without
+<strong>lm</strong> function in stat_smooth() object. The resulted
+scatter plot suggests a non-linear relationship between the these two
+variables</p>
+<p>Visualize the data:</p>
+<pre class="r"><code>ggplot(train.df, aes(Straw_As, TF) ) +
+  geom_point() +
+  stat_smooth()+
+    ggtitle(&quot;Straw As vs Transfer Factors&quot;)  +  
+  xlab(&quot;Straw As (mg/kg)&quot;) + ylab(&quot;Transfer Factors)&quot;) +
+  #  customized background and front size
+  theme(
+        panel.background = element_rect(fill = &quot;grey95&quot;,colour = &quot;gray75&quot;,size = 0.5, linetype = &quot;solid&quot;),
+        axis.line = element_line(colour = &quot;grey&quot;),
+        plot.title = element_text(size = 16, hjust = 0.5),
+        axis.title.x = element_text(size = 16),
+        axis.title.y = element_text(size = 16),
+        axis.text.x=element_text(size=13, colour=&quot;black&quot;),
+        axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour=&#39;black&#39;))</code></pre>
+<img src="non-linear-regression_files/figure-html/Transfer%20Factor%20vs%20Straw%20As-1.png" width="432" />
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="polynomial-regression-model" class="section level3">
+<h3><strong>Polynomial Regression Model</strong></h3>
+<p>Polynomial regression is a form of non-linear regression analysis in
+which the relationship between the independent variable x and the
+dependent variable y is modelled as an nth degree polynomial in x.</p>
+<p>In general, we can model the expected value of y as an nth degree
+polynomial, yielding the general polynomial regression model</p>
+<p><img src="Image/PNG_FILE_02/poly_model.png" width="120%" style="display: block; margin: auto auto auto 0;" /></p>
+<div style="margin-bottom:20px;">
+
+</div>
+<p>The polynomial regression with 6th order can be computed in R as
+follow:</p>
+<pre class="r"><code>lm(TF ~ poly(Straw_As, 6, raw = TRUE), data = train.df) %&gt;%
+  summary()</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = TF ~ poly(Straw_As, 6, raw = TRUE), data = train.df)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.026086 -0.006930 -0.001616  0.004027  0.096789 
+## 
+## Coefficients:
+##                                  Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                     1.300e-01  1.327e-02   9.796  &lt; 2e-16 ***
+## poly(Straw_As, 6, raw = TRUE)1 -3.516e-02  9.594e-03  -3.664 0.000317 ***
+## poly(Straw_As, 6, raw = TRUE)2  6.067e-03  2.383e-03   2.546 0.011656 *  
+## poly(Straw_As, 6, raw = TRUE)3 -5.703e-04  2.699e-04  -2.113 0.035812 *  
+## poly(Straw_As, 6, raw = TRUE)4  2.832e-05  1.512e-05   1.873 0.062541 .  
+## poly(Straw_As, 6, raw = TRUE)5 -6.951e-07  4.052e-07  -1.715 0.087817 .  
+## poly(Straw_As, 6, raw = TRUE)6  6.616e-09  4.121e-09   1.605 0.110021    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.01327 on 201 degrees of freedom
+## Multiple R-squared:  0.5581, Adjusted R-squared:  0.5449 
+## F-statistic: 42.32 on 6 and 201 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>From the output above, it can be seen that polynomial terms beyond
+the 3rd order are not significant. So, just create a 3rd polynomial
+regression model as follow:</p>
+<pre class="r"><code># Build the model
+model.poly &lt;- lm(TF ~ poly(Straw_As, 3, raw = TRUE), data = train.df)
+# Make predictions
+pred.poly &lt;- model.poly %&gt;% predict(test.df)
+# Model performance
+data.frame(
+  RMSE = RMSE(pred.poly, test.df$TF),
+  R2 = R2(pred.poly, test.df$TF)
+)</code></pre>
+<pre><code>##         RMSE       R2
+## 1 0.01031963 0.614937</code></pre>
+<p>Visualize the data:</p>
+<pre class="r"><code>ggplot(train.df, aes(Straw_As, TF) ) +
+  geom_point() +
+  stat_smooth(method = lm, formula = y ~ poly(x, 3, raw = TRUE))+
+    ggtitle(&quot;Ploynomal Model: Straw As vs Transfer Factors&quot;)  +  
+  xlab(&quot;Straw As (mg/kg)&quot;) + ylab(&quot;Transfer Factors)&quot;) +
+  #  customized background and front size
+  theme(
+        panel.background = element_rect(fill = &quot;grey95&quot;,colour = &quot;gray75&quot;,size = 0.5, linetype = &quot;solid&quot;),
+        axis.line = element_line(colour = &quot;grey&quot;),
+        plot.title = element_text(size = 16, hjust = 0.5),
+        axis.title.x = element_text(size = 16),
+        axis.title.y = element_text(size = 16),
+        axis.text.x=element_text(size=13, colour=&quot;black&quot;),
+        axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour=&#39;black&#39;))</code></pre>
+<img src="non-linear-regression_files/figure-html/Polynomal%20Transfer%20Factor%20vs%20Straw%20As-1.png" width="432" />
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="log-transformed-model" class="section level3">
+<h3><strong>Log Transformed Model</strong></h3>
+<p>When you have a non-linear relationship, you can also try a logarithm
+transformation of the predictor variables:</p>
+<pre class="r"><code># Build the model
+model.log &lt;- lm(TF ~ log(Straw_As), data = train.df)
+# Make predictions
+pred.log &lt;- model.log %&gt;% predict(test.df)
+# Model performance
+data.frame(
+  RMSE = RMSE(pred.log, test.df$TF),
+  R2 = R2(pred.log, test.df$TF)
+)</code></pre>
+<pre><code>##         RMSE        R2
+## 1 0.01035142 0.6117803</code></pre>
+<pre class="r"><code>ggplot(train.df, aes(Straw_As, TF) ) +
+  geom_point() +
+ stat_smooth(method = lm, formula = y ~ log(x))+
+    ggtitle(&quot;Log Model: Straw As vs Transfer Factors&quot;)  +  
+  xlab(&quot;Straw As (mg/kg)&quot;) + ylab(&quot;Transfer Factors)&quot;) +
+  #  customized background and front size
+  theme(
+        panel.background = element_rect(fill = &quot;grey95&quot;,colour = &quot;gray75&quot;,size = 0.5, linetype = &quot;solid&quot;),
+        axis.line = element_line(colour = &quot;grey&quot;),
+        plot.title = element_text(size = 16, hjust = 0.5),
+        axis.title.x = element_text(size = 16),
+        axis.title.y = element_text(size = 16),
+        axis.text.x=element_text(size=13, colour=&quot;black&quot;),
+        axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour=&#39;black&#39;))</code></pre>
+<img src="non-linear-regression_files/figure-html/Log%20Transfer%20Factor%20vs%20Straw%20As-1.png" width="432" />
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="spline-regression-model" class="section level3">
+<h3><strong>Spline Regression Model</strong></h3>
+<p>Somtimes polynomial regression captures a certain amount of curvature
+in a nonlinear relationship. An alternative, and often superior,
+approach to modeling nonlinear relationships is to use splines (P. Bruce
+and Bruce 2017).</p>
+<p>Splines provide a way to smoothly interpolate between fixed points,
+called <strong>knots</strong>. Polynomial regression is computed between
+knots. In other words, splines are series of polynomial segments strung
+together, joining at knots (P. Bruce and Bruce 2017).</p>
+<p>The R package <strong>splines2</strong> includes the function
+<strong>bSpline</strong> for creating a <strong>b-spline</strong> term
+in a regression model.</p>
+<p>We need to specify two parameters: the degree of the polynomial and
+the location of the <strong>knots</strong>. In our example, we’ll place
+the knots at the lower quartile, the median quartile, and the upper
+quartile:</p>
+<pre class="r"><code># Build the model
+knots &lt;- quantile(train.df$Straw_As, p = c(0.25, 0.5, 0.75))
+model.spline &lt;- lm (TF ~ bSpline(Straw_As, knots = knots), data = train.df)
+# Make predictions
+pred.spline &lt;- model.spline %&gt;% predict(test.df)
+# Model performance
+data.frame(
+  RMSE = RMSE(pred.spline, test.df$TF),
+  R2 = R2(pred.spline, test.df$TF)
+)</code></pre>
+<pre><code>##         RMSE        R2
+## 1 0.01000908 0.6349857</code></pre>
+<p>Note that, the coefficients for a spline term are not
+interpretable.</p>
+<p>Visualize the cubic spline as follow:</p>
+<pre class="r"><code>ggplot(train.df, aes(Straw_As, TF) ) +
+  geom_point() +
+ stat_smooth(method = lm, formula = y ~ splines2::bSpline(x, df = 3))+
+    ggtitle(&quot;Spline Model: Straw As vs Transfer Factors&quot;)  +  
+  xlab(&quot;Straw As (mg/kg)&quot;) + ylab(&quot;Transfer Factors)&quot;) +
+  #  customized background and front size
+  theme(
+        panel.background = element_rect(fill = &quot;grey95&quot;,colour = &quot;gray75&quot;,size = 0.5, linetype = &quot;solid&quot;),
+        axis.line = element_line(colour = &quot;grey&quot;),
+        plot.title = element_text(size = 16, hjust = 0.5),
+        axis.title.x = element_text(size = 16),
+        axis.title.y = element_text(size = 16),
+        axis.text.x=element_text(size=13, colour=&quot;black&quot;),
+        axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour=&#39;black&#39;))</code></pre>
+<img src="non-linear-regression_files/figure-html/Spline%20Transfer%20Factor%20vs%20Straw%20As-1.png" width="432" />
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="generalized-additive-model" class="section level3">
+<h3><strong>Generalized Additive Model</strong></h3>
+<p>Once you have detected a non-linear relationship in your data, the
+polynomial terms may not be flexible enough to capture the relationship,
+and spline terms require specifying the knots.</p>
+<p>Generalized additive models, or GAM, are a technique to automatically
+fit a spline regression. This can be done using the
+<strong>mgcv</strong> R package:</p>
+<pre class="r"><code># Build the model
+model.gam &lt;- gam(TF ~ s(Straw_As), data = train.df)
+# Make predictions
+pred.gam &lt;- model.gam %&gt;% predict(test.df)
+# Model performance
+data.frame(
+  RMSE = RMSE(pred.gam, test.df$TF),
+  R2 = R2(pred.gam, test.df$TF)
+)</code></pre>
+<pre><code>##         RMSE        R2
+## 1 0.01024984 0.6194859</code></pre>
+<p>Visualize the GMA as follow:</p>
+<pre class="r"><code>ggplot(train.df, aes(Straw_As, TF) ) +
+ geom_point() +
+ stat_smooth(method = gam, formula = y ~ s(x)) +
+    ggtitle(&quot;GAM Model: Straw As vs Transfer Factors&quot;)  +  
+  xlab(&quot;Straw As (mg/kg)&quot;) + ylab(&quot;Transfer Factors)&quot;) +
+  #  customized background and front size
+  theme(
+        panel.background = element_rect(fill = &quot;grey95&quot;,colour = &quot;gray75&quot;,size = 0.5, linetype = &quot;solid&quot;),
+        axis.line = element_line(colour = &quot;grey&quot;),
+        plot.title = element_text(size = 16, hjust = 0.5),
+        axis.title.x = element_text(size = 16),
+        axis.title.y = element_text(size = 16),
+        axis.text.x=element_text(size=13, colour=&quot;black&quot;),
+        axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour=&#39;black&#39;))</code></pre>
+<img src="non-linear-regression_files/figure-html/GAM%20Transfer%20Factor%20vs%20Straw%20As-1.png" width="432" />
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="three-parameter-exponential-model" class="section level3">
+<h3><strong>Three Parameter Exponential Model</strong></h3>
+<p>Finally we fit a three Parameter Asymptotic Exponential Model using
+<strong>nls()</strong> function:</p>
+<p><img src="Image/PNG_FILE_02/three_exponential.png" width="42%" style="display: block; margin: auto;" /></p>
+<div style="margin-bottom:20px;">
+
+</div>
+<pre class="r"><code>model.nls &lt;- nls(TF ~a + b * Straw_As^(-c), train.df, start = list(a = 0.15, b = 0.01, 
+    c = 0.3))
+summary(model.nls)</code></pre>
+<pre><code>## 
+## Formula: TF ~ a + b * Straw_As^(-c)
+## 
+## Parameters:
+##   Estimate Std. Error t value Pr(&gt;|t|)    
+## a -0.03113    0.02749  -1.132  0.25886    
+## b  0.13760    0.02372   5.801 2.48e-08 ***
+## c  0.32347    0.11213   2.885  0.00434 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.01304 on 205 degrees of freedom
+## 
+## Number of iterations to convergence: 5 
+## Achieved convergence tolerance: 4.159e-07</code></pre>
+<pre class="r"><code># Make predictions
+pred.nls &lt;- model.nls %&gt;% predict(test.df)
+# Model performance
+data.frame(
+  RMSE = RMSE(pred.nls, test.df$TF),
+  R2 = R2(pred.nls, test.df$TF)
+)</code></pre>
+<pre><code>##         RMSE        R2
+## 1 0.01016311 0.6227908</code></pre>
+<pre class="r"><code>xv&lt;-seq(0,28,0.2)
+yv&lt;-predict(model.nls,list(Straw_As=xv))
+
+plot(train.df$Straw_As,train.df$TF, 
+     xlab=&quot;Straw As&quot;,cex.axis=1.25,
+     ylab=&quot;Tranfer Factors&quot;,
+     ylim=c(0,0.2),
+     xlim=c(0,30),
+     main = &quot;Exponential Model: Straw As vs TF&quot;)
+lines(xv,yv, col = &quot;red&quot;, lwd=2.5, lty=1)</code></pre>
+<p><img src="non-linear-regression_files/figure-html/unnamed-chunk-6-1.png" width="432" /></p>
+</div>
+<div id="further-reading" class="section level3">
+<h3><strong>Further Reading</strong></h3>
+<ol style="list-style-type: decimal">
+<li><a
+href="http://www.sthda.com/english/articles/40-regression-analysis/162-nonlinear-regression-essentials-in-r-polynomial-and-spline-regression-models/"
+class="uri">http://www.sthda.com/english/articles/40-regression-analysis/162-nonlinear-regression-essentials-in-r-polynomial-and-spline-regression-models/</a></li>
+</ol>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

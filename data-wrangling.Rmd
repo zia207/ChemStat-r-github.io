@@ -19,11 +19,17 @@ knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_F
 
 * [Important R Packages for Data Wrangling](#important-r-rackages-for-data-wrangling)
 
-* [Data Processing with dplyr and tidyr](#data-processing-with-dplyr-tidyr)
+* [Load Packages](#load-packages)
+
+* [Import-Data](#import-data)
+
+* [Data Wrangling with dplyr and tidyr](#data-wrangling-with-dplyr-and-tidyr)
 
   - [Pipe Operator](#Pipe-Operator) 
 
-  - [Join](#jOIN)
+  - [Join](#join)
+  
+  - [Relocate-Change Column Order](#relocate-change-column-order)
 
   - [Filter](#filter)
 
@@ -35,7 +41,11 @@ knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_F
 
   - [Combined multiple functions with Pipes](#combined-multiple-functions-with-pipes)
 
-  - [Pivoting dataframe](#pivoting-dataframe)
+  - [Pivoting Dataframe](#pivoting-dataframe)
+  
+    - [Wider Dataframe](#wider-dataframe)
+  
+    - [Longer Datafarme](#longer-datafarme)
 
   - [Mutate]((#mutate))
 
@@ -44,6 +54,24 @@ knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_F
   - [Group by](#group-by)
   
 * [Cleaning a Messy Data](#cleaning-a-messy-data) 
+
+  - [Load Data](#load-data)
+
+  - [Create a Dataframe](#create-a-dataframe)
+
+  - [Filter Out the Data with NS](#filter-out-the-data-withn-ns)
+
+  - [Convert ND to Empty String](#convert-nd-to-empty-string)
+
+  - [Remove Spacial Characters and Convert Data to Double](#remove-spacial-characters-and-convert-data-to-double)
+
+  - [Replace the Values Below Detection Limits](#replace-the-values-below-detection-limits)
+
+  - [Check Missing Values](#check-missing-values)
+
+  - [Replace Missing Values](#replace-missing-values)
+
+  - [Impute Missing Values](#impute-missing-values)
 
 * [Further Reading](#further-reading)
 
@@ -72,14 +100,11 @@ Here below [6 steps data wrangling](https://favtutor.com/blogs/data-wrangling):
 <div style="margin-bottom:20px;">
 </div>
 
-```{r echo=FALSE, out.width='100%', fig.align="center"}
+```{r echo=FALSE, out.width='60%', fig.align="center"}
 knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\data_wrangling_background.png")
 ```
-
 <div style="margin-bottom:20px;">
 </div>
-
-
 
 
 ## **Important R Packages for Data Wrangling**
@@ -114,7 +139,37 @@ knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_F
 <div style="margin-bottom:20px;">
 </div>
 
-## **Data Processing with dplyr and tidyr**
+
+### **Load Packages**
+ 
+```{r Load Packages, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(data.table)
+library(DT)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+###  **Import Data**
+
+In this exercise  we will use two data sets: USA county level lung cancer mortality rates with risk factors from 1998 t0 2012 and USA  County FIPS Codes. All data set use in this exercise could be found [here](https://www.dropbox.com/sh/ctjv2eiifhfh2ts/AAAVXmWxPntD-O-5AE_YH3VHa?dl=0). 
+
+We will use **read_csv()** function of **readr** package to import data as a **Tidy** data.
+
+
+```{r Load Data-1, message=FALSE, warning=FALSE}
+## Create a data folder
+dataFolder<-"E:/Dropbox/GitHub/chemstat-r-github.io/Data/"
+df<-read_csv(paste0(dataFolder,"LBC_data.csv"))
+fips<-read_csv(paste0(dataFolder, "US_FIPS.csv"))
+regions<-read_csv(paste0(dataFolder, "US_regions.csv"))
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+## **Data Wrangling with dplyr and tidyr**
 
  
 The **dplyr**  and **tidyr** are the most commonly use data manipulation packages, providing a set of functions that help us solve the most common data manipulation challenges. These are:
@@ -141,60 +196,29 @@ Here below data Wrangling with [dplyr and tidyr Cheat Sheets](https://www.rstudi
 <div style="margin-bottom:20px;">
 </div>
 
-```{r echo=FALSE, out.width='100%', fig.align="center"}
+```{r echo=FALSE, out.width='90%', fig.align="center"}
 knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\data_wragling cheat_sheet_01.png")
 ```
 
 
-```{r echo=FALSE, out.width='100%', fig.align="center"}
+```{r echo=FALSE, out.width='90%', fig.align="center"}
 knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\data_wragling cheat_sheet_02.png")
-```
-<div style="margin-bottom:20px;">
-</div>
-
-
- 
-### **Load Package**
- 
-```{r message=FALSE, warning=FALSE}
-library(tidyverse)
-library(data.table)
-library(DT)
-#require(plyr)
-# library(dplyr)
-# library(readr)
-```
-<div style="margin-bottom:20px;">
-</div>
-
-
-###  **Load data**
-
-In this exercise  we will use two data sets: USA county level lung cancer mortality rates with risk factors from 1998 t0 2012 and USA  County FIPS Codes. We will use **read_csv()** function of **readr** package to import data a **Tidy** data. 
-
-
-```{r message=FALSE, warning=FALSE}
-## Create a data folder
-dataFolder<-"E:/Dropbox/GitHub/chemstat-r-github.io/Data/"
-df<-read_csv(paste0(dataFolder,"LBC_data.csv"))
-fips<-read_csv(paste0(dataFolder, "US_FIPS.csv"))
-regions<-read_csv(paste0(dataFolder, "US_regions.csv"))
 ```
 <div style="margin-bottom:20px;">
 </div>
 
 We examine structure of the data: 
 
-```{r}
+```{r Sturcture of Data, message=FALSE, warning=FALSE}
 str(df); 
 ```
 <div style="margin-bottom:20px;">
 </div>
 
-take a **glimpse** of the df dataset:
+take a **glimpse** of the dataset:
 
-```{r}
-glimpse(df)
+```{r Get a glimpse of data, message=FALSE, warning=FALSE}
+dplyr::glimpse(df)
 ```
 
 
@@ -203,13 +227,12 @@ glimpse(df)
 
 Before starting this tutorial, I like to brief you about the **Pipe Operator**. This is the most important operator for data wrangling in R. The pipe operator, written as **%>%**, has been a longstanding feature of the **magrittr** package for R.  It takes the output of one function and passes it into another function as an argument. This allows us to link a sequence of analysis steps.  In this tutorial,  you can see exactly how this works in a real example.  (Source:https://towardsdatascience.com/an-introduction-to-the-pipe-in-r-823090760d64)  
 
-#
-## **Join**
+### **Join**
 
 In R we use **base::merge()** function to merge two dataframes. This function is present inside **join()** function of dplyr package. The most important condition for joining two dataframes is that the column type should be the same of “key” variable by  the merging happens. Types of **base::merge()** and **join()** function of dplyr available in R are:
 
 
-```{r echo=FALSE, out.width='100%', fig.align="center"}
+```{r echo=FALSE, out.width='80%', fig.align="left"}
 knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\join_functions.png")
 ```
 <div style="margin-bottom:20px;">
@@ -221,28 +244,30 @@ The advantages of the specific dplyr verbs is that they It automatic identify th
 
 First we will join fips and regions file using *inner_join*()* and then join df files. 
 
-```{r}
-fips_df = inner_join(fips, regions)
+```{r Inner Join-1, message=FALSE, warning=FALSE}
+fips_df = dplyr::inner_join(fips, regions)
 head(fips_df)
 ```
 
-```{r}
-mf = inner_join(fips_df, df)
+```{r Inner Join-2, message=FALSE, warning=FALSE}
+mf = dplyr::inner_join(fips_df, df)
 head(mf)
 ```
 
+### **Relocate-Change Column Order**
 
 Now we will move  REGION, DIVISION column after FIPS for organizing the columns in the following order: 
+
 FIPS, REGION, DIVISION,  STATE, COUNTY, X, Y, Year, SMOKING, POVERTY, PM25, NO2, SO2, LBC_RATE.  We will use **relocate()** function: 
 
-```{r}
-mf<-relocate(mf, REGION,   DIVISION, .after = FIPS)
+```{r Change column order}
+mf<-dplyr::relocate(mf, REGION,   DIVISION, .after = FIPS)
 head(mf)
 ```
 
 Now explore regions names with **levels()**
 
-```{r}
+```{r Factor levels, message=FALSE, warning=FALSE}
 levels(as.factor(mf$REGION))
 ```
 <div style="margin-bottom:20px;">
@@ -266,15 +291,15 @@ There are many functions and operators that are useful when constructing the exp
 
 We will use **filter()**  to extract data only for northeast (single criteria)
 
-```{r}
-mf.northeast<-mf %>% filter(REGION == "Northeast")
+```{r Filter Data-0, message=FALSE, warning=FALSE}
+mf.northeast<-mf %>% dplyr::filter(REGION == "Northeast")
 levels(as.factor(mf.northeast$REGION))
 ```
 
 
 Filtering by multiple criteria within a single logical expression - select both Northeast and Midwest
 
-```{r}
+```{r Filter Data-1, message=FALSE, warning=FALSE}
 mf.north_mid_01<- mf %>% filter(REGION %in%c("Northeast","Midwest"))
 levels(as.factor(mf.north_mid_01$REGION))
 ```
@@ -282,45 +307,45 @@ levels(as.factor(mf.north_mid_01$REGION))
 
 or we can use  **|** which represents **OR** in the logical condition, any of the two conditions.
 
-```{r}
-mf.north_mid_02<- mf %>% filter(REGION == "Northeast" | REGION == "Midwest")
+```{r Filter Data-2, warning=FALSE}
+mf.north_mid_02<- mf %>% dplyr::filter(REGION == "Northeast" | REGION == "Midwest")
 levels(as.factor(mf.north_mid_02$REGION))
 ```
 
 
 Following filter create a  files for the Northeast region only with NY state. 
 
-```{r}
-mf.ny<-mf %>% filter(REGION == "Northeast" & STATE == "New York")
+```{r Filter Data, message=FALSE, warning=FALSE}
+mf.ny<-mf %>% dplyr::filter(REGION == "Northeast" & STATE == "New York")
 ```
 
 
 Following filters will select counties rows where `LBC_RATE` is greater than the global average of LBC - rate:
 
-```{r}
-mean.LBC <- mf %>% filter(LBC_RATE > mean(LBC_RATE, na.rm = TRUE))
+```{r Filter Data-3, message=FALSE, warning=FALSE}
+mean.LBC <- mf %>% dplyr::filter(LBC_RATE > mean(LBC_RATE, na.rm = TRUE))
 ```
 
 
 We will **&** in the following filters to  select counties or rows where `LBC_RATE` is greater than the global average of for the year 2012
 
-```{r}
-mean.LBC.2012 <- mf %>% filter(LBC_RATE > mean(LBC_RATE, na.rm = TRUE) & Year ==2012)
+```{r Fliter Data, message=FALSE, warning=FALSE}
+mean.LBC.2012 <- mf %>% dplyr::filter(LBC_RATE > mean(LBC_RATE, na.rm = TRUE) & Year ==2012)
 ```
 
 
 Following command will select counties start with "A". filter() with **grepl()** is used to search for pattern matching.
 
 
-```{r}
-counties.a <- mf %>% filter(grepl("^A", COUNTY))
+```{r Filter Data-4, message=FALSE, warning=FALSE}
+counties.a <- mf %>% dplyr::filter(grepl("^A", COUNTY))
 head(counties.a)
 ```
 <div style="margin-bottom:20px;">
 </div>
 
 
-### **select**
+### **Select**
 
 
 **dplyr** selections implement a dialect of R where operators make it easy to select variable
@@ -334,45 +359,43 @@ head(counties.a)
 * **c()** for combining selections.
 
 
-#### Selecting Variables (or Columns)
-
 Following will create a dataframe with FIPS, Year and LBC rate
 
-```{r}
-LBC.df <- mf %>% select(FIPS, Year, LBC_RATE)
+```{r Select variable-1, message=FALSE, warning=FALSE}
+LBC.df <- mf %>% dplyr::select(FIPS, Year, LBC_RATE)
 head(LBC.df)
 ```
 
 Following will create a dataframe with FIPS, Year all risk factors (SMOKING, POVERTY, PM25, NO2, SO2)
 
-```{r}
-riskfactors.df <- mf %>%  select(FIPS, Year, SMOKING:SO2)
+```{r Select Variables-2, message=FALSE, warning=FALSE}
+riskfactors.df <- mf %>% dplyr::select(FIPS, Year, SMOKING:SO2)
 head(riskfactors.df)
 ```
 
 Following command will give same output.  The minus sign before a variable tells R to drop the variable or variables.  **-(REGION:Y)**, **-LBC_RATE**   will drop these columns: REGION, DIVISION, STATE,  COUNTY, X, Y and LBC_RATE.
 
-```{r}
-riskfactors_01.df= mf %>% select(-(REGION:Y), -LBC_RATE)
+```{r Select Variable-3, message=FALSE, warning=FALSE}
+riskfactors_01.df= mf %>% dplyr::select(-(REGION:Y), -LBC_RATE)
 head(riskfactors_01.df)
 ```
 
 The following functions helps you to select variables based on their names.
 
-```{r echo=FALSE, out.width='80%', fig.align="center"}
+```{r echo=FALSE, out.width='40%', fig.align="left"}
 knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\select.png")
 ```
 <div style="margin-bottom:20px;">
 </div>
 
-#### **Rename**
+### **Rename**
 
 The rename function can be used to rename variables.
 
 
-```{r}
+```{r Rename column, message=FALSE, warning=FALSE}
 mf.new <- mf %>% 
-        rename("LBC_Mortality_Rate" = "LBC_RATE")
+        dplyr::rename("LBC_Mortality_Rate" = "LBC_RATE")
 names(mf.new)
 ```
 <div style="margin-bottom:20px;">
@@ -385,50 +408,50 @@ names(mf.new)
 **arrange()** orders the rows of a data frame by the values of selected columns.
 
 
-```{r}
+```{r Arrange accending, message=FALSE, warning=FALSE}
 # arrange ascending order as default
-mf.arrange.ac<- mf %>% arrange(SMOKING) 
+mf.arrange.ac<- mf %>% dplyr::arrange(SMOKING) 
 head(mf.arrange.ac$SMOKING)
 ```
 
-```{r}
+```{r Arrange decending}
 # arrange descending order
-mf.arrange.de<- mf %>% arrange(desc(SMOKING)) 
+mf.arrange.de<- mf %>% dplyr::arrange(desc(SMOKING)) 
 head(mf.arrange.de$SMOKING)
 ```
 
 
-### **Combined multiple functions with Pipes**
+### **Combined Multiple Functions with Pipes**
 
 In this exercise will use **select()**,  *filter()* and **rename()** in a single commands with **%>%**. First we select data FIPS, SATE, LBC rate and then filter out the data NY state data for the year 2012 and then rename LBC_RATE column.  
 
 
-```{r}
-LBC.NY <- mf %>% select(FIPS, Year, STATE, LBC_RATE) %>%
-                 filter (STATE=="New York", Year == 2012)  %>%
-                 rename("LBC Mortality Rate"= LBC_RATE)
+```{r Combined multiple functions with Pipes, message=FALSE, warning=FALSE}
+LBC.NY <- mf %>% dplyr::select(FIPS, Year, STATE, LBC_RATE) %>%
+                 dplyr::filter (STATE=="New York", Year == 2012)  %>%
+                 dplyr::rename("LBC Mortality Rate"= LBC_RATE)
                  
 head(LBC.NY)        
 ```
 
-### **Pivoting dataframe**
+### **Pivoting Dataframe**
 
-**pivot_longer()** and **pivot_wider()** are very flexible, and can easily tidy a wide variety of non-tidy datasets
+**pivot_longer()** and **pivot_wider()** from  **tidyr** package are very flexible, and can easily tidy a wide variety of non-tidy datasets. 
 
 
-#### **pivot_wider**
+#### **Wider Dataframe**
 
 pivot_wider() convert  a dataset wider by increasing the number of columns and decreasing the number of rows.
 
 
-```{r}
-LBC.wider<- mf %>% select (FIPS, Year, STATE, COUNTY, LBC_RATE) %>%
-                  pivot_wider(names_from = Year, # column need to be wider
+```{r Wider dataframe, message=FALSE, warning=FALSE}
+LBC.wider<- mf %>% dplyr::select (FIPS, Year, STATE, COUNTY, LBC_RATE) %>%
+                   tidyr::pivot_wider(names_from = Year, # column need to be wider
                               values_from = LBC_RATE) # data
 str(LBC.wider)
 ```
 
-#### **pivot_longer**
+#### **Longer Datafarme**
 
 
 The pivot_longer() function can be used to pivot a data frame from a wide format to a long format.
@@ -437,9 +460,9 @@ The pivot_longer() function can be used to pivot a data frame from a wide format
 names(LBC.wider)
 ```
 
-```{r}
+```{r Longer Dataframe, message=FALSE, warning=FALSE}
 LBC.longer<- LBC.wider %>% 
-              pivot_longer(cols= c("1998", "1999", "2000", "2001", "2002",
+              tidyr::pivot_longer(cols= c("1998", "1999", "2000", "2001", "2002",
                                     "2003", "2004", "2005", "2006", "2007",
                                     "2008", "2009", "2010", "2011", "2012"),
                           names_to = "Year", # column need to be wider
@@ -454,8 +477,8 @@ str(LBC.longer)
 
 **mutate()** – adds new variables while retaining old variables to a data frame. In this exerciser, we will add log10 of LBC rate to mf data-frame. 
 
-```{r}
-mf.new<- mf %>% mutate(logLBC = log10(LBC_RATE))
+```{r Mutate-1, message=FALSE, warning=FALSE}
+mf.new<- mf %>% dplyr::mutate(logLBC = log10(LBC_RATE))
 head(mf.new[9:15])
 ```
 
@@ -463,12 +486,12 @@ head(mf.new[9:15])
 Below series of codes, will create a wider datafrme of LBC mortality rate than  add three additional columns, such as Mean, Median and SD which are represents yearly (1998-2012) mean, median and standard deviation of  LBC mortality rates. Before **mutate()** we use **rowwise()** function which  allows us to compute on a dataframe a row-at-a-time, in our cases all 3107 counties. 
 
 
-```{r}
-LBC.wider.summary<- mf %>% select (FIPS, Year, STATE, COUNTY, LBC_RATE) %>%
-                  pivot_wider(names_from = Year, # column need to be wider
+```{r Mutate-2, message=FALSE, warning=FALSE}
+LBC.wider.summary<- mf %>% dplyr::select (FIPS, Year, STATE, COUNTY, LBC_RATE) %>%
+                  tidyr::pivot_wider(names_from = Year, # column need to be wider
                   values_from = LBC_RATE) %>%
                   rowwise() %>%
-                  mutate(Mean = mean(c_across(4:18)),
+                  dplyr::mutate(Mean = mean(c_across(4:18)),
                          Median= median(c_across(4:18)),
                          SD= sd(c_across(4:18))) # calculates the median 
 head(LBC.wider.summary)
@@ -497,11 +520,11 @@ head(LBC.wider.summary)
 * **Logical**: any(), all()
 
 
-```{r}
+```{r Summarise Data-1, message=FALSE, warning=FALSE}
 # mean
-summarise(mf, Mean=mean(LBC_RATE))
+dplyr::summarise(mf, Mean=mean(LBC_RATE))
 # median
-summarise(mf, Median=median(LBC_RATE))
+dplyr::summarise(mf, Median=median(LBC_RATE))
 ```
 <div style="margin-bottom:20px;">
 </div>
@@ -518,15 +541,15 @@ The **scoped variants (_if, _at, _all)** of summarise() make it easy to apply th
 
 Following series of codes create a **datatable** of summary statistics of LBC_RATE, SMOKING, POVERTY, PM25, NO2, SO2 variables. 
 
-```{r}
+```{r Summary statistics, message=FALSE, warning=FALSE}
 
 summary_statistics <- mf %>% 
   # First select  numerical columns
-  select(LBC_RATE, SMOKING, POVERTY, PM25, NO2, SO2) %>%
+  dplyr::select(LBC_RATE, SMOKING, POVERTY, PM25, NO2, SO2) %>%
   # rename LBC_rate to LBC
   dplyr::rename("LBC"= LBC_RATE) %>%
   # get summary statistics
-   summarise_all(funs(min = min, 
+  dplyr::summarise_all(funs(min = min, 
                       q25 = quantile(., 0.25), 
                       median = median, 
                       q75 = quantile(., 0.75), 
@@ -534,14 +557,14 @@ summary_statistics <- mf %>%
                       mean = mean, 
                       sd = sd)) %>% 
 # create a nice looking table
-  pivot_longer(everything(), names_sep = "_", names_to = c( "variable", ".value"))
+  tidyr::pivot_longer(everything(), names_sep = "_", names_to = c( "variable", ".value"))
 
 ```
 
 We can visualize the summary_statistics using **datatable()** function of **DT** package DT which provides an R interface to the JavaScript library DataTables.   *datatable()** creates an HTML widget to display R data objects with DataTables.  
 
 ```{r}
-datatable(as.data.frame(summary_statistics), 
+DT::datatable(as.data.frame(summary_statistics), 
           rownames = T, options = list(pageLength = 10, scrollX = TRUE, round)) %>%
   formatRound(columns = 2:8, digits = 3)
 ```
@@ -551,10 +574,10 @@ datatable(as.data.frame(summary_statistics),
 Now, we can apply the **group_by()** and **summarize()** functions to calculate mean all variables  by States:
 
 
-```{r}
+```{r Group by Summary data, message=FALSE, warning=FALSE}
 state.mf<-mf %>% 
-  group_by(STATE) %>%
-  summarize(LBC_RATE = mean(LBC_RATE),
+  dplyr::group_by(STATE) %>%
+  dplyr::summarize(LBC_RATE = mean(LBC_RATE),
             SMOKING = mean(SMOKING),
             POVERTY = mean(POVERTY),
             PM25 = mean(PM25),
@@ -564,42 +587,48 @@ state.mf<-mf %>%
 
 
 ```{r}
-datatable(as.data.frame(state.mf), 
+DT::datatable(as.data.frame(state.mf), 
           rownames = T, options = list(pageLength = 10, scrollX = TRUE, round)) %>%
   formatRound(columns = 2:7, digits = 3)
 ```
 <div style="margin-bottom:30px;">
 </div>
 
-## **Cleaning a Messy Data**   
+### **Cleaning a Messy Data**   
 
 In this exercise you will learn how a clean data and make it ready for analysis, such as dealing with missing values, data with below detection limit and cleaning spatial characters. We will use data from United States Geological Survey (USGS) as a part of the USGS Geochemical Landscapes Project [(Smith et al., 2011)](https://pubs.usgs.gov/ds/801/).
 
-#### Load the data 
+<div style="margin-bottom:20px;">
+</div>
 
-```{r message=FALSE, warning=FALSE}
+#### **Load Data** 
+
+```{r Load Data-2, message=FALSE, warning=FALSE}
 ## Create a data folder
 dataFolder<-"E:/Dropbox/GitHub/chemstat-r-github.io/Data/"
 df.geo<-read_csv(paste0(dataFolder,"usa_geochemical.csv"))
 meta.geo<-read_csv(paste0(dataFolder,"usa_geochemical_meta_data.csv"))
 ```
 
-```{r}
-glimpse(df.geo)
+```{r Glimpse Data-2, message=FALSE, warning=FALSE}
+dplyr::glimpse(df.geo)
 ```
 
-```{r}
+```{r Glimpse Data, message=FALSE, warning=FALSE}
 glimpse(meta.geo)
 ```
+<div style="margin-bottom:20px;">
+</div>
 
+#### **Create a Dataframe**
 
 We first create a file with limited number of variables using **select** functions
 
 
-```{r}
+```{r Create a Datafarme}
 mf.geo <- df.geo %>%
-      select(A_LabID, StateID,  LandCover1, A_Depth, A_C_Tot, A_C_Inorg, A_C_Org, A_As, A_Cd,  A_Pb, A_Cr) %>%
-      rename("LAB_ID"=A_LabID,
+      dplyr::select(A_LabID, StateID,  LandCover1, A_Depth, A_C_Tot, A_C_Inorg, A_C_Org, A_As, A_Cd,  A_Pb, A_Cr) %>%
+      dplyr::rename("LAB_ID"=A_LabID,
              "LandCover" =LandCover1,
              "Soil_depth" = A_Depth,
              "Total_Carbon" = A_C_Tot,
@@ -610,64 +639,80 @@ mf.geo <- df.geo %>%
              "Lead" = A_Pb,
              "Chromium" = A_Cr) %>% glimpse()
 ```
+<div style="margin-bottom:20px;">
+</div>
 
+#### **Filter Out the Data with NS**
 
-Now, we filter the data where records have N.S. values INS: 
+Now, we filter out  the data where records have N.S. values INS: 
 
-```{r}
+```{r Filter out NS, message=FALSE, warning=FALSE}
 mf.geo<- mf.geo %>% 
-        filter(Soil_depth != "N.S." & Total_Carbon !="INS")
+        dplyr::filter(Soil_depth != "N.S." & Total_Carbon !="INS")
 ```
 
+<div style="margin-bottom:20px;">
+</div>
+
+#### **Convert ND to Empty String**
 
 Then, we will convert all N.D. values to empty string: 
 
-
-```{r}
+```{r Convert ND to Empty String, message=FALSE, warning=FALSE}
 mf.geo[mf.geo=="N.D."]<- ""
 ```
+<div style="margin-bottom:20px;">
+</div>
 
-Here detection limits of As, Cd, Pb and Cr are  0.6, 0.1, 0.5, and 1 mg/kg, respectively. We will replace  the  values below detection limits by half of detection limits of these heavy-metals. Before that we have to remove **"<"** and convert the all **<chr>** to **<double>**.
+#### **Remove Spacial Characters and Convert Data to Double**
+
+We have to remove **"<"** and convert the all **<chr>** to **<double>**.
 
 
-```{r}
+```{r Remove Spacial Characters and convert data to Double, message=FALSE, warning=FALSE}
 mf.geo <- mf.geo %>%
-      mutate_at(c("Arsenic", "Cadmium", "Lead", "Chromium"), str_replace, "<", "") %>%
-      mutate_at(c(5:11), as.numeric) %>% glimpse()
+      dplyr::mutate_at(c("Arsenic", "Cadmium", "Lead", "Chromium"), str_replace, "<", "") %>%
+      dplyr::mutate_at(c(5:11), as.numeric) %>% glimpse()
 ```
+<div style="margin-bottom:20px;">
+</div>
+
+####  **Replace the Values Below Detection Limits** 
+
+Here detection limits of As, Cd, Pb and Cr are  0.6, 0.1, 0.5, and 1 mg/kg, respectively. We will replace the  values below detection limits by half of detection limits of these heavy-metals. 
 
 
-Now replace values below detection limits:
-
-
-```{r}
+```{r Replace the  values below detection , message=FALSE, warning=FALSE}
 mf.geo["Arsenic"][mf.geo["Arsenic"] == 0.6] <- 0.3
 mf.geo["Cadmium"][mf.geo["Cadmium"] == 0.1] <- 0.05
 mf.geo["Lead"][mf.geo["Lead"] == 0.5] <- 0.25
 mf.geo["Chromium"][mf.geo["Chromium"] == 1] <- 0.5
 ```
+<div style="margin-bottom:20px;">
+</div>
 
+#### **Check Missing Values**
 
 Now will check the missing values of the data:
 
-```{r}
+```{r Check Missing Values, message=FALSE, warning=FALSE}
 # counting unique, missing, and median values
-Arsenic<- mf.geo %>% summarise(N = length(Arsenic),
+Arsenic<- mf.geo %>% dplyr::summarise(N = length(Arsenic),
                  na = sum(is.na(Arsenic)),
                  Min = min(Arsenic, na.rm = TRUE),
                  Max =max(Arsenic, na.rm = TRUE))
 
-Cadmium<- mf.geo %>% summarise(N = length(Cadmium),
+Cadmium<- mf.geo %>%dplyr:: summarise(N = length(Cadmium),
                  na = sum(is.na(Cadmium)),
                  Min = min(Cadmium, na.rm = TRUE),
                  Max =max(Cadmium, na.rm = TRUE))
 
-Lead<- mf.geo %>% summarise(N = length(Lead),
+Lead<- mf.geo %>% dplyr::summarise(N = length(Lead),
                  na = sum(is.na(Lead)),
                  Min = min(Lead, na.rm = TRUE),
                  Max =max(Lead, na.rm = TRUE))
 
-Chromium<- mf.geo %>% summarise(N = length(Chromium),
+Chromium<- mf.geo %>% dplyr::summarise(N = length(Chromium),
                  na = sum(is.na(Chromium)),
                  Min = min(Chromium, na.rm = TRUE),
                  Max =max(Chromium, na.rm = TRUE),
@@ -680,30 +725,41 @@ geo.sum<- bind_rows(Arsenic, Cadmium, Lead, Chromium)
 row.names(geo.sum) <- c("Arsenic", "Cadmium", "Lead", "Chromium")
 datatable(geo.sum)
 ```
+<div style="margin-bottom:20px;">
+</div>
+
+
+#### **Replace Missing Values**
 
 One of the common method of replacing missing values  is **na.omit**. The function **na.omit()** returns the object with listwise deletion of missing values and function create new dataset without missing data.
 
 
-```{r}
+```{r Omit NA, message=FALSE, warning=FALSE}
 newdata <- na.omit(mf.geo)
 glimpse(newdata)
 ```
+<div style="margin-bottom:20px;">
+</div>
+
+
+#### **Impute Missing Values**
 
 This function delete all  records with missing values. Now newdata have only 1,167 records, since Inorg_Carbon variable has 3,690 missing values which all are omitted. 
 
 We can impute missing values in several ways. The easiest way to impute missing values is by replacing the mean values of the variable. The following  code replace missing of Arsenic, Cadmium, Lead and  Chromium with their mean values. 
 
 
-```{r}
-mf.geo.new<-mf.geo %>% mutate_at(vars(Arsenic, Cadmium, Lead, Chromium),~ifelse(is.na(.x), mean(.x, na.rm = TRUE), .x)) %>% glimpse()
+```{r Impute Missing values, message=FALSE, warning=FALSE}
+mf.geo.new<-mf.geo %>% dplyr::mutate_at(vars(Arsenic, Cadmium, Lead, Chromium),~ifelse(is.na(.x), mean(.x, na.rm = TRUE), .x)) %>% glimpse()
 ```
 
 ```{r}
-mf.geo.new %>% summarise(sum(is.na(Chromium)))
+mf.geo.new %>% dplyr::summarise(sum(is.na(Chromium)))
 ```
-
 <div style="margin-bottom:40px;">
 </div>
+
+
 
 ## **Further Reading**
 
@@ -716,6 +772,10 @@ mf.geo.new %>% summarise(sum(is.na(Chromium)))
 
 4. [PDF Data wrangling with R and RStudio](https://github.com/rstudio/webinars/blob/master/05-Data-Wrangling-with-R-and-RStudio/wrangling-webinar.pdf)
 
+5. [Data Wrangling with Tidyverse](https://hbctraining.github.io/Intro-to-R/lessons/08_intro_tidyverse.html)
+
 5. [Youtube Data Wrangling with R and the Tidyverse - Workshop](https://www.youtube.com/watch?v=CnY5Y5ANnjE)
+
+
  
  

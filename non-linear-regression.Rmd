@@ -1,0 +1,406 @@
+---
+title: ''
+---
+
+<div style="margin-bottom:20px;">
+</div>
+
+```{r echo=FALSE, out.width='100%', fig.align="center"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\non_linear.png")
+```
+
+<div style="margin-bottom:20px;">
+</div>
+
+
+
+### **Table of Content**
+
+* [Load Library](#load-library)
+
+* [Import Data](#import-data)
+
+* [Linear Regression Model](#linear-regression-model)
+
+* [Polynomial Regression Model](#polynomial-regression-model)
+
+* [Log Transformed Model](#log-transformed-model)
+
+* [Spline Regression Model](#spline-regression-model)
+
+* [Generalized Additive Model](#generalized-additive-model)
+
+* [Three Parameter Exponential Model](#three-parameter-exponential-model)
+    
+* [Further Reading](#further-reading)
+    
+
+<div style="margin-bottom:40px;">
+</div>
+
+### **Load Library**
+
+In this exercise We will use following R-packages: 
+
+```{r Load Library, message=FALSE, warning=FALSE}
+# load library
+library(tidyverse)
+library(dlookr)
+library(moments)
+library(car)
+library(plyr)
+library(data.table)
+library(DT)
+library(Hmisc)
+library(corrplot) 
+library(corrr)
+library(gridExtra)
+library(ggExtra)
+library(BSDA)
+library(GGally)
+library(agricolae) 
+library(multcomp)
+library(multcompView)
+library(ggfortify)
+library(report)
+library(ggstatsplot)
+library(ggfortify)
+library(caret)
+library(Metrics)
+library(splines2)
+library(AICcmodavg)
+library(mgcv)
+
+```
+<div style="margin-bottom:30px;">
+</div>
+
+### **Import Data** 
+
+n this exercise, we use following data set:
+
+
+**water_soil_rice_arsenic_data.csv**: Arsenic (As) data in irrigation water, paddy soil and and rice grain  in a contaminated cites from Bangladesh 
+
+This data set could be found [here](https://www.dropbox.com/sh/ctjv2eiifhfh2ts/AAAVXmWxPntD-O-5AE_YH3VHa?dl=0).
+
+We import this data using **read_csv()** from **readr** package.
+
+```{r Import Data, message=FALSE, warning=FALSE}
+# define working directory
+dataFolder<-"E:/Dropbox/GitHub/chemstat-r-github.io/Data/"
+df<-readr::read_csv(paste0(dataFolder,"water_soil_rice_arsenic_data.csv"))
+```
+<div style="margin-bottom:30px;">
+</div>
+
+### **Data Preparation**
+
+First, we create a dataframe  with rice straw As and transfer factor (TF, ratio grain and straw As). We  will model TF with rice straw As with different types of nonlinear models.
+
+
+```{r Fitt MLR model}
+# create a data-frame
+mf<-df %>% dplyr::select(Straw_As, TF, Variety)
+# Split data
+tr_prop = 0.80
+# training data (80% data)
+train.df = plyr::ddply(mf, .(Variety),
+                 function(., seed) { set.seed(seed); .[sample(1:nrow(.), trunc(nrow(.) * tr_prop)), ] }, seed = 101)
+test.df = plyr::ddply(mf,  .(Variety), 
+            function(., seed) { set.seed(seed); .[-sample(1:nrow(.), trunc(nrow(.) * tr_prop)), ] }, seed = 101)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+### **Linear Regression Model**
+
+Fist we we develop a standard linear regression model equation that can be written as TF = b0 + b1*Straw_As.
+
+
+```{r Linear Regression}
+# Build the model
+model.ln <- lm(TF~ Straw_As, data = train.df)
+# Make predictions
+pred.ln <- model.ln %>% predict(test.df)
+# Model performance
+data.frame(
+  RMSE = RMSE(pred.ln, test.df$TF),
+  R2 = R2(pred.ln, test.df$TF)
+)
+```
+
+
+Visualize the data:
+
+
+```{r Linear Pot, fig.height=4, fig.width=4.5, message=FALSE, warning=FALSE}
+ggplot(train.df, aes(Straw_As, TF)) +
+  geom_point() +
+  stat_smooth(method = lm, formula = y ~ x)+
+  ggtitle("Linear Model: Straw As vs Transfer Factors")  +  
+  xlab("Straw As (mg/kg)") + ylab("Transfer Factors)") +
+  #  customized background and front size
+  theme(
+        panel.background = element_rect(fill = "grey95",colour = "gray75",size = 0.5, linetype = "solid"),
+        axis.line = element_line(colour = "grey"),
+        plot.title = element_text(size = 16, hjust = 0.5),
+        axis.title.x = element_text(size = 16),
+        axis.title.y = element_text(size = 16),
+        axis.text.x=element_text(size=13, colour="black"),
+        axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour='black'))
+```
+
+
+From above  plot, it looks like the relationship between TF and Straw As is a non-linear.  We can visualize this relationship without **lm** function in stat_smooth() object. The resulted  scatter plot suggests a non-linear relationship between the these two variables
+
+Visualize the data:
+
+```{r Transfer Factor vs Straw As, fig.height=4, fig.width=4.5, message=FALSE, warning=FALSE}
+ggplot(train.df, aes(Straw_As, TF) ) +
+  geom_point() +
+  stat_smooth()+
+    ggtitle("Straw As vs Transfer Factors")  +  
+  xlab("Straw As (mg/kg)") + ylab("Transfer Factors)") +
+  #  customized background and front size
+  theme(
+        panel.background = element_rect(fill = "grey95",colour = "gray75",size = 0.5, linetype = "solid"),
+        axis.line = element_line(colour = "grey"),
+        plot.title = element_text(size = 16, hjust = 0.5),
+        axis.title.x = element_text(size = 16),
+        axis.title.y = element_text(size = 16),
+        axis.text.x=element_text(size=13, colour="black"),
+        axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour='black'))
+```
+<div style="margin-bottom:20px;">
+</div>
+
+### **Polynomial Regression Model**
+
+Polynomial regression is a form of non-linear regression analysis in which the relationship between the independent variable x and the dependent variable y is modelled as an nth degree polynomial in x. 
+
+In general, we can model the expected value of y as an nth degree polynomial, yielding the general polynomial regression model 
+
+```{r echo=FALSE, out.width='120%', fig.align="left"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\poly_model.png")
+```
+
+<div style="margin-bottom:20px;">
+</div>
+
+The polynomial regression with 6th order can be computed in R as follow: 
+
+```{r}
+lm(TF ~ poly(Straw_As, 6, raw = TRUE), data = train.df) %>%
+  summary()
+```
+
+
+From the output above, it can be seen that polynomial terms beyond the 3rd  order are not significant. So, just create a 3rd polynomial regression model as follow:
+
+
+```{r Polynomal, message=FALSE, warning=FALSE, paged.print=FALSE}
+# Build the model
+model.poly <- lm(TF ~ poly(Straw_As, 3, raw = TRUE), data = train.df)
+# Make predictions
+pred.poly <- model.poly %>% predict(test.df)
+# Model performance
+data.frame(
+  RMSE = RMSE(pred.poly, test.df$TF),
+  R2 = R2(pred.poly, test.df$TF)
+)
+```
+
+Visualize the data:
+
+```{r Polynomal Transfer Factor vs Straw As, fig.height=4, fig.width=4.5, message=FALSE, warning=FALSE}
+ggplot(train.df, aes(Straw_As, TF) ) +
+  geom_point() +
+  stat_smooth(method = lm, formula = y ~ poly(x, 3, raw = TRUE))+
+    ggtitle("Ploynomal Model: Straw As vs Transfer Factors")  +  
+  xlab("Straw As (mg/kg)") + ylab("Transfer Factors)") +
+  #  customized background and front size
+  theme(
+        panel.background = element_rect(fill = "grey95",colour = "gray75",size = 0.5, linetype = "solid"),
+        axis.line = element_line(colour = "grey"),
+        plot.title = element_text(size = 16, hjust = 0.5),
+        axis.title.x = element_text(size = 16),
+        axis.title.y = element_text(size = 16),
+        axis.text.x=element_text(size=13, colour="black"),
+        axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour='black'))
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+### **Log Transformed Model**
+
+When you have a non-linear relationship, you can also try a logarithm transformation of the predictor variables:
+
+```{r Log, message=FALSE, warning=FALSE}
+# Build the model
+model.log <- lm(TF ~ log(Straw_As), data = train.df)
+# Make predictions
+pred.log <- model.log %>% predict(test.df)
+# Model performance
+data.frame(
+  RMSE = RMSE(pred.log, test.df$TF),
+  R2 = R2(pred.log, test.df$TF)
+)
+```
+
+```{r Log Transfer Factor vs Straw As, fig.height=4, fig.width=4.5, message=FALSE, warning=FALSE}
+ggplot(train.df, aes(Straw_As, TF) ) +
+  geom_point() +
+ stat_smooth(method = lm, formula = y ~ log(x))+
+    ggtitle("Log Model: Straw As vs Transfer Factors")  +  
+  xlab("Straw As (mg/kg)") + ylab("Transfer Factors)") +
+  #  customized background and front size
+  theme(
+        panel.background = element_rect(fill = "grey95",colour = "gray75",size = 0.5, linetype = "solid"),
+        axis.line = element_line(colour = "grey"),
+        plot.title = element_text(size = 16, hjust = 0.5),
+        axis.title.x = element_text(size = 16),
+        axis.title.y = element_text(size = 16),
+        axis.text.x=element_text(size=13, colour="black"),
+        axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour='black'))
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+### **Spline Regression Model**
+
+Somtimes polynomial regression captures a certain amount of curvature in a nonlinear relationship. An alternative, and often superior, approach to modeling nonlinear relationships is to use splines (P. Bruce and Bruce 2017).
+
+Splines provide a way to smoothly interpolate between fixed points, called **knots**. Polynomial regression is computed between knots. In other words, splines are series of polynomial segments strung together, joining at knots (P. Bruce and Bruce 2017).
+
+The R package **splines2** includes the function **bSpline** for creating a **b-spline** term in a regression model.
+
+We need to specify two parameters: the degree of the polynomial and the location of the **knots**. In our example, we’ll place the knots at the lower quartile, the median quartile, and the upper quartile:
+
+
+```{r Spline Model}
+# Build the model
+knots <- quantile(train.df$Straw_As, p = c(0.25, 0.5, 0.75))
+model.spline <- lm (TF ~ bSpline(Straw_As, knots = knots), data = train.df)
+# Make predictions
+pred.spline <- model.spline %>% predict(test.df)
+# Model performance
+data.frame(
+  RMSE = RMSE(pred.spline, test.df$TF),
+  R2 = R2(pred.spline, test.df$TF)
+)
+```
+Note that, the coefficients for a spline term are not interpretable.
+
+Visualize the cubic spline as follow:
+
+
+```{r Spline Transfer Factor vs Straw As, fig.height=4, fig.width=4.5, message=FALSE, warning=FALSE}
+ggplot(train.df, aes(Straw_As, TF) ) +
+  geom_point() +
+ stat_smooth(method = lm, formula = y ~ splines2::bSpline(x, df = 3))+
+    ggtitle("Spline Model: Straw As vs Transfer Factors")  +  
+  xlab("Straw As (mg/kg)") + ylab("Transfer Factors)") +
+  #  customized background and front size
+  theme(
+        panel.background = element_rect(fill = "grey95",colour = "gray75",size = 0.5, linetype = "solid"),
+        axis.line = element_line(colour = "grey"),
+        plot.title = element_text(size = 16, hjust = 0.5),
+        axis.title.x = element_text(size = 16),
+        axis.title.y = element_text(size = 16),
+        axis.text.x=element_text(size=13, colour="black"),
+        axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour='black'))
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+### **Generalized Additive Model**
+
+Once you have detected a non-linear relationship in your data, the polynomial terms may not be flexible enough to capture the relationship, and spline terms require specifying the knots.
+
+Generalized additive models, or GAM, are a technique to automatically fit a spline regression. This can be done using the **mgcv** R package:
+
+
+```{r GAM Model, message=FALSE, warning=FALSE}
+# Build the model
+model.gam <- gam(TF ~ s(Straw_As), data = train.df)
+# Make predictions
+pred.gam <- model.gam %>% predict(test.df)
+# Model performance
+data.frame(
+  RMSE = RMSE(pred.gam, test.df$TF),
+  R2 = R2(pred.gam, test.df$TF)
+)
+```
+
+Visualize the GMA  as follow:
+
+
+```{r GAM Transfer Factor vs Straw As, fig.height=4, fig.width=4.5, message=FALSE, warning=FALSE}
+ggplot(train.df, aes(Straw_As, TF) ) +
+ geom_point() +
+ stat_smooth(method = gam, formula = y ~ s(x)) +
+    ggtitle("GAM Model: Straw As vs Transfer Factors")  +  
+  xlab("Straw As (mg/kg)") + ylab("Transfer Factors)") +
+  #  customized background and front size
+  theme(
+        panel.background = element_rect(fill = "grey95",colour = "gray75",size = 0.5, linetype = "solid"),
+        axis.line = element_line(colour = "grey"),
+        plot.title = element_text(size = 16, hjust = 0.5),
+        axis.title.x = element_text(size = 16),
+        axis.title.y = element_text(size = 16),
+        axis.text.x=element_text(size=13, colour="black"),
+        axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour='black'))
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+### **Three Parameter Exponential Model**
+
+Finally we fit a three Parameter Asymptotic Exponential Model using **nls()** function:
+
+
+```{r echo=FALSE, fig.align="center", fig.height=3, fig.width=3, out.width='42%'}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\three_exponential.png")
+```
+
+<div style="margin-bottom:20px;">
+</div>
+
+
+```{r}
+model.nls <- nls(TF ~a + b * Straw_As^(-c), train.df, start = list(a = 0.15, b = 0.01, 
+    c = 0.3))
+summary(model.nls)
+# Make predictions
+pred.nls <- model.nls %>% predict(test.df)
+# Model performance
+data.frame(
+  RMSE = RMSE(pred.nls, test.df$TF),
+  R2 = R2(pred.nls, test.df$TF)
+)
+```
+
+
+```{r fig.height=4, fig.width=4.5, paged.print=TRUE}
+xv<-seq(0,28,0.2)
+yv<-predict(model.nls,list(Straw_As=xv))
+
+plot(train.df$Straw_As,train.df$TF, 
+     xlab="Straw As",cex.axis=1.25,
+     ylab="Tranfer Factors",
+     ylim=c(0,0.2),
+     xlim=c(0,30),
+     main = "Exponential Model: Straw As vs TF")
+lines(xv,yv, col = "red", lwd=2.5, lty=1)
+
+```
+
+
+### **Further Reading**
+
+1. http://www.sthda.com/english/articles/40-regression-analysis/162-nonlinear-regression-essentials-in-r-polynomial-and-spline-regression-models/

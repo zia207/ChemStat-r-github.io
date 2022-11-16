@@ -2,13 +2,146 @@
 title: ''
 ---
 
-
 <div style="margin-bottom:20px;">
 </div>
 
 ```{r echo=FALSE, out.width='100%', fig.align="center"}
-knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_03\\curve_fitting.png")
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\non_linear.png")
 ```
 
 <div style="margin-bottom:20px;">
 </div>
+
+
+
+### **Table of Content**
+
+* [Load Library](#load-library)
+
+* [Import Data](#import-data)
+
+* [Linear Regression](#linear-regression)
+
+* [Simple Linear Regression](#simple-linear-regression)
+  
+  - [Regression Plot](#regression-plot)
+  
+  - [Residuals Plot](#residuals-plot)
+  
+  - [Regression Model Diagnostic Plots](#regression-model-diagnostic-plots)
+
+* [Multiple Linear Regression or MLR model](#multiple-linear-regression-or-mlr-model) 
+
+* [Regression Model Evaluation](#regression-model-evaluation)
+
+  - [Model Performance with an Independent Data Set](#model-performance-with-an-independent-data-set)
+
+    - [Split Data](#split-data)
+
+    - [Training MLR Model](#training-mlr-model)
+  
+    - [Make Prediction](#make-prediction)
+  
+    - [Model Evaluation](#model-evaluation)
+  
+  - [Cross Validation](#cross-calidation)
+  
+    - [Leave One Out Cross Validation or LOOCV](#leave-one-out-cross-validation-or-loocv)
+  
+    - [K-fold Cross Validation](#k-fold-cross-validation)
+  
+    - [Repeated k-fold Cross Validation](#repeated-k-fold-cross-validation)
+    
+* [Further Reading](#further-reading)
+    
+
+<div style="margin-bottom:40px;">
+</div>
+
+### **Load Library**
+
+In this exercise We will use following R-packages: 
+
+```{r Load Library, message=FALSE, warning=FALSE}
+# load library
+library(tidyverse)
+library(dlookr)
+library(moments)
+library(car)
+library(plyr)
+library(data.table)
+library(DT)
+library(Hmisc)
+library(corrplot) 
+library(corrr)
+library(gridExtra)
+library(ggExtra)
+library(BSDA)
+library(GGally)
+library(agricolae) 
+library(multcomp)
+library(multcompView)
+library(ggfortify)
+library(report)
+library(ggstatsplot)
+library(ggfortify)
+library(caret)
+library(Metrics)
+```
+<div style="margin-bottom:30px;">
+</div>
+
+### **Import Data** 
+
+n this exercise, we use following data set:
+
+
+**water_soil_rice_arsenic_data.csv**: Arsenic (As) data in irrigation water, paddy soil and and rice grain  in a contaminated cites from Bangladesh 
+
+This data set could be found [here](https://www.dropbox.com/sh/ctjv2eiifhfh2ts/AAAVXmWxPntD-O-5AE_YH3VHa?dl=0).
+
+We import this data using **read_csv()** from **readr** package.
+
+```{r Import Data, message=FALSE, warning=FALSE}
+# define working directory
+dataFolder<-"E:/Dropbox/GitHub/chemstat-r-github.io/Data/"
+df<-readr::read_csv(paste0(dataFolder,"water_soil_rice_arsenic_data.csv"))
+```
+<div style="margin-bottom:30px;">
+</div>
+
+### **Data Preparation**
+
+First, we create a dataframe  with rice straw As and transfer factor (TF, ratio grain and straw As): 
+
+```{r Fitt MLR model}
+# create a data-frame
+mf<-df %>% dplyr::select(Straw_As, TF, Variety)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+First, visualize the scatter plot of the Straw As vs TF variables as follow:
+
+```{r Transfer Factor vs Straw As, fig.height=4, fig.width=4.5, message=FALSE, warning=FALSE}
+ggplot(mf, aes(Straw_As, TF) ) +
+  geom_point() +
+  stat_smooth()+
+    ggtitle("Straw As vs Transfer Factors")  +  
+  xlab("Straw As (mg/kg)") + ylab("Transfer Factors)") +
+  #  customized background and front size
+  theme(
+        panel.background = element_rect(fill = "grey95",colour = "gray75",size = 0.5, linetype = "solid"),
+        axis.line = element_line(colour = "grey"),
+        plot.title = element_text(size = 16, hjust = 0.5),
+        axis.title.x = element_text(size = 16),
+        axis.title.y = element_text(size = 16),
+        axis.text.x=element_text(size=13, colour="black"),
+        axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour='black'))
+```
+<div style="margin-bottom:20px;">
+</div>
+
+### **Further Reading**
+
+1. http://www.sthda.com/english/articles/40-regression-analysis/162-nonlinear-regression-essentials-in-r-polynomial-and-spline-regression-models/

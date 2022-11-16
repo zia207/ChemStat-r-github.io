@@ -16,23 +16,24 @@ navbar:
       href: essential-of-r-language.html
     - text: Introduction to Using R
       href: intoduction-to-use-r.html
-    - text: Importing/Exporting  Data into R
+    - text: Importing/Exporting Data into R
       href: r-data-input-and-type.html
-    - text: Data Wrangling with R
+    - text: Data Wrangling 
       href: data-wrangling.html
-    - text: Simple Mathematics with R
-      href: mathematics-with-r.html
-    - text: Basic Statistics with R
-      href: basic-statistics-with-r.html
-    - text: Mltivariate Statistics with R
-      href: multivariate-statistics.html
-    - text: Data Visualization with R
-      href: data-visualization.html
-  - text: Curve Fitting with R 
-    href: curve-fitting-with-r.html
-    menu:
-    - text: Table of Content
-      href: curve-fitting-with-r.html
+    - text: Exploratory Data Analysis
+      href: eda.html
+    - text: Statistical Test
+      href: stat_test.html
+    - text: Analysis of Variance (ANOVA)
+      href: anova.html
+    - text: Correlation Analysis
+      href: correlation.html
+    - text: Regression Analysis
+      href: regression.html
+    - text: Stepwise Regression
+      href: stepwise-regression.html
+    - text: Nonlinear Regression
+      href: non-linear-regression.html 
   - text: Cheminformatics with R 
     href: cheminformatics-with-r.html
     menu:

@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>correlation.knit</title>
+
+<script src="site_libs/header-attrs-2.17/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">ChemStat-R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="getting-started-with-r.html">Getting Started with R</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Essential of The R Language
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="essential-of-r-language.html">Table of Content</a>
+    </li>
+    <li>
+      <a href="intoduction-to-use-r.html">Introduction to Using R</a>
+    </li>
+    <li>
+      <a href="r-data-input-and-type.html">Importing/Exporting Data into R</a>
+    </li>
+    <li>
+      <a href="data-wrangling.html">Data Wrangling</a>
+    </li>
+    <li>
+      <a href="eda.html">Exploratory Data Analysis</a>
+    </li>
+    <li>
+      <a href="stat_test.html">Statistical Test</a>
+    </li>
+    <li>
+      <a href="anova.html">Analysis of Variance (ANOVA)</a>
+    </li>
+    <li>
+      <a href="correlation.html">Correlation Analysis</a>
+    </li>
+    <li>
+      <a href="regression.html">Regression Analysis</a>
+    </li>
+    <li>
+      <a href="stepwise-regression.html">Stepwise Regression</a>
+    </li>
+    <li>
+      <a href="non-linear-regression.html">Nonlinear Regression</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Cheminformatics with R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="cheminformatics-with-r.html">Table of Content</a>
+    </li>
+    <li>
+      <a href="getting-strated-chem.html">Getting Started</a>
+    </li>
+    <li>
+      <a href="cheminformatics-with-chemminer.html">Cheminformatics with ChemmineR</a>
+    </li>
+    <li>
+      <a href="cheminformatics-with-cdk.html">Cheminformatics with CDK</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    ICP-MS Data Processing with R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="icp-ms-data-processing-and-analysis-with-r.html">Table of Content</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="mailto:zia207@gmail.com">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+    Email
+  </a>
+</li>
+<li>
+  <a href="http://github.com/zia207">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://www.linkedin.com/in/zia-ahmed-a7653578">
+    <span class="fa fa-linkedin fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+
+</div>
+
+
+<div style="margin-bottom:20px;">
+
+</div>
+<img src="Image/PNG_FILE_02/correlation_b.png" width="100%" style="display: block; margin: auto;" />
+<div style="margin-bottom:20px;">
+
+</div>
+<div id="table-of-content" class="section level3">
+<h3><strong>Table of Content</strong></h3>
+<ul>
+<li><p><a href="#load-library">Load Library</a></p></li>
+<li><p><a href="#load-data">Load Data</a></p></li>
+<li><p><a href="#what-is-correlation">Correlation</a></p>
+<ul>
+<li><p><a href="#pearson-correlation">Pearson Correlation</a></p></li>
+<li><p><a href="#nonparametric-correlations">Nonparametric
+Correlations</a></p></li>
+<li><p><a href="#correlation-by-group">Correlation by Group</a></p></li>
+</ul></li>
+<li><p><a href="#visualizing-correlations">Visualizing
+Correlations</a></p>
+<ul>
+<li><p><a href="#scatter-plots">Scatter Plot</a></p></li>
+<li><p><a href="#bubble-plot">Bubble Plot</a></p></li>
+<li><p><a href="#marginal-plot">Marginal Plot</a></p></li>
+<li><p><a href="#marginal-plot-statistical-results">Marginal Plot
+Statistical Results</a></p></li>
+</ul></li>
+<li><p><a href="#correlation-matrix">Correlation Matrix</a></p>
+<ul>
+<li><p><a href="pairs-plots">Pairs Plots</a></p></li>
+<li><p><a href="#Correlation-matrix-plots">Correlation Matrix
+Plots</a></p></li>
+<li><p><a href="#network-plot-of-acorrelation-matrix">Network Plot of a
+Correlation Matrix</a></p></li>
+</ul></li>
+<li><p><a href="#further-reading">Further Reading</a></p></li>
+</ul>
+</div>
+<div id="load-library" class="section level3">
+<h3><strong>Load Library</strong></h3>
+<p>In this exercise We will use following R-packages:</p>
+<pre class="r"><code># load library
+library(tidyverse)
+library(dlookr)
+library(moments)
+library(car)
+library(plyr)
+library(data.table)
+library(DT)
+library(Hmisc)
+library(corrplot) 
+library(corrr)
+library(gridExtra)
+library(ggExtra)
+library(BSDA)
+library(GGally)
+library(agricolae) 
+library(multcomp)
+library(multcompView)
+library(ggfortify)
+library(report)
+library(ggstatsplot)</code></pre>
+<div style="margin-bottom:30px;">
+
+</div>
+</div>
+<div id="import-data" class="section level3">
+<h3><strong>Import Data</strong></h3>
+<p>In this exercise, we use following data set:</p>
+<p><strong>water_soil_rice_arsenic_data.csv</strong>: Arsenic (As) data
+in irrigation water, paddy soil and and rice grain in a contaminated
+cites from Bangladesh</p>
+<p>This data set could be found <a
+href="https://www.dropbox.com/sh/ctjv2eiifhfh2ts/AAAVXmWxPntD-O-5AE_YH3VHa?dl=0">here</a>.</p>
+<p>We import this data using <strong>read_csv()</strong> from
+<strong>readr</strong> package.</p>
+<pre class="r"><code># define working directory
+dataFolder&lt;-&quot;E:/Dropbox/GitHub/chemstat-r-github.io/Data/&quot;
+df&lt;-readr::read_csv(paste0(dataFolder,&quot;water_soil_rice_arsenic_data.csv&quot;))</code></pre>
+<div style="margin-bottom:30px;">
+
+</div>
+</div>
+<div id="correlation" class="section level2">
+<h2><strong>Correlation</strong></h2>
+<p>Correlation is a statistical measure that expresses the extent to
+which two variables are linearly related (meaning they change together
+at a constant rate). It’s a common tool for describing simple
+relationships without making a statement about cause and effect.</p>
+<p><strong>How is correlation measured?</strong></p>
+<p>The sample correlation coefficient, <strong>r</strong>, quantifies
+the strength of the relationship. Correlations are also tested for
+statistical significance.</p>
+<p>**What are some limitations of correlation analysis?*</p>
+<p>Correlation can’t look at the presence or effect of other variables
+outside of the two being explored. Importantly, correlation doesn’t tell
+us about cause and effect. Correlation also cannot accurately describe
+nonlinear relationships.</p>
+<p><strong>What do correlation numbers mean?</strong></p>
+<p>We describe correlations with a unit-free measure called the
+<strong>correlation coefficient</strong> which ranges from <strong>-1 to
++1</strong> and is denoted by <strong>r</strong>. Statistical
+significance is indicated with a <strong>p-value</strong>. Therefore,
+correlations are typically written with two key numbers: r = and p =
+.</p>
+<ul>
+<li><p>The closer r is to zero, the weaker the linear
+relationship.</p></li>
+<li><p>Positive r values indicate a positive correlation, where the
+values of both variables tend to increase together.</p></li>
+<li><p>Negative r values indicate a negative correlation, where the
+values of one variable tend to increase when the values of the other
+variable decrease.</p></li>
+<li><p>The p-value gives us evidence that we can meaningfully conclude
+that the population correlation coefficient is likely different from
+zero, based on what we observe from the sample.</p></li>
+<li><p>“Unit-free measure” means that correlations exist on their own
+scale: in our example, the number given for r is not on the same scale
+as either elevation or temperature. This is different from other summary
+statistics. For instance, the mean of the elevation measurements is on
+the same scale as its variable.</p></li>
+</ul>
+<p>**What is a p-value*?**</p>
+<p>A p-value is a measure of probability used for hypothesis
+testing.</p>
+<p>It indicates the likelihood of obtaining the data that we are seeing
+if there is no effect present — in other words, in the case of the null
+hypothesis. For our campsite data, this would be the hypothesis that
+there is no linear relationship between elevation and temperature. When
+a p-value is used to describe a result as statistically significant,
+this means that it falls below a pre-defined cutoff (e.g., p &lt;.05 or
+p &lt;.01) at which point we reject the null hypothesis in favor of an
+alternative hypothesis (for our campsite data, that there is a
+relationship between elevation and temperature).</p>
+<div id="pearson-correlation" class="section level3">
+<h3><strong>Pearson Correlation</strong></h3>
+<p>The Pearson correlation coefficient (named for Karl Pearson) can be
+used to summarize the strength of the linear relationship between two
+data samples. The Pearson’s correlation coefficient is calculated as the
+covariance of the two variables divided by the product of the standard
+deviation of each data sample. It is the normalization of the covariance
+between the two variables to give an interpretable score. (source: <a
+href="https://www.jmp.com/en_us/statistics-knowledge-portal/what-is-correlation.html"
+class="uri">https://www.jmp.com/en_us/statistics-knowledge-portal/what-is-correlation.html</a>)</p>
+<p>To calculate the Pearson correlation, start by determining each
+variable’s standard deviation as well as the covariance between them.
+The correlation coefficient is covariance divided by the product of the
+two variables’ standard deviations.</p>
+<img src="Image/PNG_FILE_02/correlation.png" width="50%" style="display: block; margin: auto auto auto 0;" />
+<div style="margin-bottom:20px;">
+
+</div>
+<p>We will use <strong>cor()</strong> function of R-base (stats -
+package) to get Pearson correlation efficient of two numeric variables
+as default.</p>
+<pre class="r"><code>df %&gt;% dplyr::select(WAs, SAs) %&gt;%
+      cor()</code></pre>
+<pre><code>##          WAs      SAs
+## WAs 1.000000 0.235157
+## SAs 0.235157 1.000000</code></pre>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="nonparametric-correlations" class="section level3">
+<h3><strong>Nonparametric Correlations</strong></h3>
+<p>Nonparametric tests are generally used where the data does not follow
+a normal distribution. <strong>Spearman rank-order correlation</strong>
+is a nonparametric statistical technique for measuring the relationship
+between two ordinal variables or rank-ordinal correlation.</p>
+<p>Spearman’s rank correlation measures the strength and direction of
+association between two ranked variables. It basically gives the measure
+of monotonicity of the relation between two variables i.e. how well the
+relationship between two variables could be represented using a
+monotonic function. (<a
+href="#https://www.simplilearn.com/tutorials/statistics-tutorial/spearmans-rank-correlation#:~:text=Spearman&#39;s%20rank%20correlation%20measures%20the,represented%20using%20a%20monotonic%20function.">Source</a>)</p>
+<p><strong>method</strong> is a character string indicating which
+correlation coefficient (or covariance) is to be computed. One of
+<strong>“pearson”</strong> (default), <strong>“kendall”</strong>, or
+<strong>“spearman”</strong>: can be abbreviated.</p>
+<pre class="r"><code>df %&gt;% dplyr::select(WAs, SAs) %&gt;%
+      cor(method = &quot;spearman&quot;)</code></pre>
+<pre><code>##          WAs      SAs
+## WAs 1.000000 0.275511
+## SAs 0.275511 1.000000</code></pre>
+<p>We may use <strong>cor.test()</strong> function of R-base (stats -
+package) to get r-and p-values:</p>
+<pre class="r"><code>cor.test(df$WAs, df$SAs) </code></pre>
+<pre><code>## 
+##  Pearson&#39;s product-moment correlation
+## 
+## data:  df$WAs and df$SAs
+## t = 3.9087, df = 261, p-value = 0.0001183
+## alternative hypothesis: true correlation is not equal to 0
+## 95 percent confidence interval:
+##  0.1175437 0.3462646
+## sample estimates:
+##      cor 
+## 0.235157</code></pre>
+<div style="margin-bottom:15px;">
+
+</div>
+</div>
+<div id="correlation-by-group" class="section level3">
+<h3><strong>Correlation by Group</strong></h3>
+<p>To know the relationship between WAs and SAs in two Landscapes will
+use <strong>ddply()</strong> function of <strong>plyr</strong> package
+which split data frame, apply function, (here cor()), and return results
+in a data frame using <strong>summarise</strong> argument</p>
+<pre class="r"><code>#library(plyr)
+plyr::ddply(df, &quot;Land_type&quot;, summarise, corr=cor(WAs, SAs))</code></pre>
+<pre><code>##   Land_type       corr
+## 1        HL 0.40350019
+## 2       MHL 0.01526773</code></pre>
+<div style="margin-bottom:15px;">
+
+</div>
+</div>
+</div>
+<div id="visualizing-correlations" class="section level2">
+<h2><strong>Visualizing Correlations</strong></h2>
+<div id="scatter-plot" class="section level3">
+<h3><strong>Scatter Plot</strong></h3>
+<p>As we have seen Soil As increases with increases Irrigation water As
+(positive correlation), We can look at this directly this relationship
+with a scatter plot.</p>
+<pre class="r"><code>plot(df$WAs, df$SAs,         # plot the variables 
+    xlab=&quot;Water As (mg/kg)&quot;,         # x-axis label 
+    ylab=&quot; Soil AS (mg/kg)&quot;,         # y-axis label
+    main=&quot;Scatterplot of Water As vs Soil As&quot;) # title of the plot</code></pre>
+<p><img src="correlation_files/figure-html/Satterplots-1.png" width="480" /></p>
+<p>We can create a scatter plot with ggplot2:</p>
+<pre class="r"><code># Change the point size, and shape
+ggplot(df, aes(x=WAs, y=SAs, color=Land_type)) +
+  geom_point(size=2) +
+#Change the Plot title and axis labels 
+  ggtitle(&quot;Figure #.  Scatterplot of Water As vs Soil As&quot;)  +  
+  xlab(&quot;Water As (mg/kg)&quot;) + ylab(&quot;Soil As (mg/kg)&quot;) +
+  #  customized background and front size
+  theme(
+        panel.background = element_rect(fill = &quot;grey95&quot;,colour = &quot;gray75&quot;,size = 0.5, linetype = &quot;solid&quot;),
+        axis.line = element_line(colour = &quot;grey&quot;),
+        plot.title = element_text(size = 16, hjust = 0.5),
+        axis.title.x = element_text(size = 16),
+        axis.title.y = element_text(size = 16),
+        axis.text.x=element_text(size=13, colour=&quot;black&quot;),
+        axis.text.y=element_text(size=13,angle = 90,vjust = 0.5, hjust=0.5, colour=&#39;black&#39;)) +
+  # add legend tittle
+  guides(color = guide_legend(title = &quot;Landtypes&quot;))</code></pre>
+<pre><code>## Warning: The `size` argument of `element_rect()` is
+## deprecated as of ggplot2 3.4.0.
+## ℹ Please use the `linewidth` argument instead.</code></pre>
+<img src="correlation_files/figure-html/Scatterplots%20by%20group-1.png" width="480" />
+<div style="margin-bottom:15px;">
+
+</div>
+</div>
+<div id="bubble-plot" class="section level3">
+<h3><strong>Bubble Plot</strong></h3>
+<p>A bubble plot is a scatterplot where a third dimension is added: the
+value of an additional numeric variable is represented through the size
+of the dots. (source: data-to-viz).</p>
+<pre class="r"><code># Most basic bubble plot
+df %&gt;%
+  arrange(desc(SAs)) %&gt;%
+  mutate(Land_type = factor(Land_type)) %&gt;%
+  ggplot(aes(x=WAs, y=Grain_As, size = SAs, color=Land_type)) +
+    geom_point(alpha=0.5) +
+    scale_size(range = c(.1, 10), name=&quot;Soil As (mg/kg)&quot;)+
+     guides(color = guide_legend(title = &quot;Landtypes&quot;))+
+  # Change the Plot tittle and axis labels 
+  ggtitle(&quot;Figure #.Bubble Plot of Water As vs Grain As&quot;)  +  
+  xlab(&quot;Water As (mg/kg)&quot;) + ylab(&quot;Grain As (mg/kg)&quot;) </code></pre>
+<img src="correlation_files/figure-html/Bubble%20Plots-1.png" width="480" />
+<div style="margin-bottom:15px;">
+
+</div>
+</div>
+<div id="marginal-plot" class="section level3">
+<h3><strong>Marginal Plot</strong></h3>
+<p>We can add marginal distribution on X and Y axis of a scatterplot.
+The <strong>ggExtra</strong> library makes it a breeze thanks to the
+<strong>ggMarginal()</strong> function. Three main types of distribution
+are available: histogram, density and boxplot.</p>
+<pre class="r"><code># classic plot :
+p &lt;- ggplot(df, aes(x=WAs, y=Grain_As, color=Land_type, size=SAs)) +
+      geom_point() +
+      theme(legend.position=&quot;none&quot;) +
+      xlab(&quot;Water As (mg/kg)&quot;) + ylab(&quot;Grain As (mg/kg)&quot;)
+      
+      # add legend tittle
+      
+# with marginal histogram
+p1 &lt;- ggMarginal(p, type=&quot;histogram&quot;, size=10)
+ 
+# marginal density
+p2 &lt;- ggMarginal(p, type=&quot;density&quot;)
+ 
+# marginal boxplot
+p3 &lt;- ggMarginal(p, type=&quot;boxplot&quot;)</code></pre>
+<pre class="r"><code>grid.arrange(p1, p2, p3, ncol=3)</code></pre>
+<img src="correlation_files/figure-html/unnamed-chunk-4-1.png" width="960" />
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="marginal-plot-statistical-results" class="section level3">
+<h3><strong>Marginal Plot Statistical Results</strong></h3>
+<p><strong>ggscatterstats()</strong> function from
+<strong>ggstatsplot</strong> will create Scatterplots from
+<strong>ggplot2</strong> combined with marginal densigram (density +
+histogram) plots with statistical details.</p>
+<pre class="r"><code>ggstatsplot::ggscatterstats(
+  data = df, 
+  x = WAs, 
+  y = SAs,
+  title = &quot;Water vs Soil As&quot;,
+  messages = FALSE
+)</code></pre>
+<p><img src="correlation_files/figure-html/unnamed-chunk-5-1.png" width="528" /></p>
+</div>
+</div>
+<div id="correlation-matrix" class="section level2">
+<h2><strong>Correlation Matrix</strong></h2>
+<p>A correlation matrix is a table or plots showing correlation
+coefficients between sets of variables. The correlation matrix is used
+to summarize data, as an input into a more advanced analysis.</p>
+<p><strong>rcorr()</strong> function of <strong>Hmisc</strong> Computes
+a matrix of <strong>Pearson’s r</strong> or <strong>Spearman’s rho
+rank</strong> correlation coefficients for all possible pairs of columns
+of a matrix.</p>
+<pre class="r"><code>df.cor&lt;-df %&gt;% dplyr::select(WAs, WFe, WFe, SAs, SPAs, SAoAs, SAoFe,  Grain_As) 
+cor.mat&lt;-Hmisc::rcorr(as.matrix(df.cor, type=&quot;pearson&quot;))
+cor.mat</code></pre>
+<pre><code>##            WAs  WFe   SAs  SPAs SAoAs SAoFe Grain_As
+## WAs       1.00 0.24  0.24  0.28  0.27 -0.10     0.33
+## WFe       0.24 1.00  0.32  0.30  0.31  0.02     0.15
+## SAs       0.24 0.32  1.00  0.89  0.89 -0.11     0.29
+## SPAs      0.28 0.30  0.89  1.00  0.85 -0.08     0.31
+## SAoAs     0.27 0.31  0.89  0.85  1.00 -0.02     0.22
+## SAoFe    -0.10 0.02 -0.11 -0.08 -0.02  1.00    -0.22
+## Grain_As  0.33 0.15  0.29  0.31  0.22 -0.22     1.00
+## 
+## n= 263 
+## 
+## 
+## P
+##          WAs    WFe    SAs    SPAs   SAoAs  SAoFe  Grain_As
+## WAs             0.0000 0.0001 0.0000 0.0000 0.1059 0.0000  
+## WFe      0.0000        0.0000 0.0000 0.0000 0.7273 0.0127  
+## SAs      0.0001 0.0000        0.0000 0.0000 0.0787 0.0000  
+## SPAs     0.0000 0.0000 0.0000        0.0000 0.1714 0.0000  
+## SAoAs    0.0000 0.0000 0.0000 0.0000        0.7247 0.0004  
+## SAoFe    0.1059 0.7273 0.0787 0.1714 0.7247        0.0003  
+## Grain_As 0.0000 0.0127 0.0000 0.0000 0.0004 0.0003</code></pre>
+<div style="margin-bottom:20px;">
+
+</div>
+<div id="pairs-plots" class="section level3">
+<h3><strong>Pairs Plots</strong></h3>
+<p>The function <strong>ggpairs()</strong> from <strong>GGally</strong>
+leverages a modular design of pairwise comparisons of multivariate data
+and displays either the density or count of the respective variable
+along the diagonal.</p>
+<pre class="r"><code>GGally::ggpairs(df.cor)</code></pre>
+<img src="correlation_files/figure-html/Pairs%20Plots-1.png" width="576" />
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="correlation-matrix-plots" class="section level3">
+<h3><strong>Correlation Matrix Plots</strong></h3>
+<p>You can create a graphical display of a correlation matrix using the
+function <strong>corrplot()</strong> of <strong>corrplot</strong>
+package. The function <strong>corrplot()</strong> takes the correlation
+matrix as the first argument. The second argument (type=“upper”) is used
+to display only the upper triangular of the correlation matrix. The
+correlation matrix is reordered according to the correlation coefficient
+using “hclust” method</p>
+<pre class="r"><code>corrplot(cor.mat$r, type=&quot;upper&quot;, order=&quot;hclust&quot;, 
+         main=&quot;&quot;, cex.lab = 0.5,
+          tl.col = &quot;black&quot;,
+         p.mat = cor.mat$p, sig.level = 0.05, insig = &quot;blank&quot;)</code></pre>
+<img src="correlation_files/figure-html/Correlation%20Matrix-1%20Plots-1.png" width="480" />
+<div style="margin-bottom:20px;">
+
+</div>
+<p>In this plot, correlation coefficients are colored according to the
+value. Correlation matrix can be also reordered according to the degree
+of association between variables. Positive correlations are displayed in
+blue and negative correlations in red color. Color intensity and the
+size of the circle are proportional to the correlation coefficients. In
+the right side of the correlogram, the legend color shows the
+correlation coefficients and the corresponding colors. The correlations
+with p-value &gt; 0.05 are considered as insignificant. In this case the
+correlation coefficient values are leaved blank.</p>
+<pre class="r"><code>corrplot(cor.mat$r, method = &#39;color&#39;, order = &#39;alphabet&#39;, 
+         main=&quot;&quot;, cex.lab = 0.5,
+         tl.col = &quot;black&quot;,
+         p.mat = cor.mat$p, sig.level = 0.05, insig = &quot;blank&quot;)</code></pre>
+<img src="correlation_files/figure-html/Correlation%20Matrix%20Plots-2-1.png" width="480" />
+<div style="margin-bottom:20px;">
+
+</div>
+<p>We may also use <strong>correlate()</strong> function of
+<strong>dlookr</strong> package to calculate the correlation coefficient
+of all combinations of numerical variables of a data set.</p>
+<pre class="r"><code>df %&gt;% dplyr::select(WAs, WFe, WFe, SAs, SPAs, SAoAs, SAoFe,  Grain_As) %&gt;%
+  dlookr::correlate()</code></pre>
+<pre><code>## # A tibble: 42 × 3
+##    var1     var2  coef_corr
+##    &lt;fct&gt;    &lt;fct&gt;     &lt;dbl&gt;
+##  1 WFe      WAs      0.243 
+##  2 SAs      WAs      0.235 
+##  3 SPAs     WAs      0.281 
+##  4 SAoAs    WAs      0.275 
+##  5 SAoFe    WAs     -0.0999
+##  6 Grain_As WAs      0.326 
+##  7 WAs      WFe      0.243 
+##  8 SAs      WFe      0.321 
+##  9 SPAs     WFe      0.300 
+## 10 SAoAs    WFe      0.314 
+## # … with 32 more rows</code></pre>
+<div style="margin-bottom:15px;">
+
+</div>
+<p><strong>plot_correlate()</strong> function <strong>dlookr</strong>
+package visualizes the correlation matrix.</p>
+<pre class="r"><code>df %&gt;% dplyr::select(WAs, WFe, WFe, SAs, SPAs, SAoAs, SAoFe,  Grain_As) %&gt;%
+  dlookr::plot_correlate() </code></pre>
+<pre><code>## Warning: &#39;dlookr::plot_correlate&#39; is deprecated.
+## Use &#39;plot.correlate&#39; instead.
+## See help(&quot;Deprecated&quot;)</code></pre>
+<img src="correlation_files/figure-html/Correlation%20Matrix%20Plots-3-1.png" width="480" />
+<div style="margin-bottom:15px;">
+
+</div>
+</div>
+<div id="network-plot-of-a-correlation-matrix" class="section level3">
+<h3><strong>Network Plot of a Correlation Matrix</strong></h3>
+<p>Output a network plot of a correlation data frame in which variables
+that are more highly correlated appear closer together and are joined by
+stronger paths. Paths are also colored by their sign (blue for positive
+and red for negative). The proximity of the points are determined using
+multidimensional clustering.</p>
+<p>We will use <strong>network_plot()</strong> function of
+<strong>corrr</strong> package:</p>
+<pre class="r"><code>df %&gt;%
+  dplyr::select(WAs, WP, WFe, WFe, SAs, SPAs, SAoAs, ELEV, Grain_As) %&gt;%
+  correlate() %&gt;%
+  # use mirror = TRUE to not only select columns but also filter rows
+  corrr::focus(WAs:Grain_As, mirror = TRUE) %&gt;% 
+  corrr::network_plot(colors = c(&quot;red&quot;, &quot;yellow&quot;, &quot;green&quot;, &quot;blue&quot;))</code></pre>
+<pre><code>## Correlation computed with
+## • Method: &#39;pearson&#39;
+## • Missing treated using: &#39;pairwise.complete.obs&#39;</code></pre>
+<img src="correlation_files/figure-html/Network%20plot-1.png" width="480" />
+<div style="margin-bottom:15px;">
+
+</div>
+<p>We can use only <strong>focus()</strong> function of on correlations
+of one variable with all others and plot the results.</p>
+<pre class="r"><code>df %&gt;%
+  dplyr::select(WAs, WP, WFe, WFe, SAs, SPAs, SAoAs) %&gt;%
+  correlate() %&gt;%
+  corrr::focus(SAs) %&gt;%
+  ggplot(aes(y=SAs, x= reorder (term, +SAs))) + 
+  coord_flip() +
+  geom_col() +
+  ggtitle(&quot;Figure #: Correlation Coefficent between Soil As and  Covariates&quot;) +
+  xlab(&quot;Variables&quot;) + ylab(&quot;r-values&quot;) +
+  theme(
+        panel.background = element_rect(fill = &quot;grey95&quot;,colour = &quot;gray95&quot;,size = 0.5, linetype = &quot;solid&quot;),
+        axis.line = element_line(colour = &quot;grey&quot;),
+        plot.title = element_text(size = 12, hjust = 0.5),
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12),
+        axis.text.x=element_text(size=12, colour=&quot;black&quot;),
+        axis.text.y=element_text(size=12,angle = 90,vjust = 0.5, hjust=0.5, colour=&#39;black&#39;))</code></pre>
+<img src="correlation_files/figure-html/Focus%20one%20variable-1.png" width="480" />
+<div style="margin-bottom:15px;">
+
+</div>
+</div>
+<div id="further-reading" class="section level3">
+<h3><strong>Further Reading</strong></h3>
+<ol style="list-style-type: decimal">
+<li><p><a
+href="https://hbiostat.org/R/Hmisc/summaryFuns.pdf">Hmisc</a></p></li>
+<li><p><a
+href="https://cran.r-project.org/web/packages/corrplot/vignettes/corrplot-intro.html">An
+Introduction to corrplot Package</a></p></li>
+<li><p><a
+href="https://github.com/choonghyunryu/dlookr">dlook</a></p></li>
+<li><p><a href="https://corrr.tidymodels.org/">Correlation analysis with
+corrr</a></p></li>
+</ol>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -61,9 +61,11 @@ The R can be downloaded from the [R project](https://www.r-project.org/) of a re
 5.	Click "Download R for Windows" and save the executable file somewhere on your computer.
 
 
-```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="Download R"}
-library(embedr)
-embed_video("E:/Dropbox/GitHub/chemstat-r-github.io/Vedio/download_r.mp4", width = "856", height = "656")
+
+
+```{r echo=FALSE, out.width='60%', fig.align="center", fig.cap="Download R"}
+library(vembedr)
+embed_url("https://youtu.be/bvoMiKKVf4U")
 ```
 
 <div style="margin-bottom:20px;">
@@ -78,10 +80,9 @@ Installation instruction of R  in Windows and MAC could be found  [here](https:/
 2. Navigate to the directory where the downloaded R.4.2.1-win.exe (the latest version) file is exit. 
 3. Double-click this **exe** file and follow the instruction as shown in the video below: 
 
-```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="Download R"}
-embed_video("E:/Dropbox/GitHub/chemstat-r-github.io/Vedio/install_r.mp4", width = "856", height = "656")
+```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="Install R"}
+embed_url("https://youtu.be/JmQ-GAidTWk")
 ```
-
 <div style="margin-bottom:20px;">
 </div>
 
@@ -96,10 +97,9 @@ Installing R on Mac OS is similar to Windows.  The easiest way is to install it 
 
 The installation of R in Ubuntu little tricky for those who are not familiar with command line. Details R installation on Ubuntu 19.04/18.04/16.04 could be found [here](https://itslinuxfoss.com/install-r-ubuntu-22-04/).  
 
-```{r echo=FALSE, out.width='80%', fig.align="center"}
+```{r echo=FALSE, fig.align="center", fig.height=8, fig.width=5, out.width='90%'}
 knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\r_ubuntu.png")
 ```
-
 <div style="margin-bottom:20px;">
 </div>
 
@@ -110,11 +110,9 @@ knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_F
 After R installation in Windows, double click on the desktop icon or open the program from START to run R.  R will be open as a **Console**  window. 
 You can work in the console and use R with the command line. However, the command line can be pretty daunting to a beginner. It is better to work in **R Editor**.  First, you must create a **New script**  from  **File** menu. Any code you run in R-script output will be displayed in the console window. We can save all your R codes as an R script file and output them in the console as an R-Data file.
  
-
-```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="Download R"}
-embed_video("E:/Dropbox/GitHub/chemstat-r-github.io/Vedio/open_r.mp4", width = "856", height = "656")
+```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="Open R"}
+embed_url("https://youtu.be/cIubYlD5UVY")
 ```
-
 <div style="margin-bottom:20px;">
 </div>
 
@@ -153,23 +151,27 @@ Installing R Studio on Ubuntu could be found [here](https://www.geeksforgeeks.or
 
 We may open RStudio just double click Rstudio icon on your Desktop or on the task bar. It has several components: console, terminal, editors, global environment etc. 
 
-```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="Download R"}
-embed_video("E:/Dropbox/GitHub/chemstat-r-github.io/Vedio/rStudio_01.mp4", width = "856", height = "656")
+```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="R-Studio"}
+embed_url("https://youtu.be/cEykrCTWOC8")
 ```
-
 <div style="margin-bottom:20px;">
 </div>
+
+
 
 ### **Change RStudio Appearance and Themes**
 
 Navigate to **Tools → Global options → Appearance** and switch the theme in the Editor Theme option. By default, you will have the Textmate theme activated. There is a wide in-built variety of themes to choose, from light to dark themes
 
-```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="Download R"}
-embed_video("E:/Dropbox/GitHub/chemstat-r-github.io/Vedio/rStudio_02.mp4", width = "856", height = "656")
+```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="Change RStudio Appearance and Themes"}
+embed_url("https://youtu.be/dmhqWm4an6g")
 ```
 
 <div style="margin-bottom:20px;">
 </div>
+
+
+https://youtu.be/dmhqWm4an6g 
 
 ## **R Packages or Libraries** 
 
@@ -186,11 +188,13 @@ Use **install.packages()** function in your console or in  a script:
 # install.packages(c("raster","gstat"), dependencies = TRUE)
 ```
 
-```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="Download R"}
-embed_video("E:/Dropbox/GitHub/chemstat-r-github.io/Vedio/r_package.mp4", width = "856", height = "656")
+```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="R Packages or Libraries"}
+embed_url("https://youtu.be/xBh7Ti6cvXs")
 ```
 
 <div style="margin-bottom:30px;">
+
+https://youtu.be/xBh7Ti6cvXs 
 
 ###  **Use Libraries in R**
 
@@ -217,9 +221,11 @@ Markdown is a lightweight markup language for creating formatted text using a pl
 R Markdown provides an authoring framework for data science. You can use a single R Markdown file to both 
 save and execute code generate high quality reports that can be shared with an audience R Markdown documents are fully reproducible and support dozens of static and dynamic output formats. This 1-minute video provides a quick tour of what’s possible with R Markdown (source: [R Markdown)](https://rmarkdown.rstudio.com/index.html)
 
-```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="Download R"}
-embed_video("E:/Dropbox/GitHub/chemstat-r-github.io/Vedio/r-markdown.mp4", width = "856", height = "656")
+```{r echo=FALSE, out.width='100%', fig.align="center", fig.cap="R Markdown"}
+embed_url("https://youtu.be/vIcbLhC9whM")
 ```
+
+https://youtu.be/vIcbLhC9whM
 
 <div style="margin-bottom:15px;">
 
@@ -228,7 +234,7 @@ For a brief a brief tutorial, please visit [here](https://rmarkdown.rstudio.com/
 
 <div style="margin-bottom:15px;">
 
-below the  cheatsheets that  for  RStudio IDE:  
+Below the  cheatsheets that  for  RStudio IDE:  
 
 ```{r echo=FALSE, out.width='100%', fig.align="center"}
 knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_01\\rarkdown_cheat_sheet_01.png")
