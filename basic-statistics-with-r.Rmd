@@ -9,16 +9,212 @@ title: ''
 ```{r echo=FALSE, out.width='100%', fig.align="center"}
 knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\basic_statistics.png")
 ```
-
 <div style="margin-bottom:20px;">
 </div>
 
+
+
+
 ### **Table of Content**
 
-* [Probability Distribution](#probabilitya-distribution)
+* [Data Quality Diagnosis](#data-quality-diagnosis)
 
-* 
+  - [Diagnosis of Numeric Variables](#diagnosis-of-numeric-variables)
+  
+  - [Diagnosis of Categorical Variables](#diagnosis-of-categorical-variables)
+  
+  - [Diagnosing Outliers](#diagnosing-outliers) 
+  
+  - [Visualization of Outliers](#visualization-of-outliers)
 
+* [Exploratory Data Analysis](#exploratory-data-analysis)
+
+  - [Probability Distribution](#probabilitya-distribution)
+
+  - [Normal Distribution](#normal-distribution)
+  
+    - [Visual Inspection of Normal Distribution](#visual-inspection-of-normal-distribution)
+    
+      - [Histogram](#histogram)
+      
+      - [Kernel Density Plots](#kernel-density-plots)
+      
+      - [Quantile-Quantile Plots](#quantile-quantile-plots)
+      
+    - [Visualization of Normality using dlookr Package](#visualization-ofnormality-using-dlookr-Package)
+      
+    - [Normality Test](#normality-test)
+    
+    - [Test of Normality using dlookr Package](#test-of-normality-using-dlookr-package)
+    
+    - [Measures of Skewness and Kurtosis](#measures-of-skewness-and-kurtosis)
+    
+    - [Test of Normality using dlookr Package](#test-of-normality-using-dlookr-package)
+    
+  - [Data Transformation for Normality](#data-transforamtion-fornormality)
+  
+  - [Descriptive Statistics](#descriptive-statistics)
+  
+  - [EDA of Bivariate Data](#eda-of-bivariate-data)
+
+<div style="margin-bottom:30px;">
+</div>
+
+In this exercise We will use following R-packages: 
+
+```{r message=FALSE, warning=FALSE}
+# load library
+library(tidyverse)
+library(dlookr)
+library(moments)
+library(data.table)
+library(DT)
+```
+
+
+We will use arsenic (As) data in irrigation water, paddy soil and and rice grain  in a contaminated cites from Bangladesh, name **water_soil_rice_arsenic_data.csv**. We import this data using **read_csv()**. This data set could be found [here](https://www.dropbox.com/s/1gojx95huzgnibc/water_soil_rice_arsenic_data.csv?dl=0).
+
+
+```{r message=FALSE, warning=FALSE}
+# define working directory
+dataFolder<-"E:/Dropbox/GitHub/chemstat-r-github.io/Data/"
+df<-read_csv(paste0(dataFolder,"water_soil_rice_arsenic_data.csv"))
+```
+
+<div style="margin-bottom:30px;">
+</div>
+
+### **Data Quality Diagnosis**
+
+Data Quality Diagnosis is the first step before any statistical analysis. We use **diagnose()** function of **dlookr** package to use  to  explore following:
+
+* variables : variable names
+
+* types : the data type of the variables
+
+* missing_count : number of missing values
+
+* missing_percent : percentage of missing values
+
+* unique_count : number of unique values
+
+* unique_rate : rate of unique value. unique_count / number of observation
+
+
+```{r}
+#diagnose(df) # all variables
+diagnose(df, SAs, WAs, Grain_As) # Only soil,  water and rice grain AS
+```
+
+<div style="margin-bottom:15px;">
+</div>
+
+#### **Diagnosis of Numeric Variables**
+
+
+We may use **diagnose_numeric()**, diagnoses numeric(continuous and discrete) variables in a data frame returns more diagnostic information such as:
+
+* min : minimum value
+
+* Q1 : 1/4 quartile, 25th percentile
+
+* mean : arithmetic mean
+
+* median : median, 50th percentile
+
+* Q3 : 3/4 quartile, 75th percentile
+
+* max : maximum value
+
+* zero : number of observations with a value of 0
+
+* minus : number of observations with negative numbers
+
+* outlier : number of outliers
+
+
+```{r}
+# diagnose_numeric(df) # all data
+diagnose_numeric(df, SAs, WAs, Grain_As) # only three variables
+```
+<div style="margin-bottom:15px;">
+</div>
+
+#### **Diagnosis of Categorical Variables**
+
+**diagnose_category()** diagnoses the categorical(factor, ordered, character) variables of a data frame. The usage is similar to diagnose() but returns more diagnostic information such as: 
+
+* variables : variable names
+
+* levels: level names
+
+* N : number of observation
+
+* freq : number of observation at the levels
+
+* ratio : percentage of observation at the levels
+
+* rank : rank of occupancy ratio of levels
+
+
+```{r}
+diagnose_category(df, Variety, Land_type)
+```
+<div style="margin-bottom:15px;">
+</div>
+
+
+#### **Diagnosing Outliers**
+
+diagnose_outlier() diagnoses the outliers of the numeric (continuous and discrete) variables of the data frame. 
+
+* outliers_cnt : number of outliers
+
+* outliers_ratio : percent of outliers
+
+* outliers_mean : arithmetic average of outliers
+
+* with_mean : arithmetic average of with outliers
+
+* without_mean : arithmetic average of without outliers
+
+```{r}
+diagnose_outlier(df, SAs, WAs, Grain_As )
+```
+
+#### **Visualization of Outliers**
+
+**plot_outlier()** visualizes outliers of numerical variables(continuous and discrete) of data.frame. Usage is the same diagnose().
+
+The plot derived from the numerical data diagnosis is as follows.
+
+* With outliers box plot
+
+* Without outliers box plot
+
+* With outliers histogram
+
+* Without outliers histogram
+
+The following example uses diagnose_outlier(), plot_outlier(), and dplyr packages to visualize all numerical variables with an outlier ratio of 0.5% or higher.
+
+
+```{r}
+df %>%
+  plot_outlier(diagnose_outlier(df, SAs) %>% 
+                 filter(outliers_ratio >= 0.5) %>% 
+                 select(variables) %>% 
+                 unlist())
+```
+
+
+
+## **Exploratory Data Analysis**
+
+In statistics, **exploratory data analysis (EDA)** is an approach to analyzing data sets to summarize their main characteristics, often with some basic statistics and visual methods. 
+
+<div style="margin-bottom:15px;">
+</div>
 
 ### **Probability Distribution**
 
@@ -30,7 +226,7 @@ In probability theory and statistics, a probability distribution is the mathemat
 
 The **normal distribution** is a common example of a PDF, forming the well-known **bell curve** shape. It is also known as the **Gaussian distribution**, is a probability distribution that is symmetric about the mean, showing that data near the mean are more frequent in occurrence than data far from the mean.
 
-The mean and standard deviation can be related to the Guassian distribution - that gives the probability of observing a particular value of x. For a finite number of measurements, the Gaussian distribution can be approximated as:
+The mean and standard deviation can be related to the Gaussian distribution - that gives the probability of observing a particular value of x. For a finite number of measurements, the Gaussian distribution can be approximated as:
 
 https://rpubs.com/dgosser/802164 
 
@@ -51,10 +247,10 @@ xval
 ```
 
 
- No we can calculate Gaussian distribution using above formula
+ No we can calculate Gaussian or noraml distribution using above formula.
 
 ```{r}
-#  here we calculate a gaussian distribution
+#  here we calculate a Gaussian distribution
 
 yp <- (1/(s*sqrt(2*pi)))*exp(1)^((-(xval-xmean)^2)/(2*s^2))
 
@@ -62,14 +258,418 @@ yp
 ```
 
 
-```{r}
+```{r fig.height=5, fig.width=6}
 plot(xval,yp) 
 ```
 
+We can also get probability distribution using the command **dnorm()** distribution
+
+
+```{r fig.height=5, fig.width=6}
+dp  <- dnorm(xval,xmean,s)    
+plot(dp)
+```
+
+The distance from the mean of a particular measurement can be discussed in terms of **“deviations from the mean”** as multiples of the standard deviation. For instance:
+
+* 68.3% of measurements lie within plus or minus one standard deviation
+
+* 95.5% within plus or minus two standard deviations
+
+* 99.7% within plus or minus three standard deviations.
+
+The R command for the cumulative distribution, which approaches 1, is **pnorm()**:
+
+```{r fig.height=5, fig.width=6}
+cdp <-  pnorm(xval,xmean, s)
+plot(cdp)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+### **Normal Distribution**
+
+Many of parametric statistical tests including correlation, regression, t-test, and analysis of variance (ANOVA) require the data to follow a **normal distribution or Gaussian distribution**. The validity of these kind of tests depends on the distribution of the data.
+
+Before using a parametric test, some preliminary tests need to be done to make sure that the test assumptions of **"normal distribution"** of data are met. We’ll show how to check the normality of the data by **visual inspection** and by **significance tests**.
 
 
 
+<div style="margin-bottom:15px;">
+</div>
+
+In this data frame, **SAs**, column represents the soil total As (mg/kg) in paddy soils irrigated with As contaminated groundwater from shallow depth. Let check the distribution of soil As:
+
+<div style="margin-bottom:15px;">
+</div>
+
+### **Visual Inspection of Normal Distribution**
+
+Here, we’ll describe how to check the normality of the data by visual inspection by: 
+
+* Histogram
+
+* Kernel density Plots
+
+* Quantile-Quantile Plots
+
+<div style="margin-bottom:20px;">
+</div>
 
 
-calculates the probability of observing a given value.
-Cumulative Density function: calculates the probability of an observation equal or less than a value
+#### **Histogram** 
+
+You can create histograms with the function **hist(x)**  to visualize the distribution of a numeric vector (x).  The option freq=FALSE plots probability densities instead of frequencies. The option breaks= controls the number of bins.
+
+```{r fig.height=5, fig.width=6}
+hist(df$SAs, breaks = 20)
+```
+
+
+#### **Kernel Density Plots**
+
+**Kernel density** plots are usually a much more effective way to view the distribution of a variable.
+
+
+```{r fig.height=5, fig.width=6}
+# Kernel Density Plot
+d <- density(df$SAs) # returns the density data
+plot(d) # plots the results
+```
+
+#### **Quantile-Quantile Plots**
+
+**qqnorm()** is a generic function the default method of which produces a normal QQ plot of the values in y.
+
+**qqline()** adds a line to a “theoretical”, by default normal, quantile-quantile plot which passes through the probs quantiles, by default the first and third quartiles.
+
+
+```{r fig.height=6, fig.width=5}
+#create Q-Q plot to compare this dataset to a theoretical normal distribution
+qqnorm(df$SAs)
+qqline(df$SAs)
+```
+
+<div style="margin-bottom:20px;">
+</div>
+
+### **Visualization of Normality using dlookr Package**
+
+We may also use **plot_normality()** function of **dlookr** pacakge to visualizes the normality of numeric data. The information that plot_normality() visualizes is as follows.
+
+* Histogram of original data
+
+* Q-Q plot of original data
+
+* histogram of log transformed data
+
+* Histogram of square root transformed data
+
+
+<div style="margin-bottom:20px;">
+</div>
+
+
+```{r}
+plot_normality(df, SAs)
+```
+
+### **Normality Test**
+
+The R-base function **shapiro.test()** can be used to perform the Shapiro-Wilk test of normality for one variable (univariate):
+
+```{r}
+shapiro.test(df$SAs)
+```
+
+From the above output, the p-value < 0.05 implying that the distribution of the Soil As are significantly different from normal distribution. In other words, we can assume that Soil As is not-normally distributed.
+
+<div style="margin-bottom:20px;">
+</div>
+
+### **Test of Normality using dlookr Package**
+
+
+**normality()**  function of **dlookr** performs a normality test on multiple numerical data. Shapiro-Wilk normality test is performed. When the number of observations is greater than 5000, it is tested after extracting 5000 samples by random simple sampling.
+
+The variables of tbl_df object returned by normality() are as follows.
+
+* statistic : Statistics of the Shapiro-Wilk test
+
+* p_value : p-value of the Shapiro-Wilk test
+
+* sample : Number of sample observations performed Shapiro-Wilk test
+
+```{r}
+normality(df, SAs, WAs, Grain_As)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+### **Measures of Skewness and Kurtosis**
+
+**Skewness** measures the symmetry of the distribution and  this value can be positive or negative.
+
+
+* A **negative** value indicates more values are concentrated on the left side (tail) of the distribution. 
+the most frequent values are high; tail is toward low values (on the left-hand side). 
+Generally, Mode > Median > Mean.
+
+* A **positive** value indicates that the tail is on the right side of the distribution. The most frequent values are low; tail is toward the high values (on the right-hand side).
+Generally, Mode < Median < Mean.
+
+* A value of **zero** indicates that there is no skewness in the distribution at all, meaning the distribution is perfectly symmetrical or normally distributed.
+
+
+To calculate the skewness and kurtosis of Soil As, we can use **skewness()** and **kurtosis()** functions from the **moments** library in R:
+
+```{r}
+skewness(df$SAs)
+```
+
+Positive values indicates, this indicates that the distribution is right-skewed. This confirms what we have seen saw in the histogram and density plots. 
+
+
+**Kurtosis** is a measure of whether or not a distribution is heavy-tailed or light-tailed relative to a normal distribution. The kurtosis of a normal distribution is 3.
+
+
+```{r}
+kurtosis(df$SAs)
+```
+
+Since the kurtosis is > 3, which indicates that the distribution of Soil As has more values in the tails compared to a normal distribution as we have seen in the QQ plots
+
+The moments library also offers the **jarque.test()** function, which performs a goodness-of-fit test that determines whether or not sample data have skewness and kurtosis that matches a normal distribution. The null and alternative hypotheses of this test are as follows:
+
+**Null Hypothesis**: The dataset has a skewness and kurtosis that matches a normal distribution.
+
+**Alternative Hypothesis**: The dataset has a skewness and kurtosis that does not match a normal distribution.
+
+```{r}
+jarque.test(df$SAs)
+```
+
+The p-value is found to be < 0.05. We **reject the null hypothesis**. We have sufficient evidence to say that this Soil As has a skewness and kurtosis that is different from the normal distribution
+
+<div style="margin-bottom:20px;">
+</div>
+
+
+**find_skewness()**  of **dlookr** package  searches for variables with skewed data. This function finds data skewed by search conditions and calculates skewness.
+
+```{r}
+## Calculation of skewness
+df %>% select(SAs, WAs, Grain_As) %>% 
+ find_skewness(value = TRUE)
+```
+
+We van also compute the skewness & filtering with threshold
+
+```{r}
+df %>% select(SAs, WAs, Grain_As) %>% 
+ find_skewness(value = TRUE, thres =1)
+```
+<div style="margin-bottom:15px;">
+</div>
+
+
+### **Data Transformation for Normality**
+
+In statistical data analysis, transformation is the replacement of one variable by one function of that variable: for example, replacing one variable x by the square root or by the logarithm of x. The transformation is a replacement that changes the shape of a distribution or relationship.
+
+There are many reasons for transformation (source: http://fmwww.bc.edu/repec/bocode/t/transint.html)
+
+    1. Reducing skewness or transforming Data for Normality
+    2. Equal spreads
+    3. Linear relationships
+    4. Additive relationships
+    
+
+### **Data Transformation Methods**
+
+
+In this section, you will get a brief overview of these three transformation techniques and when to use them.
+
+**Square Root Transformation** 
+
+The square root method is typically used when your data is moderately skewed. Now using the square root (e.g., sqrt(x)) is a transformation that has a moderate effect on distribution shape. It is generally used to reduce right skewed data. Finally, the square root can be applied on zero values and is most commonly used on counted data.
+
+* sqrt(x) for positively skewed data,
+
+* sqrt(max(x+1) - x) for negatively skewed data
+
+**Power Transformation**
+
+a power transform is a family of functions that are applied to create a monotonic transformation of data using power functions.
+
+**Log Transformation** is a strong transformation that has a major effect on distribution shape. This technique is, as the square root method, oftenly used for reducing right skewness. Worth noting, however, is that it can not be applied to zero or negative values.
+
+* log10(x) for positively skewed data,
+
+* log10(max(x+1) - x) for negatively skewed data
+
+The **Box-Cox transformation**  use  a suitable exponent (Lambda = l)  to transform skewed data.
+
+
+**transform()** function of *dlookr** performs data both **Standardization** and  transform data for normalization (resolve skewness). 
+
+
+* **Standardization**
+
+  - “zscore” : z-score transformation. (x - mu) / sigma
+
+  - “minmax” : minmax transformation. (x - min) / (max - min)
+  
+* **Resolving Skewness**
+
+  - “log” : log transformation. log(x)
+  
+  - “log+1” : log transformation. log(x + 1). Used for values that contain 0.
+  
+  - “sqrt” : square root transformation.
+  
+  - “1/x” : 1 / x transformation
+  
+  - “x^3” : x^3 square transformation
+  
+  
+```{r}
+df$logSAs = transform(df$SAs, method = "log")
+```
+  
+```{r}
+# summary of transformation
+summary(df$logSAs)
+```
+
+```{r}
+plot(df$logSAs)
+```
+<div style="margin-bottom:15px;">
+</div>
+
+### Power transformation (Box-Cox)
+
+Power Transform uses the maximum likelihood-like approach of Box and Cox (1964) to select a transformation of a univariate or multivariate response for normality. 
+
+The following expression gives the Box-Cox functions transformations for various values of lambda:
+
+```{r echo=FALSE, out.width='100%', fig.align="center"}
+knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\boxcox.png")
+```
+<div style="margin-bottom:20px;">
+</div>
+
+First we have to calculate appropriate transformation parameters using **powerTransform()** function of **car** package and then use this parameter to transform the data using **bcPower()** function.
+
+
+```{r message=FALSE, warning=FALSE}
+library(car)
+```
+
+```{r}
+powerTransform(df$SAs)
+```
+
+```{r fig.height=4, fig.width=5}
+df$SAs.bc<-bcPower(df$SAs, 0.2605306)
+hist(df$SAs.bc)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+### **Descriptive Statistics** 
+
+Descriptive statistics are used to describe the basic features of the data in a study. They provide simple summaries about the sample and the measures. Together with simple graphics analysis, they form the basis of virtually every quantitative analysis of data.
+
+We use **describe()** function from **dloookr** package to computes descriptive statistics for numerical data. The descriptive statistics help determine the distribution of numerical variables. L
+
+The variables of the tbl_df object returned by describe() are as follows.
+
+* n : number of observations excluding missing values
+
+* na : number of missing values
+
+* mean : arithmetic average
+
+* sd : standard deviation
+
+* se_mean : standard error mean. sd/sqrt(n)
+
+* IQR : interquartile range (Q3-Q1)
+
+* skewness : skewness
+
+* kurtosis : kurtosis
+
+* p25 : Q1. 25% percentile
+
+* p50 : median. 50% percentile
+
+* p75 : Q3. 75% percentile
+
+* p01, p05, p10, p20, p30 : 1%, 5%, 20%, 30% percentiles
+
+* p40, p60, p70, p80 : 40%, 60%, 70%, 80% percentiles
+
+* p90, p95, p99, p100 : 90%, 95%, 99%, 100% percentiles
+
+```{r}
+des.stat<-describe(df, SAs, WAs, Grain_As)
+datatable(as.data.frame(des.stat), 
+          rownames = T, options = list(pageLength = 10, scrollX = TRUE, round)) %>%
+  formatRound(columns = 2:19, digits = 3)
+```
+
+
+The **describe()** function supports the **group_by()** function syntax of the **dplyr** package.
+Following function calculate descriptive testatrices of Soil, Water and Grain As of diffrent landtypes
+
+```{r}
+stat.landtype<-df %>%
+            group_by(Land_type) %>% 
+            describe(SAs, WAs, Grain_As)
+
+datatable(as.data.frame(stat.landtype), 
+          rownames = T, options = list(pageLength = 10, scrollX = TRUE, round)) %>%
+  formatRound(columns = 3:19, digits = 3)
+```
+
+Let check descriptiave statisics of grain As of diffrent rice varieties
+
+```{r}
+stat.variety<-df %>%
+            group_by(Variety) %>% 
+            describe(Grain_As) 
+
+datatable(as.data.frame(stat.variety), 
+          rownames = T, options = list(pageLength = 10, scrollX = TRUE, round)) %>%
+  formatRound(columns = 3:19, digits = 3)
+```
+<div style="margin-bottom:20px;">
+</div>
+
+
+### **EDA of Bivariate Data**
+
+**correlate()** function of **dlookr""  calculates the correlation coefficient of all combinations of numerical variables of data set. 
+
+
+```{r}
+df %>% select(WAs, WFe, WFe, SAs, SPAs, SAoAs, SAoFe,  Grain_As) %>%
+  correlate() 
+```
+
+<div style="margin-bottom:15px;">
+</div>
+
+**plot.correlate()** visualizes the correlation matrix.
+
+
+```{r fig.height=5, fig.width=5}
+df %>% select(WAs, WFe, WFe, SAs, SPAs, SAoAs, SAoFe,  Grain_As) %>%
+  correlate() %>%
+  plot()
+```
+

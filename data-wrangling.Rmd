@@ -170,7 +170,7 @@ library(DT)
 
 ###  **Load data**
 
-In this exercise  we will use two data sets: USA county level lung cancer mortality rates with risk factors from 1998 t0 2012 and USA  County FIPS Codes. We will use **read_csv()** function of **readr** package to import data a **Tidy** data. 
+In this exercise  we will use two data sets: USA county level lung cancer mortality rates with risk factors from 1998 t0 2012 and USA  County FIPS Codes. We will use **read_csv()** function of **readr** package to import data as a **Tidy** data. All data set use in this exercise could be found [here](https://www.dropbox.com/sh/ctjv2eiifhfh2ts/AAAVXmWxPntD-O-5AE_YH3VHa?dl=0).
 
 
 ```{r message=FALSE, warning=FALSE}

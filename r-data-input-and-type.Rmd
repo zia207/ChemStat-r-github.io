@@ -7,7 +7,6 @@ title: ''
 ```{r echo=FALSE, out.width='100%', fig.align="center"}
 knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\import.png")
 ```
-
 <div style="margin-bottom:20px;">
 </div>
 
@@ -65,7 +64,7 @@ If you want to change the working directory in R you just need to call the **set
 
 ```{r}
 myWD<-setwd("E:\\Dropbox\\GitHub\\chemstat-r-github.io")    # Set working directory  
-myWD<-setwd("E:/Dropbox/GitHub/chemstat-r-github.io") # Equivelent
+myWD<-setwd("E:/Dropbox/GitHub/chemstat-r-github.io") # Equivalent
 myWD
 ```
 
@@ -80,9 +79,13 @@ dir()
 </div>
 
 ## **Import Data into R**
+
+
+All data set use in this exercise could be found [here](https://www.dropbox.com/sh/ctjv2eiifhfh2ts/AAAVXmWxPntD-O-5AE_YH3VHa?dl=0). 
+
+
 <div style="margin-bottom:15px;">
 </div>
-
 ### **Text Files**
 
 The easiest form of data to import into R is a simple text file, and this will often be acceptable for problems of small or medium scale. The primary function to import from a text file is **read.table()**. However, **scan()**  function could be used to scan and read data. It is usually used to read data into vector or list or from file in R Language.

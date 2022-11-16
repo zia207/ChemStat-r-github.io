@@ -500,6 +500,8 @@ function</p>
 </div>
 <div id="import-data-into-r" class="section level2">
 <h2><strong>Import Data into R</strong></h2>
+<p>All data set use in this exercise could be found <a
+href="https://www.dropbox.com/sh/ctjv2eiifhfh2ts/AAAVXmWxPntD-O-5AE_YH3VHa?dl=0">here</a>.</p>
 <div style="margin-bottom:15px;">
 
 </div>
@@ -675,22 +677,22 @@ functions.</p>
 <pre class="r"><code># base function read,csv
 system.time(read.csv(paste0(dataFolder,&quot;LBC_data.csv&quot;), header= TRUE)) </code></pre>
 <pre><code>##    user  system elapsed 
-##    0.21    0.00    0.22</code></pre>
+##    0.18    0.01    0.21</code></pre>
 <pre class="r"><code>#fread of data.table
 system.time(fread(paste0(dataFolder,&quot;LBC_data.csv&quot;), header= TRUE)) </code></pre>
 <pre><code>##    user  system elapsed 
-##    0.02    0.00    0.02</code></pre>
+##       0       0       0</code></pre>
 </div>
 <div id="writing-time" class="section level4">
 <h4>Writing time</h4>
 <pre class="r"><code># base-function write.csv
 system.time(write.csv(DT,  paste0(dataFolder, &quot;DT.csv&quot;), row.names=F))</code></pre>
 <pre><code>##    user  system elapsed 
-##    0.96    0.00    0.94</code></pre>
+##    0.91    0.03    0.94</code></pre>
 <pre class="r"><code># fwrite of data.table
 system.time(fwrite(DT,  paste0(dataFolder, &quot;DT.csv&quot;), row.names=F, quote=TRUE))</code></pre>
 <pre><code>##    user  system elapsed 
-##    0.06    0.00    0.04</code></pre>
+##    0.07    0.00    0.03</code></pre>
 <p>Beside two functions, we can perform several data transforming such
 as how to subset rows, select and compute on columns, and perform
 aggregations by group, etc with data.table API. Here is the cheat sheets
@@ -753,11 +755,11 @@ system.time(write.csv(DT, paste0(dataFolder, &quot;LBC_data.csv&quot;)))</code><
 <pre class="r"><code># CSV file with fwrite
 system.time(fwrite(DT, paste0(dataFolder, &quot;LBC_data.csv&quot;)))</code></pre>
 <pre><code>##    user  system elapsed 
-##    0.10    0.00    0.09</code></pre>
+##    0.06    0.00    0.05</code></pre>
 <pre class="r"><code># feather file with 
 system.time(write_feather(DT, paste0(dataFolder, &quot;LBC_data.feather&quot;)))</code></pre>
 <pre><code>##    user  system elapsed 
-##    0.00    0.02    0.02</code></pre>
+##       0       0       0</code></pre>
 <div style="margin-bottom:30px;">
 
 </div>
@@ -860,7 +862,7 @@ European countries.</p>
 <p>For example, importing CSV file:</p>
 <pre class="r"><code>df.chem_01&lt;-read_csv(paste0(dataFolder,&quot;PAHdata.csv&quot;))</code></pre>
 <pre><code>## Rows: 20 Columns: 23
-## ── Column specification ─────────────────────────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr  (1): Subject
 ## dbl (22): Napthalene, 1-Methyl Napthalene, 2-Methyl Napthalene, Acenapthylen...
