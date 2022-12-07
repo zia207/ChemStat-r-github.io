@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>getting-started-with-r.knit</title>
+
+<script src="site_libs/header-attrs-2.17/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">ChemStat-R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="getting-started-with-r.html">Getting Started with R</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Essential of The R Language
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="essential-of-r-language.html">Table of Content</a>
+    </li>
+    <li>
+      <a href="intoduction-to-use-r.html">Introduction to Using R</a>
+    </li>
+    <li>
+      <a href="r-data-input-and-type.html">Importing/Exporting Data into R</a>
+    </li>
+    <li>
+      <a href="data-wrangling.html">Data Wrangling</a>
+    </li>
+    <li>
+      <a href="eda.html">Exploratory Data Analysis</a>
+    </li>
+    <li>
+      <a href="stat_test.html">Statistical Test</a>
+    </li>
+    <li>
+      <a href="anova.html">Analysis of Variance (ANOVA)</a>
+    </li>
+    <li>
+      <a href="correlation.html">Correlation Analysis</a>
+    </li>
+    <li>
+      <a href="regression.html">Regression Analysis</a>
+    </li>
+    <li>
+      <a href="stepwise-regression.html">Stepwise Regression</a>
+    </li>
+    <li>
+      <a href="non-linear-regression.html">Nonlinear Regression</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Cheminformatics with R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="cheminformatics-with-r.html">Table of Content</a>
+    </li>
+    <li>
+      <a href="getting-strated-chem.html">Getting Started</a>
+    </li>
+    <li>
+      <a href="cheminformatics-with-chemminer.html">Cheminformatics with ChemmineR</a>
+    </li>
+    <li>
+      <a href="cheminformatics-with-cdk.html">Cheminformatics with CDK</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    ICP-MS Data Processing with R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="icp-ms-data-processing-and-analysis-with-r.html">Table of Content</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="mailto:zia207@gmail.com">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+    Email
+  </a>
+</li>
+<li>
+  <a href="http://github.com/zia207">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://www.linkedin.com/in/zia-ahmed-a7653578">
+    <span class="fa fa-linkedin fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+
+</div>
+
+
+<div style="margin-bottom:20px;">
+
+</div>
+<p><img src="Image/PNG_FILE_01/getting_started.png" width="100%" style="display: block; margin: auto;" /></p>
+<div style="margin-bottom:20px;">
+
+</div>
+<div id="table-of-content" class="section level3">
+<h3><strong>Table of Content</strong></h3>
+<ul>
+<li><p><a href="#what-is-r">What is R?</a></p></li>
+<li><p><a href="#download-r">Download R</a></p></li>
+<li><p><a href="#install-r-on-windows">Install R on Windows</a></p></li>
+<li><p><a href="#install-r-on-mac-osx">Install R on Mac OSX</a></p></li>
+<li><p><a href="#install-r-on-ubuntu">Install R on Ubuntu</a></p></li>
+<li><p><a href="#open-r-base">Open R-Base</a></p></li>
+<li><p><a href="#integrated-development-environment-for-r">Integrated
+Development Environment for R</a></p></li>
+<li><p><a href="#download-and-installation-rstudio">Download and
+Installation RStudio</a></p>
+<ul>
+<li><p><a href="#open-rstudio">Open RStudio</a></p></li>
+<li><p><a href="#change-rstudio-appearance-and-themes">Change RStudio
+Appearance and Themes</a></p></li>
+</ul></li>
+<li><p><a href="#r-packages-or-libraries">R Packages or
+Libraries</a></p></li>
+<li><p><a href="#r-markdown">R Markdown</a></p></li>
+</ul>
+<div style="margin-bottom:30px;">
+
+</div>
+</div>
+<div id="what-is-r" class="section level3">
+<h3><strong>What is R?</strong></h3>
+<p><a href="https://www.r-project.org/">R</a> is one of the most popular
+open-source statistical computing and visualization environments. It was
+developed in 1980 based on the <a
+href="https://en.wikipedia.org/wiki/S_(programming_language)">S-language</a>,
+and an open-source community regularly updates the software for a
+robust, programmable, portable, and open-source computing environment.
+We can use it to solve complex and sophisticated problems and “routine”
+analysis without restrictions on access or use.</p>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="download-r" class="section level3">
+<h3><strong>Download R</strong></h3>
+<p>The R can be downloaded from the <a
+href="https://www.r-project.org/">R project</a> of a repository CRAN or
+you can install <a href="https://mran.microsoft.com/download">Microsoft
+R Open</a>, the enhanced distribution of R from Microsoft. It is a
+complete and free open source platform for statistical analysis and data
+science</p>
+<ol style="list-style-type: decimal">
+<li>Click <a href="https://www.r-project.org//">this link</a> to
+download the latest stable version of R</li>
+<li>Select a CRAN location (a mirror site) and please choose a location
+close to you</li>
+<li>Click on the “Download R for Windows” link at the top of the
+page.<br />
+</li>
+<li>Click on the “install R for the first time” link at the top of the
+page.</li>
+<li>Click “Download R for Windows” and save the executable file
+somewhere on your computer.</li>
+</ol>
+<div class="vembedr">
+<div>
+<iframe src="https://www.youtube.com/embed/bvoMiKKVf4U" width="533" height="300" frameborder="0" allowfullscreen="" data-external="1"></iframe>
+</div>
+</div>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="install-r-on-windows" class="section level3">
+<h3><strong>Install R on Windows</strong></h3>
+<p>Installation instruction of R in Windows and MAC could be found <a
+href="https://courses.edx.org/courses/UTAustinX/UT.7.01x/3T2014/56c5437b88fa43cf828bff5371c6a924/">here</a>.
+Detail Installation steps of Microsoft R Open in different operating
+systems can be found <a
+href="https://mran.microsoft.com/documents/rro/installation">here</a>.</p>
+<ol style="list-style-type: decimal">
+<li>Open Windows Explorer</li>
+<li>Navigate to the directory where the downloaded R.4.2.1-win.exe (the
+latest version) file is exit.</li>
+<li>Double-click this <strong>exe</strong> file and follow the
+instruction as shown in the video below:</li>
+</ol>
+<div class="vembedr">
+<div>
+<iframe src="https://www.youtube.com/embed/JmQ-GAidTWk" width="533" height="300" frameborder="0" allowfullscreen="" data-external="1"></iframe>
+</div>
+</div>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="install-r-on-mac-osx" class="section level3">
+<h3><strong>Install R on Mac OSX</strong></h3>
+<p>Installing R on Mac OS is similar to Windows. The easiest way is to
+install it through CRAN by going to the CRAN downloads page and
+following description as as shown <a
+href="https://itslinuxfoss.com/install-r-ubuntu-22-04/">here</a></p>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="install-r-on-ubuntu" class="section level3">
+<h3><strong>Install R on Ubuntu</strong></h3>
+<p>The installation of R in Ubuntu little tricky for those who are not
+familiar with command line. Details R installation on Ubuntu
+19.04/18.04/16.04 could be found <a
+href="https://itslinuxfoss.com/install-r-ubuntu-22-04/">here</a>.</p>
+<img src="Image/PNG_FILE_02/r_ubuntu.png" width="90%" style="display: block; margin: auto;" />
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="open-r-base" class="section level3">
+<h3><strong>Open R-Base</strong></h3>
+<p>After R installation in Windows, double click on the desktop icon or
+open the program from START to run R. R will be open as a
+<strong>Console</strong> window. You can work in the console and use R
+with the command line. However, the command line can be pretty daunting
+to a beginner. It is better to work in <strong>R Editor</strong>. First,
+you must create a <strong>New script</strong> from <strong>File</strong>
+menu. Any code you run in R-script output will be displayed in the
+console window. We can save all your R codes as an R script file and
+output them in the console as an R-Data file.</p>
+<div class="vembedr">
+<div>
+<iframe src="https://www.youtube.com/embed/cIubYlD5UVY" width="533" height="300" frameborder="0" allowfullscreen="" data-external="1"></iframe>
+</div>
+</div>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="integrated-development-environment-for-r"
+class="section level2">
+<h2><strong>Integrated Development Environment for R</strong></h2>
+<p>R can be run in the command line and graphical user interfaces in <a
+href="https://en.wikipedia.org/wiki/Integrated_development_environment">integrated
+development environment (IDE)</a>. Below are the best programming IDE
+for R:</p>
+<ol style="list-style-type: decimal">
+<li><a href="https://www.rstudio.com/">RStudio</a></li>
+<li><a
+href="https://docs.microsoft.com/en-us/visualstudio/rtvs/installing-r-tools-for-visual-studio?view=vs-2017">R
+Tools for Visual Studio</a></li>
+<li><a href="https://rattle.togaware.com/">Rattle</a></li>
+<li><a
+href="https://www.dunebook.com/best-r-programming-ide/">ESS</a></li>
+<li><a href="https://tinn-r.software.informer.com/">Tinn-R</a></li>
+<li><a href="https://r.analyticflow.com/en/">R AnalyticalFlow</a></li>
+<li><a
+href="https://radiant-rstats.github.io/docs/install.html">Radiant</a></li>
+<li><a href="https://atom.io/packages/rbox">RBox</a></li>
+<li><a href="https://code.visualstudio.com/">Code</a></li>
+</ol>
+<div style="margin-bottom:15px;">
+
+</div>
+<div id="download-and-installation-rstudio" class="section level3">
+<h3><strong>Download and Installation RStudio</strong></h3>
+<p><a href="https://www.rstudio.com/">RStudio</a> is one of the best <a
+href="https://en.wikipedia.org/wiki/Integrated_development_environment">integrated
+development environment (IDE)</a> for R that includes a <a
+href="https://support.rstudio.com/hc/en-us/articles/200404846-Working-in-the-Console">console</a>,
+a <a
+href="https://support.rstudio.com/hc/en-us/articles/115010737148-Using-the-RStudio-Terminal-in-the-RStudio-IDE">terminal</a>
+syntax-highlighting editor that supports direct code execution, as well
+as tools for plotting, history, debugging and workspace management.
+RStudio Desktop and RStudio Server for Windows, Mac, and Linux are open
+sources.</p>
+<p>First, you have to download the latest version of RStudio according
+to your operating system from <a
+href="https://www.rstudio.com/products/rstudio/download/#download">here</a>.
+For windows user, and just run the installation file and it normally
+detects your latest installed R version automatically. If you want to do
+some extra configuration, you need follow some steps which can be found
+<a
+href="http://www.dummies.com/programming/r/how-to-install-and-configure-rstudio/">here</a></p>
+<p>For installation instruction of R and RStudio in Mac OS could be
+found <a
+href="https://web.stanford.edu/~kjytay/courses/stats32-aut2018/Session%201/Installation%20for%20Mac.html">here</a>.
+Installing R Studio on Ubuntu could be found <a
+href="https://www.geeksforgeeks.org/how-to-install-r-studio-on-windows-and-linux/">here</a></p>
+<div style="margin-bottom:15px;">
+
+</div>
+</div>
+<div id="open-rstudio" class="section level3">
+<h3><strong>Open RStudio</strong></h3>
+<p>We may open RStudio just double click Rstudio icon on your Desktop or
+on the task bar. It has several components: console, terminal, editors,
+global environment etc.</p>
+<div class="vembedr">
+<div>
+<iframe src="https://www.youtube.com/embed/cEykrCTWOC8" width="533" height="300" frameborder="0" allowfullscreen="" data-external="1"></iframe>
+</div>
+</div>
+<div style="margin-bottom:20px;">
+
+</div>
+</div>
+<div id="change-rstudio-appearance-and-themes" class="section level3">
+<h3><strong>Change RStudio Appearance and Themes</strong></h3>
+<p>Navigate to <strong>Tools → Global options → Appearance</strong> and
+switch the theme in the Editor Theme option. By default, you will have
+the Textmate theme activated. There is a wide in-built variety of themes
+to choose, from light to dark themes</p>
+<div class="vembedr">
+<div>
+<iframe src="https://www.youtube.com/embed/dmhqWm4an6g" width="533" height="300" frameborder="0" allowfullscreen="" data-external="1"></iframe>
+</div>
+</div>
+<div style="margin-bottom:20px;">
+
+</div>
+<p><a href="https://youtu.be/dmhqWm4an6g"
+class="uri">https://youtu.be/dmhqWm4an6g</a></p>
+</div>
+</div>
+<div id="r-packages-or-libraries" class="section level2">
+<h2><strong>R Packages or Libraries</strong></h2>
+<p>R Packages are collections of R functions, data, and compiled code in
+a well-defined format. The directory where packages are stored is called
+the <strong>library</strong>. We can install any R ‘package’ or multiple
+package directly from the console, using r-script and GUI (Tools &gt;
+Install Packages) through internet.</p>
+<p>Use <strong>install.packages()</strong> function in your console or
+in a script:</p>
+<pre class="r"><code># One package
+# install.packages(&quot;raster&quot;, dependencies = TRUE)
+
+# Multiple packages
+# install.packages(c(&quot;raster&quot;,&quot;gstat&quot;), dependencies = TRUE)</code></pre>
+<div class="vembedr">
+<div>
+<iframe src="https://www.youtube.com/embed/xBh7Ti6cvXs" width="533" height="300" frameborder="0" allowfullscreen="" data-external="1"></iframe>
+</div>
+</div>
+<div style="margin-bottom:30px;">
+
+<p><a href="https://youtu.be/xBh7Ti6cvXs"
+class="uri">https://youtu.be/xBh7Ti6cvXs</a></p>
+<div id="use-libraries-in-r" class="section level3">
+<h3><strong>Use Libraries in R</strong></h3>
+<p>To use any installed libraries, simply type the
+<strong>library()</strong> function with the name of the library in
+brackets. For example</p>
+<pre class="r"><code>library(spatial)</code></pre>
+<p>If we want see content of any library, just use
+<strong>help()</strong> function</p>
+<pre class="r"><code>#library(help=spatial)</code></pre>
+<div style="margin-bottom:30px;">
+
+</div>
+</div>
+<div id="r-markdown" class="section level2">
+<h2><strong>R Markdown</strong></h2>
+<p>Markdown is a lightweight markup language for creating formatted text
+using a plain-text editor. John Gruber and Aaron Swartz created Markdown
+in 2004 as a markup language that is appealing to human readers in its
+source code form. Markdown is widely used in blogging, instant
+messaging, online forums, collaborative software, documentation pages,
+and readme files. (source: <a
+href="https://en.wikipedia.org/wiki/Markdown">wikipedia)</a></p>
+<p>R Markdown provides an authoring framework for data science. You can
+use a single R Markdown file to both save and execute code generate high
+quality reports that can be shared with an audience R Markdown documents
+are fully reproducible and support dozens of static and dynamic output
+formats. This 1-minute video provides a quick tour of what’s possible
+with R Markdown (source: <a
+href="https://rmarkdown.rstudio.com/index.html">R Markdown)</a></p>
+<div class="vembedr">
+<div>
+<iframe src="https://www.youtube.com/embed/vIcbLhC9whM" width="533" height="300" frameborder="0" allowfullscreen="" data-external="1"></iframe>
+</div>
+</div>
+<p><a href="https://youtu.be/vIcbLhC9whM"
+class="uri">https://youtu.be/vIcbLhC9whM</a></p>
+<div style="margin-bottom:15px;">
+
+<p>For a brief a brief tutorial, please visit <a
+href="https://rmarkdown.rstudio.com/lesson-2.html">here</a></p>
+<div style="margin-bottom:15px;">
+
+<p>Below the cheatsheets that for RStudio IDE:</p>
+<p><img src="Image/PNG_FILE_01/rarkdown_cheat_sheet_01.png" width="100%" style="display: block; margin: auto;" /></p>
+<div style="margin-bottom:15px;">
+
+<p><img src="Image/PNG_FILE_01/rarkdown_cheat_sheet_02.png" width="100%" style="display: block; margin: auto;" /></p>
+<div style="margin-bottom:15px;">
+
+<p>For a brief a brief tutorial, please visit <a
+href="https://rmarkdown.rstudio.com/lesson-2.html">here</a></p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

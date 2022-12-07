@@ -29,11 +29,9 @@ This tutorial  consists of four modules:
 
 ### 2. [Essential of The R Language](essential-of-r-language.html)
 
-### 3. [Curve Fitting with R](curve-fitting-with-r.html)
+### 3. [Cheminformatics with R](cheminformatics-with-r.html)
 
-### 4. [Cheminformatics with R](cheminformatics-with-r.html)
-
-### 5. [ICP-MS data Processing and analysis with R](icp-ms-data-processing-and-analysis-with-r.html)
+### 4. [ICP-MS data Processing and analysis with R](icp-ms-data-processing-and-analysis-with-r.html)
 
 
 <div style="margin-bottom:50px;">
