@@ -877,8 +877,9 @@ data_summary&lt;-gh.df %&gt;%
   dplyr::group_by(Treatment, Variety) %&gt;%
   dplyr::summarise(mean=mean(GAs), sd=sd(GAs)) %&gt;%
   arrange(desc(mean))</code></pre>
-<pre><code>## `summarise()` has grouped output by &#39;Treatment&#39;.
-## You can override using the `.groups` argument.</code></pre>
+<pre><code>## `summarise()` has grouped output by
+## &#39;Treatment&#39;. You can override using
+## the `.groups` argument.</code></pre>
 <pre class="r"><code># Add letters
 cld &lt;- as.data.frame.list(tukey.cld$&quot;Treatment:Variety&quot;)
 data_summary$Tukey &lt;- cld$Letters
