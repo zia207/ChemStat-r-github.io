@@ -19,17 +19,17 @@ Reading or importing data into R  for analysis and exporting the results as text
 
 ### **Table of Content**
 
-* [Set Working Directory](#set-working-directory) 
+* [Working directory](#working-directory) 
 
-* [Import Data into R](#import-data-into-r)
+* [Import filse into R](#import-files-into-r)
 
-  - [Import Text Files](#import-text-Files)
+  - [Text Files](#text-Files)
   
-  - [Import Comma Delimited Text Files](#import-comma-delimited-text-files)
+  - [Comma Delimited Text Files](#comma-delimited-text-files)
   
-  - [Import Excel Files](#import-excel-files)
+  - [Excel Files](#excel-files)
 
-* [Export Files from R](#export-files-from-r)
+* [Export files from R](#export-files-from-r)
 
   - [Export Data into Text or CSV files](#export-data-into-text-or-csv-files)
   
@@ -40,12 +40,8 @@ Reading or importing data into R  for analysis and exporting the results as text
 
 * [Import and Export Large Data with datatable](#import-and-export-large-data-with-datatable)
 
-  - [Reading CSV file with fread](#reading-csv-file-with-fread)
-  
-  - [Writing CSV file with fwrite](#writing-csv-file-with-fwrite)
 
-
-* [Feather A Fast Ondisk Format for Dataframe](#feather-a-fast-ondisk-format-for-dataframe)
+* [Feather A Fast On-Disk Format for Data Frames](#feather-a-fast-on-disk-format-for-data-frames)
 
 
 * [Data Import and Export with tidyverse Package](#data-import-and-export-with-tidyverse-package)
@@ -53,20 +49,20 @@ Reading or importing data into R  for analysis and exporting the results as text
 <div style="margin-bottom:30px;">
 </div>
 
-### **Set Working Directory**
+### **Working directory**
 
 First, suppose we want to read files from a specific location or write files in a folder. In that case, we will need to create or set a working directory in R. The following example shows how to set the working directory in R to the folder "Data" within the 
 
 In case you want to check the directory of your R session, the function **getwd()** will print the current working directory path as a string. Hence, the output is the folder where all your files will be saved.
 
-```{r Get Working directory}
+```{r}
 getwd()
 ```
 
 If you want to change the working directory in R you just need to call the **setwd()** function, specifying as argument the path of the new working directory folder. 
 
 
-```{r Set Working directory}
+```{r}
 myWD<-setwd("E:\\Dropbox\\GitHub\\chemstat-r-github.io")    # Set working directory  
 myWD<-setwd("E:/Dropbox/GitHub/chemstat-r-github.io") # Equivalent
 myWD
@@ -77,12 +73,12 @@ Remember that you must use the forward slash / or double backslash \\ in R! The 
 The files under in a directory can check using **dir()** function 
 
 ```{r}
-# dir()
+dir()
 ```
 <div style="margin-bottom:30px;">
 </div>
 
-### **Import Data into R**
+## **Import Data into R**
 
 
 All data set use in this exercise could be found [here](https://www.dropbox.com/sh/ctjv2eiifhfh2ts/AAAVXmWxPntD-O-5AE_YH3VHa?dl=0). 
@@ -90,31 +86,32 @@ All data set use in this exercise could be found [here](https://www.dropbox.com/
 
 <div style="margin-bottom:15px;">
 </div>
-
-#### **Import Text Files**
+### **Text Files**
 
 The easiest form of data to import into R is a simple text file, and this will often be acceptable for problems of small or medium scale. The primary function to import from a text file is **read.table()**. However, **scan()**  function could be used to scan and read data. It is usually used to read data into vector or list or from file in R Language.
 
 
-```{r Define data folder}
+```{r}
 ## Create a data folder
 dataFolder<-"E:/Dropbox/GitHub/chemstat-r-github.io/Data/"
 ```
 
-```{r Read txt data, message=FALSE, warning=FALSE}
+```{r}
 data.txt<-read.table(paste0(dataFolder,"test_data.txt"), header= TRUE) 
 #data.txt<-read.table("test_data.txt", header= TRUE) 
 head(data.txt)
 names(data.txt)
 ```
+
+
 <div style="margin-bottom:20px;">
 </div>
 
-#### **Import Comma Delimited Text Files**
+### **Comma Delimited Text Files**
 
 The sample data can be in comma-separated values (CSV) format. Each cell inside such data file is separated by a special character, which is usually a comma, although other characters can be used. Reading data from a CSV file is made easy by the **read.csv()**, an extension of **read.table()**. It facilitates the direct import of data from CSV files. 
 
-```{r Read CSV file, message=FALSE, warning=FALSE}
+```{r}
 data.csv<-read.csv(paste0(dataFolder,"test_data.csv"), header= TRUE) 
 #head(data.csv)
 names(data.csv)
@@ -123,19 +120,19 @@ names(data.csv)
 <div style="margin-bottom:20px;">
 </div>
 
-#### **Import Excel Files**
+### **Excel Files**
 
 One of the best ways to read an Excel file is to export it to a comma-delimited file and import it using the method above. Alternatively, we can use the xlsx package to access Excel files. The first row should contain variable/column names. 
 
-```{r Load xlsx package, message=FALSE, warning=FALSE}
+```{r}
 # install.packages("xlsx") # Install "xlsx" package
-# Load xlsx package
-library(xlsx)
 ```
 
-```{r Read XLX file, message=FALSE, warning=FALSE}
+```{r}
+# Load xlsx package
+library(xlsx)
 # Import Sheet 1, from a excel file
-data.xlsx <-xlsx::read.xlsx(paste0(dataFolder,"test_data.xlsx"), 1) 
+data.xlsx <-read.xlsx(paste0(dataFolder,"test_data.xlsx"), 1) 
 #data.xlsx <-read.xlsx("test_data.xlsx", 1)  
 names(data.xlsx)
 ```
@@ -143,21 +140,20 @@ names(data.xlsx)
 </div>
 
 
-### **Export Files from R**
+## **Export  files from R**
 
 To export data  and save to your local drive, you need the file path and an extension. First of all, the path is the location where the data will be stored.
 
 <div style="margin-bottom:15px;">
 </div>
 
-#### **Export Data into Text or CSV files**
+### **Export Data into Text or CSV files**
 
 The popular R base functions for writing data are  **write.table()**, **write.csv()**, **write.csv2()** and **write.delim()** functions. 
 
 First of all, let create a data frame that we will going  to export into a text/CSV file.
 
-```{r Create a Dataframe, message=FALSE, warning=FALSE}
-
+```{r}
 Variety =c("BR1","BR3", "BR16", "BR17", "BR18", "BR19","BR26",
 	      "BR27","BR28","BR29","BR35","BR36") # create a text vector
 Yield = c(5.2,6.0,6.6,5.6,4.7,5.2,5.7,
@@ -165,9 +161,7 @@ Yield = c(5.2,6.0,6.6,5.6,4.7,5.2,5.7,
 rice.data= data.frame(Variety, Yield)
 head(rice.data)
 ```
-
-
-```{r Write as CSV file, message=FALSE, warning=FALSE}
+```{r}
 write.csv(rice.data, paste0(dataFolder, "rice_data.csv"), row.names = F) # no row names
 #write.csv(rice.data, "rice_data.csv", row.names = F) # no row names
 ```
@@ -175,13 +169,16 @@ write.csv(rice.data, paste0(dataFolder, "rice_data.csv"), row.names = F) # no ro
 <div style="margin-bottom:20px;">
 </div>
 
-#### **Export into Excel**
+### **Export into Excel**
 
 We can export data into Excel from R workspace using  **writexl** package which allows us to export data as an Excel file into xlsx format. 
 
-```{r Write as Xlsx file, message=FALSE, warning=FALSE}
+```{r}
 # install writexl
 #install.packages("writexl")
+```
+
+```{r}
 library(writexl)
 write.xlsx(rice.data, paste0(dataFolder, "rice_data.xlsx"))
 #write.xlsx(rice.data, "rice_data.xlsx")
@@ -190,13 +187,13 @@ write.xlsx(rice.data, paste0(dataFolder, "rice_data.xlsx"))
 <div style="margin-bottom:20px;">
 </div>
 
-#### **Export as a R data file**
+### **Export as a R data file**
 
 If you want to share the data from R as Objects and share those with your colleagues through different systems so that they can use it right away into their R workspace. These objects are of two types **.rda/.RData** which can be used to store some or all objects, functions from R global environment. 
 
 The **save()** function allows us to save multiple objects into our global environment: 
 
-```{r Save R-Data, message=FALSE, warning=FALSE}
+```{r}
 save(rice.data, Variety, Yield,  file= paste0(dataFolder,"rice_data.RData"))
 #save(rice.data, Variety, Yield,  file="rice_data.RData")
 ```
@@ -205,7 +202,7 @@ save(rice.data, Variety, Yield,  file= paste0(dataFolder,"rice_data.RData"))
 </div>
 
 
-### **Import and Export Large Data with datatable**
+## **Import and Export Large Data with datatable**
 
 The R-package [data.tabel](https://rdatatable.gitlab.io/data.table/) a improved version  data.frame of R-base function. It has following advantages:
 
@@ -214,64 +211,68 @@ The R-package [data.tabel](https://rdatatable.gitlab.io/data.table/) a improved 
 •	memory efficient
 
 
-````{r Load data.table, message=FALSE, warning=FALSE}
+```{r eval=FALSE, include=FALSE}
 # Install data.table
 # install.packages("data.table")
+```
+
+```{r message=FALSE, warning=FALSE}
 library(data.table)
 ```
 
-#### **Reading CSV file with fread**
+We will use tow important functions of data.table to read and write CSV files in R.
+
+### Reading CSV file with fread
 
 **fread**: This function is capable of reading CSV files quickly and conveniently. 
 
-```{r Read with fread, message=FALSE, warning=FALSE}
-dt<-data.table::fread(paste0(dataFolder,"LBC_data.csv"), header= TRUE) 
-str(dt)
-#dt<-fread("usa_geochemical.csv", header= TRUE) 
-```
-<div style="margin-bottom:15px;">
-</div>
 
-#### **Writing CSV file with fwrite**
+```{r}
+DT<-fread(paste0(dataFolder,"LBC_data.csv"), header= TRUE) 
+str(DT)
+#DT<-fread("usa_geochemical.csv", header= TRUE) 
+```
+
+### Writing CSV file with fwrite
 
 **fwrite**: This capable to write  CSV field very fast! 
 
-```{r write with fwrite, message=FALSE, warning=FALSE}
-data.table::fwrite(dt,  paste0(dataFolder, "dt.csv"), row.names=F, quote=TRUE)
+```{r}
+fwrite(DT,  paste0(dataFolder, "DT.csv"), row.names=F, quote=TRUE)
 ```
 
 
 Now we compare reading and writing time of **fread** and **frwite** functions with read.csv and write.csv functions.
 
-**Reading time**
+#### Reading time
 
-```{r Reading Time, message=FALSE, warning=FALSE}
+```{r}
 # base function read,csv
 system.time(read.csv(paste0(dataFolder,"LBC_data.csv"), header= TRUE)) 
 #fread of data.table
-system.time(data.table::fread(paste0(dataFolder,"LBC_data.csv"), header= TRUE)) 
+system.time(fread(paste0(dataFolder,"LBC_data.csv"), header= TRUE)) 
 ```
 
-**Writing time**
+#### Writing time
 
-```{r Writing Time, message=FALSE, warning=FALSE}
+```{r}
 # base-function write.csv
-system.time(write.csv(dt,  paste0(dataFolder, "DT.csv"), row.names=F))
+system.time(write.csv(DT,  paste0(dataFolder, "DT.csv"), row.names=F))
 # fwrite of data.table
-system.time(data.table::fwrite(dt,  paste0(dataFolder, "DT.csv"), row.names=F, quote=TRUE))
+system.time(fwrite(DT,  paste0(dataFolder, "DT.csv"), row.names=F, quote=TRUE))
 ```
 
 Beside two functions, we  can perform several data transforming such as how to subset rows, select and compute on columns, and perform aggregations by group, etc with data.table API. Here is the  cheat sheets of data.table package 
 
 
-```{r echo=FALSE, fig.align="center", fig.height=8, fig.width=10, out.width="100%"}
+```{r echo=FALSE, out.width='80%', fig.align="center"}
 knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\data_table_01.png")
 ```
 
 <div style="margin-bottom:20px;">
 </div>
 
-```{r echo=FALSE, fig.align="center", fig.height=8, fig.width=10, out.width="100%"}
+```{r echo=FALSE, out.width='80%', fig.align="center"}
 knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\data_table_02.png")
 ```
 
@@ -279,7 +280,7 @@ knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_F
 </div>
 
 
-### **Feather A Fast Ondisk Format for Dataframe**
+## **Feather: A Fast On-Disk Format for Data Frames**
 
 
 Feather is a fast, lightweight, and easy-to-use binary file format for storing data frames. It has a few specific design goals:
@@ -292,40 +293,40 @@ Feather is extremely fast. Since Feather does not currently use any compression 
 
 source: https://www.rstudio.com/blog/feather/ 
 
-```{r Load feather package, message=FALSE, warning=FALSE}
+```{r message=FALSE, warning=FALSE}
 #install.packages("feather")
 library(feather)
 ```
 
 First we have to create feather data using **write_feather()** function
 
-```{r Write as feather file, message=FALSE, warning=FALSE}
-write_feather(dt, paste0(dataFolder, "LBC_data.feather"))
+```{r}
+write_feather(DT, paste0(dataFolder, "LBC_data.feather"))
 ```
 
 We can read this feather data with lighting speed using read_feather function()
 
-```{r Read feather file, message=FALSE, warning=FALSE}
-DT_feather <- feather::read_feather(paste0(dataFolder, "LBC_data.feather"))
+```{r}
+DT_feather <- read_feather(paste0(dataFolder, "LBC_data.feather"))
 str(DT_feather)
 ```
  
 Compare to and **wrire.csv()**  as well as  **frwite()**, **write_feather()** is very fast:  
 
-```{r Sytem time}
+```{r}
 # CSV file with base write.csv
-system.time(write.csv(dt, paste0(dataFolder, "LBC_data.csv")))
+system.time(write.csv(DT, paste0(dataFolder, "LBC_data.csv")))
 # CSV file with fwrite
-system.time(data.table::fwrite(dt, paste0(dataFolder, "LBC_data.csv")))
+system.time(fwrite(DT, paste0(dataFolder, "LBC_data.csv")))
 # feather file with 
-system.time(feather::write_feather(dt, paste0(dataFolder, "LBC_data.feather")))
+system.time(write_feather(DT, paste0(dataFolder, "LBC_data.feather")))
 ```
 <div style="margin-bottom:30px;">
 </div>
 
 
 
-### **Data Import and Export with tidyverse Package**
+## **Data Import and Export with tidyverse Package**
 
 The tidyverse is an  collection of  several R packages designed for data science. All packages share an underlying design philosophy, grammar, and data structures. (source:https://www.tidyverse.org/ )
 
@@ -334,22 +335,25 @@ The core tidyverse includes the packages that you’re likely to use in everyday
 <div style="margin-bottom:20px;">
 </div>
 
-```{r echo=FALSE, fig.align="left", fig.height=6.5, fig.width=5, out.width="70%"}
+```{r echo=FALSE, out.width='80%', fig.align="center"}
 knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\tidyverse.png")
 ```
 
 <div style="margin-bottom:20px;">
 </div>
 
-#### **Installation and Use**
+### Installation and use
 
 * Install all the packages in the tidyverse by running install.packages("tidyverse").
 
 * Run library(tidyverse) to load the core tidyverse and make it available in your current R session.
 
 
-```{r Load tidyverse, message=FALSE, warning=FALSE}
+```{r}
 # install.packages("tidyverse")
+```
+
+```{r message=FALSE, warning=FALSE}
 library(tidyverse)
 ```
 
@@ -379,7 +383,7 @@ As well as   **readr**, for reading flat files, the tidyverse package installs a
 </div>
 
 
-#### **Read a delimited file (including CSV and TSV) into a tibble**
+### **Read a delimited file (including CSV and TSV) into a tibble**
 
 
 A **tibble**, or **tbl_df**, is the latest method for reimagining of modern data-frame and  It keeps all the crucial features regarding the data frame. Since R is an old language, and some things that were useful 10 or 20 years ago now get in your way. It’s difficult to change base R without breaking existing code, so most innovation occurs in **tibble()**  data-frame with tibble package. 
@@ -412,40 +416,46 @@ source: https://www.educative.io/answers/what-is-tibble-versus-data-frame-in-r
 
 We can use following functions **readr** package to import  tabular data  into R as tibble:
 
-```{r echo=FALSE, fig.align="left", fig.height=5, fig.width=5.5, out.width="60%"}
+```{r echo=FALSE, out.width='80%', fig.align="center"}
 knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\read_readr_function.png")
 ```
 
 <div style="margin-bottom:20px;">
 </div>
 
-**read_csv()** and **read_tsv()** from **readr** package are special cases of the more general read_delim(). They're useful for reading the most common types of flat file data, comma separated values and tab separated values, respectively. read_csv2() uses ⁠;⁠ for the field separator and ⁠,⁠ for the decimal point. This format is common in some European countries.
+**read_csv()** and **read_tsv()** are special cases of the more general read_delim(). They're useful for reading the most common types of flat file data, comma separated values and tab separated values, respectively. read_csv2() uses ⁠;⁠ for the field separator and ⁠,⁠ for the decimal point. This format is common in some European countries.
 
 For example, importing CSV file: 
 
-```{r Read data with read_csv, message=FALSE, warning=FALSE}
-df.chem_01<-readr::read_csv(paste0(dataFolder,"PAHdata.csv"))
+```{r}
+df.chem_01<-read_csv(paste0(dataFolder,"PAHdata.csv"))
 str(df.chem_01)
 ```
 
+with read.csv():
+
+```{r}
+df.chem_02<-read.csv(paste0(dataFolder,"PAHdata.csv"))
+str(df.chem_02)
+```
 <div style="margin-bottom:20px;">
 </div>
 
 
-#### **Write a data frame to a delimited file with readr package**
+### **Write a data frame to a delimited file with readr package**
 
 
 The **write_()**⁠ family of functions are an improvement to analogous function such as write.csv() because they are approximately twice as fast. Unlike write.csv(), these functions do not include row names as a column in the written file. A generic function, output_column(), is applied to each variable to coerce columns to suitable output.
 
 We can use following functions **readr** package to extort  tabular data from R:
 
-```{r echo=FALSE, fig.align="left", out.width="40%"}
+```{r echo=FALSE, out.width='100%', fig.align="center"}
 knitr::include_graphics("E:\\Dropbox\\GitHub\\chemstat-r-github.io\\Image\\PNG_FILE_02\\write_readr_function.png")
 ```
 
 
-```{r Write with write_csv, message=FALSE, warning=FALSE}
-readr::write_csv(df.chem_01, "df.chem_01")
+```{r}
+write_csv(df.chem_02, "df.chem_02")
 ```
 
 <div style="margin-bottom:20px;">
@@ -455,23 +465,9 @@ readr::write_csv(df.chem_01, "df.chem_01")
 We can also use **as_tibble()** function of **tibble** package 
 
 
-```{r Read data as_tibble}
-df.chem_02<-tibble::as_tibble(read.csv(paste0(dataFolder,"PAHdata.csv"), check.names = FALSE))
-str(df.chem_02)
+```{r}
+df.chem_03<-as_tibble(read.csv(paste0(dataFolder,"PAHdata.csv"), check.names = FALSE))
+str(df.chem_03)
 ```
 
-<div style="margin-bottom:30px;">
-</div>
-
-### **Further Reading**
-
-1. [R for Data Science](https://r4ds.had.co.nz/index.html)
-
-2. [R Data Import/Export](https://cran.r-project.org/doc/manuals/r-devel/R-data.htmlhttps://cran.r-project.org/doc/manuals/r-devel/R-data.html)
-
-3. [Tidy data](https://tidyr.tidyverse.org/articles/tidy-data.html)
-
-4. [Getting started with the tidyverse; loading your data](Getting started with the tidyverse; loading your data)
-
-5. [Chapter 2 Importing Data in the Tidyverse](https://jhudatascience.org/tidyversecourse/get-data.html)
 
